@@ -109,7 +109,7 @@ const ChatBot = () => {
     ol: ({ children }) => <ol className="list-decimal ml-4 mb-3 space-y-1">{children}</ol>,
     li: ({ children }) => <li className="text-slate-700 font-medium">{children}</li>,
     
-    // ✅ පින්තූර ගැටලුව විසඳන කොටස
+    
     img: ({ src, alt }) => (
       <div className="my-4 overflow-hidden rounded-2xl border-2 border-slate-100 shadow-sm">
         <img 

@@ -5,18 +5,18 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Cloudinary සැකසුම්
+// Cloudinary configuration
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Storage සැකසුම් (පින්තූර සුරකින ආකාරය)
+// Storage configuration (Defines how images are saved)
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'lak_travelers_uploads', // Cloudinary හි සාදනු ලබන folder එක
+    folder: 'lak_travelers_uploads', // Folder created within Cloudinary
     allowed_formats: ['jpg', 'png', 'jpeg'],
   },
 });

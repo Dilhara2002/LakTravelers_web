@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import API from '../services/api'; // අපි කලින් හදාගත් API instance එක
+import API from '../services/api'; // Using our previously created API instance
 
 const EditHotel = () => {
   const { id } = useParams();
@@ -19,7 +19,7 @@ const EditHotel = () => {
   const [uploading, setUploading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
-  // 1. පවතින දත්ත ලබා ගැනීම (Fetch Existing Data)
+  // 1. Fetch Existing Data
   useEffect(() => {
     const fetchHotel = async () => {
       try {
@@ -47,7 +47,7 @@ const EditHotel = () => {
   };
 
   /**
-   * 🖼️ නව පින්තූරයක් Cloudinary වෙත උඩුගත කිරීම
+   * 🖼️ Upload a new image to Cloudinary
    */
   const handleFileUpload = async (file) => {
     if (!file) return;
@@ -57,12 +57,12 @@ const EditHotel = () => {
     data.append('image', file);
 
     try {
-      // ⚠️ මෙහිදී API භාවිතා කිරීමෙන් CORS සහ 401 දෝෂ මගහැරේ
+      // ⚠️ Using API here avoids CORS and 401 Unauthorized errors
       const res = await API.post('/upload', data, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       
-      // Cloudinary මගින් ලැබෙන URL එක formData එකට එකතු කරයි
+      // Update formData with the URL received from Cloudinary
       setFormData((prev) => ({ ...prev, image: res.data }));
       alert("New image uploaded! ✅");
     } catch (error) {
@@ -85,17 +85,17 @@ const EditHotel = () => {
   };
 
   /**
-   * පින්තූරය පෙන්වීමට URL එක සකසන Helper Function එක
+   * Helper function to format the image URL for display
    */
   const getImageUrl = (path) => {
     if (!path) return "https://via.placeholder.com/400x300?text=No+Image";
     if (path.startsWith("http")) return path;
-    const backendURL = "https://lak-travelers-api.vercel.app"; // ඔබේ Backend URL එක
+    const backendURL = "https://lak-travelers-api.vercel.app"; // Your Backend URL
     return `${backendURL}${path.startsWith("/") ? path : `/${path}`}`;
   };
 
   /**
-   * 📝 හෝටල් තොරතුරු යාවත්කාලීන කිරීම (Update)
+   * 📝 Update hotel details
    */
   const handleSubmit = async (e) => {
     e.preventDefault();

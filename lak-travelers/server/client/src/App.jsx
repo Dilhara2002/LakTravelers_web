@@ -37,18 +37,18 @@ import ChatBot from './components/ChatBot';
 import AdminBookings from './pages/AdminBookings';
 import VendorBookings from './pages/VendorBookings';
 
-// 🛡️ Fixed Protected Route Component
+// 🛡️ Protected Route Component to restrict access to logged-in users
 const ProtectedRoute = ({ children }) => {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const location = useLocation();
-  const toastId = useRef(null); // පණිවිඩය පාලනය කිරීමට useRef භාවිතා කරයි
+  const toastId = useRef(null); // Use useRef to control toast instances
 
   useEffect(() => {
     if (!userInfo) {
-      // දැනටමත් පණිවිඩයක් පෙන්වන්නේ නැතිනම් පමණක් අලුත් එකක් පෙන්වයි
+      // Only show a new toast if one isn't already active
       if (!toast.isActive(toastId.current)) {
         toastId.current = toast.error("Please login first to access this feature! 🔐", {
-          toastId: "login-first-error" // ස්ථාවර ID එකක් ලබා දීමෙන් දෙවරක් දිස්වීම වළකී
+          toastId: "login-first-error" // Fixed ID prevents duplicate toast appearance
         });
       }
     }
@@ -61,7 +61,7 @@ function App() {
   return (
     <CurrencyProvider>
       <Router>
-        {/* ToastContainer එකට limit={1} ලබා දීමෙන් ද එකවර පණිවිඩ දෙකක් දිස්වීම පාලනය කළ හැක */}
+        {/* limit={1} also helps control multiple simultaneous notifications */}
         <ToastContainer position="top-center" autoClose={3000} limit={1} />
         
         <div className="font-sans bg-gray-50 text-gray-900 min-h-screen flex flex-col relative">

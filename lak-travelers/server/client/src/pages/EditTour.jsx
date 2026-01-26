@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import API from '../services/api'; // අපි සාදාගත් API instance එක
+import API from '../services/api'; // Using our pre-configured API instance
 
 const EditTour = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // 1. Duration Logic සඳහා වෙනම States
+  // 1. Separate States for Duration Logic
   const [durationValue, setDurationValue] = useState('');
   const [durationUnit, setDurationUnit] = useState('Days');
 
@@ -25,13 +25,13 @@ const EditTour = () => {
   const [uploading, setUploading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
-  // 2. දත්ත ලබා ගැනීම සහ Duration එක Parse කිරීම
+  // 2. Fetch Data and Parse the Duration String
   useEffect(() => {
     const fetchTour = async () => {
       try {
         const { data } = await API.get(`/tours/${id}`);
         
-        // "3 Days" වැනි දත්ත "3" සහ "Days" ලෙස වෙන් කරයි
+        // Parses data like "3 Days" into "3" and "Days"
         if (data.duration) {
             const parts = data.duration.split(' ');
             if (parts.length >= 2) {
@@ -66,7 +66,7 @@ const EditTour = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Duration වෙනස් වන විට formData ද Update කරයි
+  // Updates formData whenever the duration value or unit changes
   const handleDurationUpdate = (val, unit) => {
       setDurationValue(val);
       setDurationUnit(unit);
@@ -74,7 +74,7 @@ const EditTour = () => {
   };
 
   /**
-   * 🖼️ නව පින්තූරයක් Cloudinary වෙත උඩුගත කිරීම
+   * 🖼️ Upload a new image to Cloudinary
    */
   const handleFileUpload = async (file) => {
     if (!file) return;
@@ -84,7 +84,7 @@ const EditTour = () => {
     data.append('image', file);
 
     try {
-      // ⚠️ API භාවිතා කිරීමෙන් CORS සහ Authentication දෝෂ මගහැරේ
+      // ⚠️ Using the API instance avoids CORS and Authentication errors
       const res = await API.post('/upload', data, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
@@ -108,17 +108,17 @@ const EditTour = () => {
   };
 
   /**
-   * පින්තූර පෙන්වීම සඳහා URL එක සකසන Helper Function එක
+   * Helper function to format the image URL for display
    */
   const getImageUrl = (path) => {
     if (!path) return "https://via.placeholder.com/400x300?text=No+Image";
     if (path.startsWith("http")) return path;
-    const backendURL = "https://lak-travelers-api.vercel.app"; // ඔබේ Backend URL එක
+    const backendURL = "https://lak-travelers-api.vercel.app"; // Your Backend URL
     return `${backendURL}${path.startsWith("/") ? path : `/${path}`}`;
   };
 
   /**
-   * 🚐 ටුවර් පැකේජය යාවත්කාලීන කිරීම (Update)
+   * 🚐 Update tour package details
    */
   const handleSubmit = async (e) => {
     e.preventDefault();

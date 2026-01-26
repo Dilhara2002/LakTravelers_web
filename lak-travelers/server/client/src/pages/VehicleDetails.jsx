@@ -12,7 +12,7 @@ const VehicleDetails = () => {
   // Booking State
   const [pickupDate, setPickupDate] = useState("");
   const [pickupLocation, setPickupLocation] = useState("");
-  const [days, setDays] = useState(1); // අවම වශයෙන් එක් දිනක්
+  const [days, setDays] = useState(1); // Minimum of one day
 
   // Review State
   const [rating, setRating] = useState(0);
@@ -24,7 +24,7 @@ const VehicleDetails = () => {
   const user = JSON.parse(localStorage.getItem('userInfo'));
 
   /**
-   * වාහනයේ විස්තර ලබා ගැනීම
+   * Fetch vehicle details from the API
    */
   const fetchVehicle = async () => {
     try {
@@ -43,20 +43,20 @@ const VehicleDetails = () => {
   }, [id]);
 
   /**
-   * වාහනය වෙන් කිරීම (Booking)
+   * Handle vehicle booking
    */
   const handleBooking = async (e) => {
     e.preventDefault();
 
-    // 🚨 වැදගත්: මුළු මුදල ගණනය කිරීම
+    // 🚨 Important: Calculate the total price
     const calculatedPrice = vehicle.pricePerDay * days;
 
     try {
       const bookingData = {
-        vehicle: id,              // Backend Schema එකේ ඇති නම
-        checkInDate: pickupDate,  // Schema එකේ pickupDate සඳහා checkInDate භාවිතා වේ
+        vehicle: id,              // Name as defined in the Backend Schema
+        checkInDate: pickupDate,  // Using checkInDate field for pickupDate per Schema
         pickupLocation,
-        totalPrice: calculatedPrice, // 👈 මෙම අගය අනිවාර්යයි
+        totalPrice: calculatedPrice, // 👈 This value is mandatory
         status: 'Pending'
       };
 
@@ -73,7 +73,7 @@ const VehicleDetails = () => {
   };
 
   /**
-   * වාහනය මැකීම (Delete)
+   * Delete vehicle listing
    */
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete this vehicle? ⚠️")) {
@@ -88,7 +88,7 @@ const VehicleDetails = () => {
   };
 
   /**
-   * Review එක සඳහා පින්තූරයක් Upload කිරීම
+   * Upload an image for the review
    */
   const handleReviewImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -102,7 +102,7 @@ const VehicleDetails = () => {
       const { data } = await API.post('/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      // ✅ Cloudinary response එකෙන් URL එක පමණක් ලබා ගැනීම
+      // ✅ Extract only the URL from the Cloudinary response
       const imageUrl = typeof data === 'object' ? data.image : data;
       setReviewImage(imageUrl);
       setUploading(false);
@@ -115,7 +115,7 @@ const VehicleDetails = () => {
   };
 
   /**
-   * Review එක Submit කිරීම
+   * Submit the review
    */
   const submitReviewHandler = async (e) => {
     e.preventDefault();
@@ -134,7 +134,7 @@ const VehicleDetails = () => {
   };
 
   /**
-   * පින්තූර URL එක සකසන Helper Function එක
+   * Helper function to format the image URL for display
    */
   const getImageUrl = (imagePath) => {
     if (!imagePath) return "https://via.placeholder.com/800x400?text=No+Image+Available";
@@ -191,7 +191,7 @@ const VehicleDetails = () => {
 
       <div className="container mx-auto px-4 md:px-8 -mt-8 relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl">
         
-        {/* 2. MAIN CONTENT (Left) */}
+        {/* 2. MAIN CONTENT (Left Side) */}
         <div className="lg:col-span-2 space-y-8">
           
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
@@ -325,7 +325,7 @@ const VehicleDetails = () => {
           </div>
         </div>
 
-        {/* 3. SIDEBAR (Booking) */}
+        {/* 3. SIDEBAR (Booking Section) */}
         <div className="lg:col-span-1">
           <div className="bg-white p-6 rounded-2xl shadow-xl border border-gray-100 sticky top-28">
             <div className="mb-6">

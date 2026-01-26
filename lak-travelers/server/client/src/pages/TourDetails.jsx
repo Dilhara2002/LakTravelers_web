@@ -22,7 +22,7 @@ const TourDetails = () => {
   const user = JSON.parse(localStorage.getItem('userInfo'));
 
   /**
-   * ටුවර් පැකේජයේ දත්ත ලබා ගැනීම
+   * Fetch tour package data
    */
   const fetchTour = async () => {
     try {
@@ -41,7 +41,7 @@ const TourDetails = () => {
   }, [id]);
 
   /**
-   * ටුවර් පැකේජය මැකීම (Delete)
+   * Delete the tour package
    */
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete this tour package? ⚠️")) {
@@ -56,20 +56,20 @@ const TourDetails = () => {
   };
 
   /**
-   * ටුවර් එකක් වෙන් කිරීම (Booking)
+   * Reserve a tour (Booking process)
    */
   const handleBooking = async (e) => {
     e.preventDefault();
     
-    // 🚨 පද්ධතියේ වැදගත්ම කොටස: මුළු මුදල ගණනය කිරීම
+    // 🚨 Critical Logic: Calculate the total price
     const calculatedTotalPrice = tour.price * peopleCount;
 
     try {
       const bookingData = {
-        tour: id, // Backend එක බලාපොරොත්තු වන නම
-        checkInDate: tourDate, // Tour date එක checkInDate ලෙස යවමු (Schema එකට අනුව)
+        tour: id, // Name expected by the Backend
+        checkInDate: tourDate, // Sending tour date as checkInDate per Schema requirements
         peopleCount: Number(peopleCount),
-        totalPrice: calculatedTotalPrice, // 👈 මීට පෙර අඩුව තිබූ පේළිය මෙයයි
+        totalPrice: calculatedTotalPrice, 
         status: 'Pending'
       };
 
@@ -78,7 +78,7 @@ const TourDetails = () => {
       await API.post('/bookings', bookingData);
       
       alert("Tour Booked Successfully! 🚐🎉. Please wait for Vendor approval.");
-      navigate('/dashboard'); // හෝ /my-bookings වෙත යොමු කරන්න
+      navigate('/dashboard'); 
     } catch (error) {
       console.error("Booking Error:", error);
       alert(error.response?.data?.message || "Booking Failed! Please ensure you are logged in.");
@@ -87,7 +87,7 @@ const TourDetails = () => {
   };
 
   /**
-   * Review එක සඳහා පින්තූරයක් Upload කිරීම (Cloudinary)
+   * Upload an image for the review (Cloudinary)
    */
   const handleReviewImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -101,7 +101,7 @@ const TourDetails = () => {
       const { data } = await API.post('/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      // 🚨 Fix: Cloudinary response එකෙන් image URL එක පමණක් ලබාගන්න
+      // 🚨 Fix: Ensure only the image URL is extracted from the Cloudinary response
       const imageUrl = typeof data === 'object' ? data.image : data;
       setReviewImage(imageUrl);
       setUploading(false);
@@ -114,7 +114,7 @@ const TourDetails = () => {
   };
 
   /**
-   * Review එක Submit කිරීම
+   * Submit the review
    */
   const submitReviewHandler = async (e) => {
     e.preventDefault();
@@ -133,7 +133,7 @@ const TourDetails = () => {
   };
 
   /**
-   * පින්තූර URL එක සකසන Helper Function එක
+   * Helper function to format the image URL for display
    */
   const getImageUrl = (imagePath) => {
     if (!imagePath) return "https://via.placeholder.com/800x400?text=No+Image+Found";
@@ -188,7 +188,7 @@ const TourDetails = () => {
 
       <div className="container mx-auto px-4 md:px-8 -mt-8 relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl">
         
-        {/* 2. MAIN CONTENT (Left) */}
+        {/* 2. MAIN CONTENT (Left Side) */}
         <div className="lg:col-span-2 space-y-8">
           
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
@@ -305,7 +305,7 @@ const TourDetails = () => {
           </div>
         </div>
 
-        {/* 3. SIDEBAR (Booking) */}
+        {/* 3. SIDEBAR (Booking Section) */}
         <div className="lg:col-span-1">
           <div className="bg-white p-6 rounded-2xl shadow-xl border border-gray-100 sticky top-28">
             <div className="mb-6">

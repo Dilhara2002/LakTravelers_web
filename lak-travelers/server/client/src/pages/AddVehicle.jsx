@@ -54,7 +54,7 @@ const AddVehicle = () => {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
         
-        // ✅ මෙතැනදී ලැබෙන response එකෙන් URL එක පමණක් ලබාගන්නා බව තහවුරු කරයි
+        // ✅ Ensure only the URL is extracted from the response object
         const imageUrl = typeof res.data === 'object' ? res.data.image : res.data;
         uploadedUrls.push(imageUrl);
       }
@@ -88,14 +88,14 @@ const AddVehicle = () => {
     }));
   };
 
-  // ✅ ERROR FIX: Path එක String එකක් දැයි පරීක්ෂා කිරීම (Line 90 Fix)
+  // ✅ ERROR FIX: Verify if the path is a String (Line 90 Fix)
   const getImageUrl = (path) => {
     if (!path) return "";
     
-    // යම් හෙයකින් path එක Object එකක් ලෙස ලැබුණහොත් එහි URL එක ලබා ගැනීම
+    // If path is received as an object, extract its URL
     const finalPath = typeof path === 'object' ? path.image : path;
 
-    // දැන් finalPath අනිවාර්යයෙන්ම String එකක් බැවින් startsWith වැඩ කරයි
+    // Verify finalPath is a string before calling startsWith
     if (finalPath && typeof finalPath === 'string' && finalPath.startsWith("http")) {
       return finalPath;
     }

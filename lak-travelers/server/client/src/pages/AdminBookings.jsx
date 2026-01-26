@@ -4,7 +4,7 @@ import API from "../services/api";
 const AdminBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedBooking, setSelectedBooking] = useState(null); // Click කළ විට විස්තර පෙන්වීමට
+  const [selectedBooking, setSelectedBooking] = useState(null); // To show details when clicked
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -64,7 +64,7 @@ const AdminBookings = () => {
 
               <section>
                 <h3 className="font-bold text-slate-700 underline">Vendor Details (Service Provider)</h3>
-                {/* Vendor විස්තර Controller එකේ populate කර ඇති නිසා මෙසේ ලබාගත හැක */}
+                {/* These can be accessed this way because Vendor details are populated in the Controller */}
                 <p>Vendor Name: {selectedBooking.hotel?.user?.name || selectedBooking.tour?.user?.name || selectedBooking.vehicle?.user?.name}</p>
                 <p>Vendor Email: {selectedBooking.hotel?.user?.email || selectedBooking.tour?.user?.email || selectedBooking.vehicle?.user?.email}</p>
               </section>

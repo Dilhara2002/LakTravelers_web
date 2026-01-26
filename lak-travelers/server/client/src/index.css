@@ -1,5 +1,5 @@
 /* ---------------------------------------------------
-   Fonts - Plus Jakarta Sans (Tourism UI සඳහා ඉතා උචිතයි)
+   Fonts - Plus Jakarta Sans (Ideal for Tourism UI)
 --------------------------------------------------- */
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
@@ -11,8 +11,8 @@
 @tailwind utilities;
 
 /* ---------------------------------------------------
-   Google Translate Widget Cleanup (IMPORTANT)
-   මෙම කොටස මඟින් Google හි "කැත" dropdown එක සහ ලෝගෝ සඟවයි.
+   Google Translate Widget Clean-up
+   Hides unwanted branding and frames from the default widget.
 --------------------------------------------------- */
 .goog-te-gadget span,
 .goog-te-gadget .goog-logo-link,
@@ -29,7 +29,7 @@
     font-size: 0 !important;
 }
 
-/* Page එක උඩින් ඇති වන හිස් ඉඩ (Gap) ඉවත් කිරීමට */
+/* Removes the top white space/gap caused by the translate banner */
 body {
     top: 0 !important;
     position: static !important;
@@ -37,7 +37,7 @@ body {
 
 /* ---------------------------------------------------
    Google Translate Dropdown Custom Styling
-   අපේ Custom Modal එක ඇතුළේ පෙන්වන පෙනුම මෙහිදී පාලනය වේ.
+   Controls the appearance inside our custom UI modal.
 --------------------------------------------------- */
 .goog-te-combo {
     display: block !important;
@@ -52,7 +52,7 @@ body {
     color: #1e293b !important;
     outline: none !important;
     cursor: pointer !important;
-    /* සෆාරි සහ අනෙකුත් බ්‍රවුසර වල dropdown එක නිවැරදි කිරීමට */
+    /* Normalizes appearance across Safari and other browsers */
     -webkit-appearance: menulist !important;
 }
 
@@ -69,7 +69,7 @@ body {
     padding: 0;
     box-sizing: border-box;
     font-family: 'Plus Jakarta Sans', sans-serif;
-    background-color: #f8fafc; /* පද්ධතියේ පසුබිම් වර්ණය */
+    background-color: #f8fafc; /* System background color */
     color: #0f172a;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

@@ -21,7 +21,7 @@ const __dirname = path.resolve();
 
 /**
  * 🚀 1. Body Parser Settings
- * Base64 පින්තූර සහ විශාල JSON දත්ත හුවමාරුවට අවසර ලබා දීම.
+ * Allowing Base64 images and large JSON payloads for service registrations.
  */
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
@@ -32,7 +32,7 @@ app.use(cookieParser());
  */
 app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" },
-  contentSecurityPolicy: false,
+  contentSecurityPolicy: false, // Disabled for development flexibility, enable carefully in production
 }));
 
 if (process.env.NODE_ENV === 'development') {
@@ -40,18 +40,18 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 /**
- * 🌐 3. CORS Configuration (දැන් 100% නිවැරදියි)
- * ඔබගේ Vercel Frontend එකට Backend එක සමඟ සම්බන්ධ වීමට මෙහිදී අවසර ලබා දෙයි.
+ * 🌐 3. CORS Configuration
+ * Permits your Vercel Frontend to communicate securely with this Backend.
  */
 const allowedOrigins = [
-  'http://localhost:5173',                  // Local Development සඳහා
-  'https://lak-travelers.vercel.app',       // ඔබගේ ප්‍රධාන වෙබ් අඩවි ලිපිනය
-  'https://lak-travelers-z1uk.vercel.app'    // අමතර Vercel ලිපිනය
+  'http://localhost:5173',                  // Local Development
+  'https://lak-travelers.vercel.app',       // Primary Production URL
+  'https://lak-travelers-z1uk.vercel.app'    // Secondary Vercel Preview URL
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    // origin එකක් නැති අවස්ථා (Mobile/Postman) සහ ලැයිස්තුවේ ඇති ලිපිනයන්ට අවසර දීම
+    // Allow requests with no origin (like Mobile apps or Postman) and those in the allowed list
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -59,7 +59,7 @@ app.use(cors({
       callback(new Error('CORS Policy: Access Denied'));
     }
   },
-  credentials: true,
+  credentials: true, // Required for HttpOnly cookies to work across domains
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
   optionsSuccessStatus: 200
@@ -67,8 +67,7 @@ app.use(cors({
 
 /**
  * 🛠️ 4. API Routes
- * වැදගත්: Frontend එකෙන් Call කරන විට අනිවාර්යයෙන්ම '/api' කොටස ඇතුළත් කරන්න.
- * උදා: https://lak-travelers-api.onrender.com/api/users/send-otp
+ * Note: All frontend API calls must include the '/api' prefix.
  */
 app.use('/api/users', userRoutes);
 app.use('/api/hotels', hotelRoutes);
@@ -78,16 +77,16 @@ app.use('/api/bookings', bookingRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/ai', aiRoutes);
 
-// Static folders (පින්තූර ගබඩා කිරීමට)
+// Static folders for file access
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// සේවාදායකය වැඩ කරනවාදැයි පරීක්ෂා කිරීමට (Health Check)
+// Root Health Check Route
 app.get('/', (req, res) => {
   res.status(200).send('Lak Travelers API is Live! 🚀');
 });
 
 /**
- * 🚨 5. Error Handling
+ * 🚨 5. Error Handling Middleware
  */
 app.use(notFound);
 app.use(errorHandler);

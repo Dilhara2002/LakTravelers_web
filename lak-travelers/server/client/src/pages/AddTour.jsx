@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import API from '../services/api'; // API service එක භාවිතා කරමු
+import API from '../services/api'; // Use our pre-configured API service
 
 const AddTour = () => {
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ const AddTour = () => {
 
   const user = JSON.parse(localStorage.getItem('userInfo'));
 
-  // 🔐 Authorization check
+  // 🔐 Authorization check (Verify user access)
   useEffect(() => {
     if (!user || (user.role !== 'vendor' && user.role !== 'admin')) {
       alert('Unauthorized Access');
@@ -53,7 +53,7 @@ const AddTour = () => {
   };
 
   /**
-   * 🖼️ පින්තූරය Cloudinary වෙත උඩුගත කිරීම
+   * 🖼️ Upload image to Cloudinary
    */
   const handleFileUpload = async (file) => {
     if (!file) return;
@@ -64,11 +64,11 @@ const AddTour = () => {
     data.append('image', file);
 
     try {
-      // ⚠️ මෙහිදී API භාවිතා කිරීමෙන් CORS සහ 401 දෝෂ මගහැරේ
+      // ⚠️ Using API instance here helps avoid CORS and 401 Unauthorized errors
       const res = await API.post('/upload', data, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      // Cloudinary මගින් ලැබෙන URL එක සකසයි
+      // Set the image URL received from Cloudinary
       setFormData((prev) => ({ ...prev, image: res.data.image }));
       alert('Image uploaded successfully! ✅');
     } catch (error) {
@@ -94,7 +94,7 @@ const AddTour = () => {
   };
 
   /**
-   * 🚐 ටුවර් පැකේජය සේවාදායකයට යැවීම
+   * 🚐 Submit tour package to the server
    */
   const handleSubmit = async (e) => {
     e.preventDefault();

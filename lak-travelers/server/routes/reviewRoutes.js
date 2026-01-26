@@ -5,17 +5,29 @@ import Review from "../models/Review.js";
 
 const router = express.Router();
 
-// 📈 සියලුම Reviews ලබා ගැනීම (Community Feed සඳහා)
+/**
+ * @desc    Fetch all reviews from across the platform
+ * @route   GET /api/reviews/all
+ * @access  Public (Used for the Community Feed)
+ */
 router.get("/all", async (req, res) => {
     try {
-        const reviews = await Review.find().populate("user", "name").sort({ createdAt: -1 });
+        // Populates the user name and sorts by most recent for the feed
+        const reviews = await Review.find()
+            .populate("user", "name")
+            .sort({ createdAt: -1 });
+            
         res.status(200).json({ success: true, reviews });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
 });
 
-// 📝 Review එකක් ඇතුළත් කිරීම (Protect middleware අවශ්‍යයි)
+/**
+ * @desc    Submit a new review
+ * @route   POST /api/reviews/submit
+ * @access  Private (Requires authentication via Protect middleware)
+ */
 router.post("/submit", protect, submitReview);
 
 export default router;

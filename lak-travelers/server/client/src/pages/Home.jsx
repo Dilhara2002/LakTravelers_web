@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
-// 👇 Local images import කිරීම
+// 👇 Importing local images
 import i1 from "../assets/i1.jpg";
 import i2 from "../assets/i2.jpg";
 import i3 from "../assets/i3.jpg";
@@ -50,7 +50,7 @@ const Home = () => {
   );
 
   // ============================================================
-  // 👇 ලියාපදිංචි වූ පරිශීලකයින් සඳහා පෙන්වන කොටස
+  // 👇 UI Section for Logged-In Users
   // ============================================================
   const LoggedInUI = () => (
     <div className="bg-slate-50 min-h-screen font-sans text-slate-800 mt-[-20px]">
@@ -83,7 +83,7 @@ const Home = () => {
         </div>
       </div>
 
-      {/* 🚀 NEW SECTION: AI SMART PLANNER (GraphRAG Highlight) */}
+      {/* 🚀 AI SMART PLANNER SECTION (GraphRAG Highlight) */}
       <section className="py-24 bg-white relative overflow-hidden">
         <div className="container mx-auto px-6">
           <div className="flex flex-col lg:flex-row items-center gap-16">
@@ -145,7 +145,7 @@ const Home = () => {
   );
 
   // ============================================================
-  // 👇 ලියාපදිංචි නොවූ අමුත්තන් සඳහා පෙන්වන කොටස
+  // 👇 UI Section for Guest (Unregistered) Visitors
   // ============================================================
   const GuestUI = () => (
     <div className="bg-slate-50 min-h-screen font-sans text-slate-800 mt-[-96px]">

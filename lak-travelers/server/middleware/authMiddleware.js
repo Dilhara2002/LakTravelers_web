@@ -3,28 +3,28 @@ import asyncHandler from 'express-async-handler';
 import User from '../models/User.js';
 
 /**
- * @desc    සාමාන්‍යයෙන් ලොග් වූ පරිශීලකයින් හඳුනාගැනීම (Protect Route)
+ * @desc    Protect routes - Identify authenticated users
  */
 const protect = asyncHandler(async (req, res, next) => {
   let token;
 
-  // 1. මුලින්ම Cookies වල 'jwt' තියෙනවාද බලන්න
+  // 1. First, check if 'jwt' exists in Cookies
   if (req.cookies && req.cookies.jwt) {
     token = req.cookies.jwt;
   } 
-  // 2. Cookies වල නැත්නම් Authorization Header එක බලන්න (Bearer Token)
+  // 2. If not in cookies, check the Authorization Header (Bearer Token)
   else if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-    // split(' ') මගින් 'Bearer' සහ 'token' වෙන් කර ගනී
+    // Splits 'Bearer' and the 'token' string
     token = req.headers.authorization.split(' ')[1];
   }
 
-  // ටෝකනයක් පවතිනවාද සහ එය "undefined" හෝ "null" string එකක් නොවේදැයි බලන්න
+  // Ensure token exists and is not a "null" or "undefined" string
   if (token && token !== 'undefined' && token !== 'null') {
     try {
-      // ටෝකන් එක Verify කිරීම
+      // Verify the JWT token
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       
-      // පරිශීලකයා සොයා req.user වෙත ඇතුළත් කිරීම (decoded.userId හෝ decoded.id පරීක්ෂා කරන්න)
+      // Find the user and attach to the request (checking for both userId or id in payload)
       req.user = await User.findById(decoded.userId || decoded.id).select('-password');
       
       if (!req.user) {
@@ -36,7 +36,6 @@ const protect = asyncHandler(async (req, res, next) => {
     } catch (error) {
       console.error("JWT Verification Error:", error.message);
       res.status(401);
-      // 'jwt malformed' වැනි දෝෂ මෙහිදී හසුුවේ
       throw new Error('Not authorized, token failed');
     }
   } else {
@@ -46,7 +45,7 @@ const protect = asyncHandler(async (req, res, next) => {
 });
 
 /**
- * @desc    Admin පරිශීලකයින් පමණක් හඳුනාගැනීම
+ * @desc    Admin authorization - Identify users with admin role
  */
 const admin = (req, res, next) => {
   if (req.user && req.user.role === 'admin') {
@@ -58,10 +57,11 @@ const admin = (req, res, next) => {
 };
 
 /**
- * @desc    අනුමත වූ (Approved) Vendor කෙනෙක් දැයි පරීක්ෂා කිරීම
+ * @desc    Vendor authorization - Check for approved vendor status
  */
 const vendor = (req, res, next) => {
   if (req.user && (req.user.role === 'vendor' || req.user.role === 'admin')) {
+    // If user is a vendor, check if they are admin-approved
     if (req.user.role === 'vendor' && !req.user.isApproved) {
       res.status(403);
       throw new Error('Vendor account not approved by admin yet');

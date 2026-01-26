@@ -4,13 +4,13 @@ import axios from 'axios';
 const CurrencyContext = createContext();
 
 export const CurrencyProvider = ({ children }) => {
-  // ආරම්භක මුදල් ඒකකය LKR ලෙස සකසා ඇත
+  // Initial currency set to LKR
   const [currency, setCurrency] = useState('LKR');
   
-  // මුලින්ම පෙන්වීමට default rates කිහිපයක් (API එක load වන තෙක්)
+  // Default rates to show initially (until the API loads)
   const [rates, setRates] = useState({ LKR: 1, USD: 0.0033, EUR: 0.0031 });
 
-  // ✅ Navbar එකේ පෙන්වීමට අවශ්‍ය කොඩි (Flags) URL මෙහි ඇතුළත් වේ
+  // ✅ Flag URLs to be displayed in the Navbar are included here
   const flags = {
     LKR: "https://flagcdn.com/w40/lk.png",
     USD: "https://flagcdn.com/w40/us.png",
@@ -18,7 +18,7 @@ export const CurrencyProvider = ({ children }) => {
   };
 
   /**
-   * සැබෑ කාලීන (Real-time) විදේශ විනිමය අනුපාත ලබා ගැනීම
+   * Fetch real-time foreign exchange rates
    */
   useEffect(() => {
     const fetchRates = async () => {
@@ -35,17 +35,17 @@ export const CurrencyProvider = ({ children }) => {
   }, []);
 
   /**
-   * 💰 ඕනෑම LKR මිලක් තෝරාගත් මුදල් ඒකකයට පරිවර්තනය කර Format කරන Function එක
+   * 💰 Function to convert any LKR price to the selected currency and format it
    */
   const formatPrice = (lkrAmount) => {
     if (!lkrAmount) return "Rs. 0";
     
     const converted = lkrAmount * (rates[currency] || 1);
     
-    // මුදල් ඒකකයට අදාළ සංකේතය (Symbol) තේරීම
+    // Selecting the relevant symbol for the currency
     const symbol = currency === 'LKR' ? 'Rs.' : currency === 'USD' ? '$' : '€';
     
-    // දශමස්ථාන රහිතව (හෝ අවශ්‍ය නම් පමණක් දශමස්ථාන සහිතව) පෙන්වීම
+    // Displaying without decimal places (or with decimals only if necessary)
     return `${symbol} ${converted.toLocaleString(undefined, { 
       maximumFractionDigits: 0 
     })}`;
@@ -58,7 +58,7 @@ export const CurrencyProvider = ({ children }) => {
   );
 };
 
-// පහසුවෙන් භාවිතා කිරීමට Custom Hook එකක්
+// Custom Hook for easy usage
 export const useCurrency = () => {
   const context = useContext(CurrencyContext);
   if (!context) {

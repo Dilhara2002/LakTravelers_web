@@ -8,14 +8,14 @@ const VehicleList = () => {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     
-    // 1. පරිශීලක තොරතුරු ආරක්ෂිතව ලබා ගැනීම
+    // 1. Securely retrieve user information from localStorage
     const [user, setUser] = useState(() => {
         const savedUser = localStorage.getItem("userInfo");
         return savedUser ? JSON.parse(savedUser) : null;
     });
 
     /**
-     * පද්ධතියේ ඇති සියලුම වාහන ලැයිස්තුව ලබා ගැනීම
+     * Fetch the complete list of available vehicles from the system
      */
     const fetchVehicles = async () => {
         try {
@@ -33,12 +33,12 @@ const VehicleList = () => {
     }, []);
 
     /**
-     * වාහනයක් පද්ධතියෙන් ඉවත් කිරීම (Delete)
+     * Remove a vehicle from the system (Delete Handler)
      */
     const handleDelete = async (id) => {
         if (window.confirm("Are you sure you want to delete this vehicle? 🗑️")) {
             try {
-                // API instance එක භාවිතා කිරීමෙන් Cookies (JWT) ස්වයංක්‍රීයව යැවේ
+                // Using the API instance ensures JWT cookies are sent automatically
                 await API.delete(`/vehicles/${id}`);
                 setVehicles(vehicles.filter((v) => v._id !== id));
                 alert("Vehicle removed successfully! ✅");
@@ -50,7 +50,7 @@ const VehicleList = () => {
     };
 
     /**
-     * සෙවුම් යන්ත්‍රය (Filter Logic)
+     * Search engine logic (Filter by model or type)
      */
     const filteredVehicles = vehicles.filter((vehicle) =>
         vehicle.vehicleModel.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -58,7 +58,7 @@ const VehicleList = () => {
     );
 
     /**
-     * දත්ත Load වන තෙක් පෙන්වන Skeleton Card එක
+     * Skeleton Card component displayed while data is loading
      */
     const SkeletonCard = () => (
         <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-4 animate-pulse">
@@ -72,7 +72,7 @@ const VehicleList = () => {
         <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 mt-12">
             <div className="max-w-7xl mx-auto">
 
-                {/* 1. HEADER SECTION */}
+                {/* --- 1. HEADER SECTION --- */}
                 <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-10">
                     <div>
                         <h1 className="text-4xl font-black text-gray-900 tracking-tight">
@@ -83,7 +83,7 @@ const VehicleList = () => {
                         </p>
                     </div>
 
-                    {/* Register Vehicle Button (Vendor/Admin සඳහා පමණි) */}
+                    {/* Register Vehicle Button (Accessible to Vendors and Admins only) */}
                     {user && (user.role === 'vendor' || user.role === 'admin') && (
                         <Link
                             to="/add-vehicle"
@@ -97,7 +97,7 @@ const VehicleList = () => {
                     )}
                 </div>
 
-                {/* 2. SEARCH BAR */}
+                {/* --- 2. SEARCH BAR --- */}
                 <div className="relative mb-12 max-w-2xl">
                     <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
                         <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -113,13 +113,13 @@ const VehicleList = () => {
                     />
                 </div>
 
-                {/* 3. VEHICLES GRID */}
+                {/* --- 3. VEHICLES GRID --- */}
                 {loading ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                         {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => <SkeletonCard key={n} />)}
                     </div>
                 ) : filteredVehicles.length === 0 ? (
-                    // Empty State
+                    // Empty State UI
                     <div className="text-center py-24 bg-white rounded-[2rem] border border-dashed border-gray-200 shadow-inner">
                         <div className="inline-block p-6 rounded-full bg-gray-50 mb-6 text-5xl">
                             🚙

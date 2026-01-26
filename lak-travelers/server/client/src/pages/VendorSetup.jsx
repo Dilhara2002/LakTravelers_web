@@ -36,7 +36,7 @@ const VendorSetup = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPending, setIsPending] = useState(false);
 
-  // 🔐 Authorization Guard
+  // 🔐 Authorization Guard to protect the route
   useEffect(() => {
     if (!user) {
       navigate("/login");
@@ -52,7 +52,7 @@ const VendorSetup = () => {
   };
 
   /**
-   * 🖼️ ලේඛන Cloudinary වෙත උඩුගත කිරීම
+   * 🖼️ Upload documents to Cloudinary via the Backend
    */
   const handleFileUpload = async (file, fieldName) => {
     if (!file) return;
@@ -68,7 +68,7 @@ const VendorSetup = () => {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
-      // ✅ නිවැරදි කිරීම: Backend එකෙන් image path එක ලබාගැනීම
+      // ✅ Extraction: Retrieve the image path from the server response
       const imagePath = res.data?.image || res.data;
       
       if (!imagePath) {
@@ -85,19 +85,17 @@ const VendorSetup = () => {
   };
 
   /**
-   * 🚀 Vendor Profile එක Submit කිරීම
+   * 🚀 Submit the complete Vendor Profile for verification
    */
   const handleSubmit = async (e) => {
   e.preventDefault();
   
-  // Validation (පවතින ඒවා එලෙසම තබන්න)
   if (!formData.profileImage) { alert("Profile Image is required!"); return; }
-  // ... අනෙකුත් validations ...
 
   setIsSubmitting(true);
 
   try {
-    // 💡 Backend එක දත්ත බලාපොරොත්තු වන ආකාරයට structure එක සකස් කිරීම
+    // 💡 Structure the payload to match the backend expectations
     const payload = {
       businessName: formData.businessName,
       address: formData.address,
@@ -105,7 +103,6 @@ const VendorSetup = () => {
       serviceType: formData.serviceType,
       registrationNumber: formData.registrationNumber,
       description: formData.description,
-      // අනෙකුත් සියලුම fields මෙහි ඇතුළත් කරන්න
       hotelStarRating: formData.hotelStarRating,
       vehicleFleetSize: formData.vehicleFleetSize,
       guideLanguages: formData.guideLanguages,
@@ -115,17 +112,16 @@ const VendorSetup = () => {
       idBack: formData.idBack
     };
 
-    // Payload එක යැවීම
     const response = await API.put("/users/vendor-profile", payload);
     const data = response.data;
     
-    // ... ඉතිරි කේතය (localStorage update කිරීම ආදිය) ...
     if (data) {
         alert("Application submitted successfully! ✅");
         setIsPending(true);
     }
   } catch (error) {
-    // Error handling...
+    console.error("Submission Error:", error);
+    alert("Submission failed. Please check all fields.");
   } finally {
     setIsSubmitting(false);
   }
@@ -163,7 +159,7 @@ const VendorSetup = () => {
 
         <form onSubmit={handleSubmit} className="p-8 space-y-8">
           
-          {/* 1. SERVICE TYPE */}
+          {/* 1. SERVICE TYPE SELECTION */}
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wider">Select Service Category</label>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -184,7 +180,7 @@ const VendorSetup = () => {
             </div>
           </div>
 
-          {/* 2. BUSINESS DETAILS */}
+          {/* 2. CORE BUSINESS DETAILS */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="col-span-2">
               <label className="block text-sm font-bold text-gray-700 mb-1">Business Name</label>
@@ -200,7 +196,7 @@ const VendorSetup = () => {
             </div>
           </div>
 
-          {/* 3. DYNAMIC FIELDS */}
+          {/* 3. SERVICE-SPECIFIC DYNAMIC FIELDS */}
           <div className="bg-blue-50/50 p-6 rounded-2xl border border-blue-100">
             <h3 className="text-sm font-bold text-blue-900 uppercase tracking-wider mb-4 border-b border-blue-100 pb-2">
               Service Specifics
@@ -257,7 +253,7 @@ const VendorSetup = () => {
             </div>
           </div>
 
-          {/* 4. IDENTITY VERIFICATION */}
+          {/* 4. IDENTITY VERIFICATION DOCUMENTS */}
           <div className="space-y-6">
             <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-2 border-b border-gray-100 pb-2">Identity Verification</h3>
             
@@ -316,24 +312,21 @@ const VendorSetup = () => {
   );
 };
 
-// ✅ SINGLE CORRECTED UploadBox Component
+// ✅ UploadBox Component to handle image display and file input
 const UploadBox = ({ label, image, loading, onUpload }) => {
     const getImageUrl = (path) => {
         if (!path || typeof path !== 'string') return null;
         
-        // Cloudinary URL (starts with http) නම් direct return කරන්න
+        // Return directly if it's a Cloudinary URL (starts with http)
         if (path.startsWith('http')) {
           return path;
         }
         
-        // Local file path නම්, backend URL එක සමඟ combine කරන්න
-        // Cloudinary වලින් direct URL එක ලැබෙන නිසා මෙය අවශ්‍ය නොවිය හැක
-        // නමුත් ආරක්ෂිතව සෑදීම සඳහා
+        // If it's a local file path, combine it with the backend URL
         const backendURL = import.meta.env.VITE_API_URL 
           ? import.meta.env.VITE_API_URL.replace('/api', '') 
           : 'http://localhost:5001';
         
-        // Path එක /uploads/... වගේ නම් combine කරන්න
         if (path.startsWith('/')) {
           return `${backendURL}${path}`;
         }

@@ -5,7 +5,7 @@ const LanguageSwitcher = () => {
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    // Google Translate Initialize කිරීම
+    // Initialize Google Translate
     if (!window.googleTranslateElementInit) {
       window.googleTranslateElementInit = () => {
         new window.google.translate.TranslateElement(
@@ -26,7 +26,7 @@ const LanguageSwitcher = () => {
       document.body.appendChild(addScript);
     }
 
-    // මෙනුවෙන් පිටත ක්ලික් කළහොත් මෙනුව වසා දැමීමට
+    // Close the menu if a click occurs outside of it
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsOpen(false);
@@ -57,7 +57,7 @@ const LanguageSwitcher = () => {
         </svg>
       </button>
 
-      {/* Dropdown Menu - බටන් එක ක්ලික් කළ විට පමණක් පෙන්වයි */}
+      {/* Dropdown Menu - Only displayed when the button is clicked */}
       <div
         className={`absolute right-0 z-[9999] mt-3 min-w-[240px] origin-top-right rounded-2xl border border-gray-100 bg-white p-5 shadow-2xl transition-all duration-300 ${
           isOpen ? "opacity-100 translate-y-0 visible" : "opacity-0 -translate-y-2 invisible"
@@ -67,7 +67,7 @@ const LanguageSwitcher = () => {
           Select Your Language
         </p>
         
-        {/* Google dropdown එක පෙන්වන ස්ථානය */}
+        {/* Location where the Google dropdown is displayed */}
         <div id="google_translate_element" className="custom-google-box"></div>
       </div>
     </div>

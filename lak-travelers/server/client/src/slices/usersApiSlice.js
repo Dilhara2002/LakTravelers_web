@@ -10,7 +10,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     
-    // ✅ මේ කොටස අලුතින් එකතු කරන්න
+    // ✅ Add this section for OTP handling
     sendOtp: builder.mutation({
       query: (data) => ({
         url: `${USERS_URL}/send-otp`,
@@ -27,14 +27,14 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     
-    // ... අනෙකුත් endpoints
+    // ... other endpoints
   }),
 });
 
-// ✅ පල්ලෙහා මේක Export කරන්නත් අමතක කරන්න එපා
+// ✅ Ensure these are exported for use in your components
 export const { 
   useLoginMutation, 
-  useSendOtpMutation, // 👈 මේක Register.jsx එකේදී පාවිච්චි කරනවා
+  useSendOtpMutation, // 👈 This is used in Register.jsx
   useRegisterMutation,
   // ...
 } = usersApiSlice;

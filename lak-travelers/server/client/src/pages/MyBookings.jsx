@@ -12,7 +12,7 @@ const MyBookings = () => {
   const [activeTab, setActiveTab] = useState('bookings'); 
   const [loading, setLoading] = useState(true);
 
-  // 1. සාමාන්‍ය Bookings ලබා ගැනීම
+  // 1. Fetch Standard Reservations
   const fetchMyBookings = async () => {
     try {
       const { data } = await API.get('/bookings/mybookings');
@@ -22,7 +22,7 @@ const MyBookings = () => {
     }
   };
 
-  // 2. Save කළ AI Itineraries ලබා ගැනීම
+  // 2. Fetch Saved AI Itineraries
   const fetchMyPlans = async () => {
     try {
       const { data } = await API.get('/ai/my-plans'); 
@@ -41,22 +41,22 @@ const MyBookings = () => {
     loadAllData();
   }, []);
 
-  // ✅ සැලසුමක් මකා දැමීම (Delete Plan)
+  // ✅ Delete Plan Logic
   const handleDeletePlan = async (id) => {
     if (window.confirm("Are you sure you want to delete this saved plan?")) {
       try {
         await API.delete(`/ai/plan/${id}`);
         toast.success("Plan deleted successfully!");
-        fetchMyPlans(); // ලැයිස්තුව යාවත්කාලීන කිරීම
+        fetchMyPlans(); // Refresh the list
       } catch (error) {
         toast.error("Failed to delete plan.");
       }
     }
   };
 
-  // ✅ සැලසුම නැවත SmartPlanner එකේ පෙන්වීම (View Logic)
+  // ✅ View Plan in SmartPlanner Logic
   const handleViewPlan = (plan) => {
-    // දත්ත localStorage එකේ තැන්පත් කිරීම
+    // Store data in localStorage to persist across navigation
     localStorage.setItem("plannerForm", JSON.stringify({
       location: plan.location,
       duration: plan.duration,
@@ -65,7 +65,7 @@ const MyBookings = () => {
     }));
     localStorage.setItem("plannerResult", plan.itinerary);
     
-    // Smart Planner පිටුවට රැගෙන යාම
+    // Redirect to the Smart Planner page
     navigate('/smart-planner');
   };
 
@@ -200,7 +200,7 @@ const MyBookings = () => {
               {aiPlans.map((plan) => (
                 <div key={plan._id} className="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm hover:shadow-xl transition-all relative group">
                   
-                  {/* 🗑️ Delete Button */}
+                  {/* 🗑️ Delete Plan Button */}
                   <button 
                     onClick={() => handleDeletePlan(plan._id)}
                     className="absolute top-8 right-8 text-slate-300 hover:text-rose-500 transition-colors"

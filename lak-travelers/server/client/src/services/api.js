@@ -1,21 +1,21 @@
 import axios from 'axios';
 
 /**
- * 🚀 API URL එක ස්වයංක්‍රීයව තීරණය කිරීම
+ * 🚀 Automatically determine the Base API URL
  */
 const getBaseURL = () => {
-  // 1. .env ගොනුවේ VITE_API_URL එකක් ඇත්නම් එය භාවිතා කරයි
+  // 1. Use VITE_API_URL if it exists in the .env file
   if (import.meta.env.VITE_API_URL) {
     const url = import.meta.env.VITE_API_URL;
     return url.endsWith('/api') ? url : `${url}/api`;
   }
   
-  // 2. ඔබ localhost හි වැඩ කරන්නේ නම් 5001 ට සම්බන්ධ වේ
+  // 2. Default to localhost port 5001 if working locally
   if (window.location.hostname === "localhost") {
     return "http://localhost:5001/api";
   }
 
-  // 3. ඔබගේ නිවැරදි Render Backend URL එක (Vercel නොව Render විය යුතුය)
+  // 3. Production Backend URL on Render
   return "https://lak-travelers-api.onrender.com/api"; 
 };
 
@@ -27,7 +27,7 @@ const API = axios.create({
   },
 });
 
-// ✅ Request Interceptor: Token එක Header එකට එකතු කිරීම
+// ✅ Request Interceptor: Attach the JWT Token to the Authorization Header
 API.interceptors.request.use(
   (config) => {
     const userInfo = localStorage.getItem('userInfo');
@@ -46,14 +46,14 @@ API.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// ✅ Response Interceptor: Error හසුරුවා ගැනීම
+// ✅ Response Interceptor: Global Error Handling
 API.interceptors.response.use(
   (response) => response,
   (error) => {
     const message = error.response?.data?.message || error.message;
     console.error('API Error Response:', message);
     
-    // 401 Unauthorized නම් Logout කර Login පිටුවට යැවීම
+    // If status is 401 Unauthorized, logout the user and redirect to Login
     if (error.response?.status === 401) {
       localStorage.removeItem('userInfo');
       if (window.location.pathname !== '/login') {

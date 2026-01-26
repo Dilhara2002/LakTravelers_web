@@ -6,13 +6,14 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: [true, 'Please add an email'], unique: true, lowercase: true },
     password: { type: String, required: [true, 'Please add a password'], minlength: 6 },
     role: { type: String, enum: ['user', 'vendor', 'admin', 'super-admin'], default: 'user' },
+    // Vendors are set to false by default until admin approval
     isApproved: { type: Boolean, default: true },
     
-    // Vendor Details Schema යාවත්කාලීන කිරීම
+    // Vendor Details Schema - Updated to sync with Controller logic
     vendorDetails: {
       businessName: { type: String, default: "" },
-      businessAddress: { type: String, default: "" }, // Controller එකට ගැලපෙන ලෙස වෙනස් කළා
-      businessPhone: { type: String, default: "" },   // Controller එකට ගැලපෙන ලෙස වෙනස් කළා
+      businessAddress: { type: String, default: "" }, 
+      businessPhone: { type: String, default: "" },   
       serviceType: { type: String, enum: ['hotel', 'vehicle', 'tour', 'none'], default: 'none' },
       registrationNumber: { type: String, default: "" },
       description: { type: String, default: "" },
@@ -33,10 +34,10 @@ const userSchema = new mongoose.Schema({
 
 /**
  * 🔐 Password Hashing Middleware
- * FIXED: 'next' ඉවත් කර async/await පමණක් භාවිතා කරන ලදී.
+ * Automatically hashes the password before saving to the database.
  */
 userSchema.pre('save', async function () {
-  // Password එක වෙනස් වී නොමැති නම් පමණක් ඉදිරියට යන්න
+  // Only hash the password if it has been modified (or is new)
   if (!this.isModified('password')) {
     return; 
   }
@@ -46,11 +47,13 @@ userSchema.pre('save', async function () {
 });
 
 /**
- * 🔑 Password එක Compare කරන ශ්‍රිතය
+ * 🔑 Instance method to compare entered password with hashed password
  */
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
+// Check if the model already exists to prevent OverwriteModelError in development
 const User = mongoose.models.User || mongoose.model("User", userSchema);
+
 export default User;

@@ -6,7 +6,7 @@ import html2pdf from "html2pdf.js";
 import { toast } from 'react-toastify';
 
 const SmartPlanner = () => {
-    // 1. Initial State එක localStorage එකෙන් ලබා ගැනීම
+    // 1. Initialize State from localStorage to persist data
     const [formData, setFormData] = useState(() => {
         const savedForm = localStorage.getItem("plannerForm");
         return savedForm ? JSON.parse(savedForm) : {
@@ -24,7 +24,7 @@ const SmartPlanner = () => {
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
 
-    // 2. දත්ත වෙනස් වන විට ඒවා localStorage එකේ Save කිරීම
+    // 2. Persist form and itinerary data whenever they change
     useEffect(() => {
         localStorage.setItem("plannerForm", JSON.stringify(formData));
     }, [formData]);
@@ -59,7 +59,7 @@ const SmartPlanner = () => {
         }
     };
 
-    // ✅ සැලසුම Database එකට Save කිරීම
+    // ✅ Save the generated plan to the Database
     const handleSavePlan = async () => {
         const userInfoString = localStorage.getItem('userInfo');
         if (!userInfoString) {
@@ -109,12 +109,12 @@ const SmartPlanner = () => {
         }
     };
 
-    // ✅ 🤖 CCTNS: Cognitive Nudging & Trust Modeling Logic
+    // ✅ 🤖 CCTNS: Cognitive Nudging & Trust Modeling UI Logic
     const MarkdownComponents = {
         p: ({ children }) => {
             const content = React.Children.toArray(children).join("");
             
-            // MongoDB ID එකක් ඇත්දැයි බැලීම
+            // Check for a valid MongoDB ObjectID
             const idRegex = /([0-9a-fA-F]{24})/;
             const match = content.match(idRegex);
 
@@ -127,7 +127,7 @@ const SmartPlanner = () => {
 
                 return (
                     <div className="my-8 p-6 bg-white rounded-[2rem] border border-slate-100 shadow-xl shadow-slate-200/50 hover:scale-[1.01] transition-transform duration-300">
-                        {/* CCTNS Pillar: Community Experience Sharing Label */}
+                        {/* CCTNS Pillar: Trust Label for Community Verified Data */}
                         <div className="flex items-center gap-2 mb-3">
                             <span className="bg-emerald-100 text-emerald-600 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter">🛡️ Community Verified & Recalibrated</span>
                         </div>
@@ -151,7 +151,7 @@ const SmartPlanner = () => {
             }
             return <p className="mb-6 leading-relaxed text-slate-600 font-medium">{children}</p>;
         },
-        // ✅ CCTNS Pillar: Cognitive Nudging (Active Suggestions/Warnings)
+        // ✅ CCTNS Pillar: Cognitive Nudging (Suggestions and AI Insights)
         blockquote: ({ children }) => (
             <div className="bg-gradient-to-br from-orange-50 to-amber-50 border-l-8 border-orange-500 p-8 my-10 rounded-3xl shadow-xl shadow-orange-100/50 relative overflow-hidden group">
                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:rotate-12 transition-transform duration-500 text-6xl">💡</div>
@@ -204,7 +204,7 @@ const SmartPlanner = () => {
 
     return (
         <div className="min-h-screen bg-[#f8fafc] font-sans text-slate-900 selection:bg-orange-100">
-            {/* --- MODERN HERO --- */}
+            {/* --- MODERN HERO SECTION --- */}
             <div className="relative h-[550px] flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 z-0">
                     <img
@@ -231,7 +231,7 @@ const SmartPlanner = () => {
             <div className="max-w-7xl mx-auto px-6 -mt-32 relative z-30 pb-20">
                 <div className="grid lg:grid-cols-12 gap-8">
 
-                    {/* --- 🖋️ PREMIUM INPUT PANEL --- */}
+                    {/* --- 🖋️ INPUT PANEL --- */}
                     <div className="lg:col-span-4">
                         <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.05)] overflow-hidden sticky top-28">
                             <div className="bg-slate-900 px-8 py-6 flex justify-between items-center">
@@ -272,7 +272,7 @@ const SmartPlanner = () => {
                         </div>
                     </div>
 
-                    {/* --- RIGHT: RESULT PANEL --- */}
+                    {/* --- RIGHT: ITINERARY RESULT PANEL --- */}
                     <div className="lg:col-span-8">
                         {itinerary ? (
                             <div className="space-y-8 animate-in fade-in slide-in-from-bottom-10 duration-1000">
@@ -312,9 +312,9 @@ const SmartPlanner = () => {
                 </div>
             </div>
 
-            {/* --- 📄 PDF TEMPLATE (STAY HIDDEN) --- */}
+            {/* --- 📄 HIDDEN PDF TEMPLATE --- */}
             <div id="printable-pdf-area" style={{ display: 'none', padding: '50px', backgroundColor: 'white' }}>
-                <div style={{ borderBottom: '5px solid #10b981', paddingBottom: '30px', marginBottom: '40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ borderBottom: '5px solid #10b981', paddingBottom: '30px', marginBottom: '40px', display: 'flex', justifycontent: 'space-between', alignItems: 'center' }}>
                     <div>
                         <h1 style={{ margin: 0, fontSize: '42px', fontWeight: '900', color: '#064e3b' }}>LAK TRAVELERS</h1>
                         <p style={{ margin: 0, fontSize: '14px', color: '#059669', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: '2px' }}>CCTNS Trusted Travel Framework</p>

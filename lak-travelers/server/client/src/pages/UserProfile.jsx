@@ -35,7 +35,7 @@ const UserProfile = () => {
     fetchUserData();
   }, [navigate]);
 
-  // පින්තූරය ස්ථිරවම සේව් වීමට Base64 ලෙස පරිවර්තනය කිරීම
+  // Convert image to Base64 to ensure it saves permanently as a string
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -108,7 +108,7 @@ const UserProfile = () => {
     <div className="min-h-screen bg-white py-24 px-6 font-sans antialiased text-slate-900">
       <div className="max-w-5xl mx-auto">
         
-        {/* Top Breadcrumb Style Header */}
+        {/* Top Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 border-b border-slate-100 pb-8 gap-6">
           <div>
             <h1 className="text-3xl font-light tracking-tight text-slate-900">Account <span className="font-bold">Settings</span></h1>

@@ -1,17 +1,17 @@
 import jwt from 'jsonwebtoken';
 
 /**
- * @desc    JWT ටෝකනය සාදා එය HTTP-Only Cookie එකක් ලෙස යැවීම සහ ටෝකනය return කිරීම
+ * @desc    Generate a JWT token, set it as an HTTP-Only Cookie, and return the token
  * @param   {Object} res - Express response object
- * @param   {String} userId - පරිශීලකයාගේ MongoDB ID එක
- * @param   {String} role - පරිශීලක role (optional, අඩුපාඩු නම් default ලෙස 'user')
+ * @param   {String} userId - User's MongoDB ObjectID
+ * @param   {String} role - User role (defaults to 'user')
  */
 const generateToken = (res, userId, role = 'user') => {
   if (!process.env.JWT_SECRET) {
     throw new Error('JWT_SECRET environment variable is not defined');
   }
 
-  // 1. ටෝකනය නිර්මාණය කිරීම (Payload එක ලෙස userId සහ role)
+  // 1. Create the token (Payload includes userId and role)
   const tokenPayload = { 
     userId, 
     role 
@@ -23,47 +23,47 @@ const generateToken = (res, userId, role = 'user') => {
     audience: 'lak-travelers-client'
   });
 
-  // 2. Cookie එකක් ලෙස Client (Browser) වෙත යැවීම
+  // 2. Set as an HTTP-Only Cookie for the Client (Browser)
   const isProduction = process.env.NODE_ENV === 'production';
   const isDevelopment = process.env.NODE_ENV === 'development';
   
-  // Vercel + Render.com deployment සඳහා සුදුසු cookie settings
+  // Cookie settings optimized for Vercel + Render.com deployments
   const cookieOptions = {
     httpOnly: true,    
-    secure: isProduction, // Production එකේදී true, development එකේදී false
-    sameSite: isProduction ? 'none' : 'lax', // Cross-site cookies සඳහා 'none' required
+    secure: isProduction, // True in production, false in development
+    sameSite: isProduction ? 'none' : 'lax', // 'none' is required for cross-site cookies
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     path: '/',
-    // Domain setting - Render.com backend සහ Vercel frontend සඳහා
-    domain: isProduction ? '.onrender.com' : undefined, // Adjust based on your domain
+    // Domain setting - adjust based on your production URL structure
+    domain: isProduction ? '.onrender.com' : undefined, 
   };
 
-  // Development mode එකේදී localhost තුළ වැඩ කිරීමට
+  // Adjustments for local development on localhost
   if (isDevelopment) {
     cookieOptions.secure = false;
     cookieOptions.sameSite = 'lax';
   }
 
-  // Cookie set කිරීම
+  // Set the primary secure JWT cookie
   res.cookie('jwt', token, cookieOptions);
 
-  // 3. Additional cookie for client-side access (අවශ්‍ය නම්)
-  // Frontend එකට token එක access කිරීමට අවශ්‍ය නම්
+  // 3. Set an additional cookie for client-side access (Optional)
+  // Used if the frontend needs to check for token existence without reading the payload
   res.cookie('auth_token', token, {
-    httpOnly: false, // Client-side access සඳහා
+    httpOnly: false, // Accessible via client-side JavaScript
     secure: isProduction,
     sameSite: isProduction ? 'none' : 'lax',
     maxAge: 30 * 24 * 60 * 60 * 1000,
     path: '/',
   });
 
-  // ✅ ටෝකනය return කිරීම (axios/fetch requests සඳහා)
+  // Return the token for axios/fetch header usage
   return token; 
 };
 
 /**
- * @desc    JWT ටෝකනය verify කිරීම
- * @param   {String} token - JWT token
+ * @desc    Verify a JWT token
+ * @param   {String} token - JWT token string
  * @returns {Object} - Decoded token payload
  */
 export const verifyToken = (token) => {
@@ -76,7 +76,7 @@ export const verifyToken = (token) => {
   } catch (error) {
     console.error('Token verification failed:', error.message);
     
-    // Specific error types
+    // Specific JWT error handling
     if (error.name === 'TokenExpiredError') {
       throw new Error('Token has expired');
     }
@@ -89,7 +89,7 @@ export const verifyToken = (token) => {
 };
 
 /**
- * @desc    Clear authentication cookies
+ * @desc    Clear authentication cookies on logout
  * @param   {Object} res - Express response object
  */
 export const clearAuthCookies = (res) => {
@@ -100,10 +100,10 @@ export const clearAuthCookies = (res) => {
     secure: isProduction,
     sameSite: isProduction ? 'none' : 'lax',
     path: '/',
-    expires: new Date(0),
+    expires: new Date(0), // Sets expiration to the past to delete the cookie
   };
 
-  // Clear both cookies
+  // Clear both auth-related cookies
   res.cookie('jwt', '', cookieOptions);
   res.cookie('auth_token', '', {
     ...cookieOptions,

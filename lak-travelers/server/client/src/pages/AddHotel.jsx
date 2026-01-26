@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import API from '../services/api'; // අපි සාදාගත් API service එක භාවිතා කරමු
+import API from '../services/api'; // Use our pre-configured API service
 import logoImage from "../assets/logo.png"; 
 
 const AddHotel = () => {
@@ -19,7 +19,7 @@ const AddHotel = () => {
   const [preview, setPreview] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
 
-  // 🔐 Authorization check (පරිශීලකයා ලොග් වී ඇත්දැයි බැලීම)
+  // 🔐 Authorization check (Verify if the user is logged in and authorized)
   const user = JSON.parse(localStorage.getItem('userInfo'));
 
   useEffect(() => {
@@ -35,12 +35,12 @@ const AddHotel = () => {
   };
 
   /**
-   * 🖼️ පින්තූරය Cloudinary වෙත උඩුගත කිරීම
+   * 🖼️ Upload image to Cloudinary
    */
   const handleFileUpload = async (file) => {
     if (!file) return;
     
-    // Preview එක පෙන්වීම
+    // Show local preview
     setPreview(URL.createObjectURL(file));
     setUploading(true);
 
@@ -48,13 +48,13 @@ const AddHotel = () => {
     data.append('image', file);
 
     try {
-      // අපි Backend එකේ සකස් කළ /api/upload route එකට දත්ත යවයි
-      // මෙහිදී 'API' භාවිතා කිරීමෙන් CORS ගැටලුව මගහැරේ
+      // Sends data to the /api/upload route configured in the Backend
+      // Using the 'API' instance avoids CORS issues
       const res = await API.post('/upload', data, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       
-      // Cloudinary මගින් ලැබෙන URL එක formData එකට එකතු කරයි
+      // Updates formData with the URL returned from Cloudinary
       setFormData((prev) => ({ ...prev, image: res.data.image }));
       alert('Image uploaded successfully! ✅');
     } catch (error) {
@@ -81,14 +81,14 @@ const AddHotel = () => {
   };
 
   /**
-   * 🏨 හෝටල් තොරතුරු සේවාදායකයට (Server) යැවීම
+   * 🏨 Submit hotel details to the Server
    */
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.image) return alert('Property image is required.');
 
     try {
-      // Backend එකේ /api/hotels route එකට දත්ත යවයි
+      // Sends data to the /api/hotels route in the Backend
       await API.post('/hotels', formData);
       alert('Hotel Added Successfully! 🏨');
       navigate('/hotels');

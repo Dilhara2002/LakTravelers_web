@@ -44,7 +44,7 @@ export const createBooking = asyncHandler(async (req, res) => {
     checkInDate, checkOutDate, 
     tourDate, pickupDate, 
     totalPrice,
-    paymentMethod // Frontend එකෙන් එවන්න: 'pay_on_arrival' හෝ 'online_payment'
+    paymentMethod 
   } = req.body;
 
   if (!totalPrice) {
@@ -63,7 +63,7 @@ export const createBooking = asyncHandler(async (req, res) => {
     pickupDate,
     totalPrice,
     status: 'pending',
-    // ✅ Reserve Now, Pay Later සඳහා එක් කළ කොටස
+    // ✅ Reserve Now, Pay Later 
     paymentMethod: paymentMethod || 'pay_on_arrival',
     paymentStatus: paymentMethod === 'online_payment' ? 'paid' : 'unpaid'
   });
@@ -81,7 +81,7 @@ export const updateBookingStatus = asyncHandler(async (req, res) => {
 
   if (booking) {
     if (status) booking.status = status.toLowerCase();
-    // Vendor හට ගෙවීම් තත්ත්වය (Paid/Unpaid) මෙතනින් යාවත්කාලීන කළ හැක
+    // (Paid/Unpaid) 
     if (paymentStatus) booking.paymentStatus = paymentStatus.toLowerCase();
     
     const updatedBooking = await booking.save();

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../services/api";
-import loginImage from "../assets/Login.jpg"; // ඔබේ ලොගින් පින්තූරය
+import loginImage from "../assets/Login.jpg"; 
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -9,7 +9,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // පිටුව පූරණය වූ විගස මුදුනට Scroll කිරීම
+  // Scroll to the top of the page immediately upon loading
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -116,7 +116,7 @@ const Login = () => {
           </div>
         </div>
 
-        {/* RIGHT: IMAGE SECTION (Register හා සමාන ලෙස) */}
+        {/* RIGHT: IMAGE SECTION (Matches the Registration design) */}
         <div className="hidden md:block w-1/2 relative">
           <img
             src={loginImage}

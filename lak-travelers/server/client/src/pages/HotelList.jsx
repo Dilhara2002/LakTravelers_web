@@ -9,7 +9,7 @@ const HotelList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
 
-  // 🔐 පරිශීලක තොරතුරු ලබා ගැනීම (Memoized to prevent unnecessary re-renders)
+  // 🔐 Retrieve user info (Memoized to prevent unnecessary re-renders)
   const user = useMemo(() => {
     try {
       const savedUser = localStorage.getItem("userInfo");
@@ -20,7 +20,7 @@ const HotelList = () => {
   }, []);
 
   /**
-   * 📡 පද්ධතියේ ඇති සියලුම හෝටල් ලබා ගැනීම
+   * 📡 Fetch all hotels from the system
    */
   useEffect(() => {
     const fetchHotels = async () => {
@@ -40,7 +40,7 @@ const HotelList = () => {
   }, []);
 
   /**
-   * 🗑️ හෝටලයක් මකා දැමීම (Delete Handler)
+   * 🗑️ Delete Handler for removing a hotel listing
    */
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this hotel? 🗑️")) return;
@@ -56,7 +56,7 @@ const HotelList = () => {
   };
 
   /**
-   * 🔍 සෙවුම් පුවරුවට අනුව දත්ත පෙරීම (Filtered Hotels)
+   * 🔍 Filter hotels based on the search term
    */
   const filteredHotels = useMemo(() => {
     return hotels.filter((hotel) =>
@@ -66,7 +66,7 @@ const HotelList = () => {
   }, [hotels, searchTerm]);
 
   /**
-   * 🦴 Skeleton Loader UI
+   * 🦴 Skeleton Loader UI for better UX during loading
    */
   const SkeletonCard = () => (
     <div className="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 p-4 animate-pulse">

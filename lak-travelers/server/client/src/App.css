@@ -1,4 +1,4 @@
-/* Google Translate විජට් එකේ අනවශ්‍ය කොටස් සැඟවීම */
+/* Hide unnecessary parts of the Google Translate widget */
 .goog-te-gadget span, 
 .goog-te-gadget .goog-logo-link,
 .goog-te-banner-frame.skiptranslate,
@@ -12,18 +12,18 @@
     font-size: 0 !important;
 }
 
-/* Dropdown එක තුළ භාෂා ලැයිස්තුවේ පෙනුම */
+/* Style for the language selection dropdown list */
 .goog-te-combo {
     @apply w-full rounded-lg border border-gray-200 bg-white p-2 text-sm font-medium text-gray-700 outline-none focus:ring-2 focus:ring-blue-500;
 }
 
-/* Page එක ඉහළට තල්ලු වීම වැළැක්වීම */
+/* Prevent the page from shifting upwards when the widget loads */
 body {
     top: 0 !important;
     position: static !important;
 }
 
-/* Navbar එකේ මෙනුව ක්ලික් කළ විට පෙන්වන dropdown එකේ උස පාලනය */
+/* Control the height and scrolling of the dropdown container in the Navbar */
 .google-translate-container {
     max-height: 300px;
     overflow-y: auto;

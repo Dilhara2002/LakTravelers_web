@@ -40,7 +40,7 @@ const Navbar = () => {
     setIsMobileMenuOpen(false);
   };
 
-  // මෙනු අයිතම ලැයිස්තුව (Community Feed ඇතුළුව)
+  // List of menu items (including Community Feed)
   const navItems = [
     { name: "Home", path: "/" },
     { name: "Hotels", path: "/hotels" },

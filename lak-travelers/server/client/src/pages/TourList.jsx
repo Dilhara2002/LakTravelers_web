@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import API from '../services/api'; 
-import TourCard from '../components/cards/TourCard'; // Folder structure එකට අනුව මාවත තහවුරු කරගන්න
+import TourCard from '../components/cards/TourCard'; // Verify the path based on your folder structure
 
 const TourList = () => {
   const [tours, setTours] = useState([]);
@@ -9,14 +9,14 @@ const TourList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
 
-  // 🔐 පරිශීලක තොරතුරු ආරක්ෂිතව ලබා ගැනීම
+  // 🔐 Securely retrieve user information from localStorage
   const user = useMemo(() => {
     const savedUser = localStorage.getItem("userInfo");
     return savedUser ? JSON.parse(savedUser) : null;
   }, []);
 
   /**
-   * 📡 Backend එකෙන් ටුවර් පැකේජ ලබා ගැනීම
+   * 📡 Fetch tour packages from the Backend
    */
   useEffect(() => {
     const fetchTours = async () => {
@@ -36,7 +36,7 @@ const TourList = () => {
   }, []);
 
   /**
-   * 🗑️ පැකේජයක් මකා දැමීම (Delete)
+   * 🗑️ Delete Handler for removing a tour package
    */
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this tour? 🗑️")) return;
@@ -44,7 +44,6 @@ const TourList = () => {
     try {
       await API.delete(`/tours/${id}`);
       setTours(prevTours => prevTours.filter((t) => t._id !== id));
-      // Optional: Success toast message
     } catch (err) {
       console.error("Delete Error:", err);
       alert(err.response?.data?.message || "Unauthorized: You cannot delete this package.");
@@ -52,7 +51,7 @@ const TourList = () => {
   };
 
   /**
-   * 🔍 සෙවුම් යන්ත්‍රය (Search Filtering) - Performance වැඩි කිරීමට useMemo භාවිතා කළ හැක
+   * 🔍 Search Engine (Filter results by name or destination)
    */
   const filteredTours = tours.filter((tour) =>
     tour.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -60,7 +59,7 @@ const TourList = () => {
   );
 
   /**
-   * 🦴 Skeleton Card Component
+   * 🦴 Skeleton Card UI for loading states
    */
   const SkeletonCard = () => (
     <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-4 animate-pulse">
@@ -85,7 +84,7 @@ const TourList = () => {
             </p>
           </div>
 
-          {/* Create Button (Vendor/Admin Only) */}
+          {/* Create Button (Visible to Vendors and Admins Only) */}
           {user && (user.role === 'vendor' || user.role === 'admin') && (
             <Link
               to="/add-tour"
@@ -115,7 +114,7 @@ const TourList = () => {
           />
         </div>
 
-        {/* --- 3. TOURS GRID / CONTENT --- */}
+        {/* --- 3. TOURS GRID CONTENT --- */}
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {[...Array(8)].map((_, n) => <SkeletonCard key={n} />)}
@@ -129,7 +128,7 @@ const TourList = () => {
           <div className="text-center py-24 bg-white rounded-[2.5rem] border border-dashed border-gray-200 shadow-inner">
             <div className="inline-block p-6 rounded-full bg-gray-50 mb-6 text-5xl">🗺️</div>
             <h3 className="text-2xl font-bold text-slate-900">No packages found</h3>
-            <p className="text-slate-500 mt-2 max-w-sm mx-auto">We couldn't find any results for "{searchTerm}". Try checking your spelling or search for another city.</p>
+            <p className="text-slate-500 mt-2 max-w-sm mx-auto">We couldn't find any results for "{searchTerm}". Try checking your spelling or searching for another city.</p>
             <button 
               onClick={() => setSearchTerm("")}
               className="mt-6 bg-slate-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-slate-800 transition shadow-lg"

@@ -15,10 +15,10 @@ const CommunityFeed = () => {
     serviceQuality: 5,
   });
 
-  // පවතින අත්දැකීම් ලබා ගැනීම (Fetch Experiences)
+  // Fetch existing community experiences
   const fetchReviews = async () => {
     try {
-      // මෙතැන API_URL එක නිවැරදිව භාවිතා කර ඇත
+      // API_URL is used correctly here
       const { data } = await axios.get(`${API_URL}/api/reviews`);
       setReviews(data.reviews || data); 
     } catch (err) {
@@ -31,7 +31,7 @@ const CommunityFeed = () => {
     fetchReviews();
   }, []);
 
-  // අත්දැකීම් ඇතුළත් කිරීම (Submit & Recalibrate)
+  // Submit experience and recalibrate trust scores
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));

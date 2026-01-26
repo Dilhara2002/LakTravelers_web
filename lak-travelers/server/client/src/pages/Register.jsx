@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import API from '../services/api'; // ඔබගේ api.js සේවාව
+import API from '../services/api'; // Your api.js service
 import { toast } from 'react-toastify';
 import registerImage from '../assets/Register.jpg';
 
@@ -20,7 +20,7 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isOtpSent, setIsOtpSent] = useState(false); 
 
-  // දැනට ලොග් වී ඇති පරිශීලක තොරතුරු පරීක්ෂාව
+  // Check for currently logged-in user information
   const userInfo = useMemo(() => {
     const saved = localStorage.getItem('userInfo');
     return saved ? JSON.parse(saved) : null;
@@ -30,7 +30,7 @@ const Register = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  // URL එකෙන් ලැබෙන Role එක (උදා: ?role=vendor) සැකසීම
+  // Handle Role from URL (e.g., ?role=vendor)
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const roleFromUrl = queryParams.get('role');
@@ -39,7 +39,7 @@ const Register = () => {
     }
   }, [location]);
 
-  // ලොග් වී සිටී නම් Redirect කිරීම
+  // Redirect if already logged in
   useEffect(() => {
     if (userInfo) {
       if (userInfo.role === 'vendor' && !userInfo.isApproved) {
@@ -55,7 +55,7 @@ const Register = () => {
   };
 
   /**
-   * 📧 1. OTP එක Email එකට යැවීමේ ක්‍රියාවලිය
+   * 📧 1. Send OTP to the user's email address
    */
   const handleSendOtp = async (e) => {
     e.preventDefault();
@@ -68,7 +68,7 @@ const Register = () => {
 
     setIsLoading(true);
     try {
-      // ✅ baseURL හි /api ඇති බැවින් '/users/send-otp' පමණක් භාවිතා කරන්න
+      // baseURL already includes /api, so we use '/users/send-otp'
       await API.post('/users/send-otp', { email: email.trim().toLowerCase() });
       setIsOtpSent(true);
       toast.success('Verification code sent to your email! 📩');
@@ -80,7 +80,7 @@ const Register = () => {
   };
 
   /**
-   * 🚀 2. OTP එක Verify කර Register වීමේ ක්‍රියාවලිය
+   * 🚀 2. Verify OTP and complete the Registration process
    */
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -93,7 +93,7 @@ const Register = () => {
 
     setIsLoading(true);
     try {
-      // ✅ baseURL හි /api ඇති බැවින් '/users' පමණක් භාවිතා කරන්න
+      // baseURL already includes /api, so we use '/users'
       const { data } = await API.post('/users', {
         name: name.trim(),
         email: email.trim().toLowerCase(),
@@ -123,7 +123,7 @@ const Register = () => {
     <div className="min-h-screen flex items-start justify-center bg-gray-50 p-4 pt-10">
       <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden max-w-5xl w-full flex flex-col md:flex-row mt-4 border border-gray-100">
 
-        {/* වම් පස: FORM කොටස */}
+        {/* LEFT SIDE: FORM SECTION */}
         <div className="w-full md:w-1/2 p-8 md:p-14">
           <div className="mb-10">
             <h2 className="text-4xl font-black text-slate-900 mb-2 tracking-tight">
@@ -186,7 +186,7 @@ const Register = () => {
           </p>
         </div>
 
-        {/* දකුණු පස: රූපය සහිත කොටස */}
+        {/* RIGHT SIDE: IMAGE SECTION */}
         <div className="hidden md:block w-1/2 relative">
           <img src={registerImage} alt="Sri Lanka" className="absolute inset-0 w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent flex flex-col justify-end p-16 text-white">

@@ -6,17 +6,17 @@ import Tour from '../models/Tour.js';
 import Vehicle from '../models/Vehicle.js';
 
 /**
- * @desc    Admin Dashboard සඳහා සංඛ්‍යාලේඛන ලබා ගැනීම
+ * @desc    Get statistics for the Admin Dashboard
  * @route   GET /api/admin/stats
  * @access  Private/Admin
  */
 const getAdminStats = asyncHandler(async (req, res) => {
-  // සත්‍යාපනය (Verification) සඳහා ලොග් එකක් දැමීම
+  // Log request for verification purposes
   console.log(`Admin Stats Requested by: ${req.user.name} (ID: ${req.user._id})`);
 
   try {
-    // 1. සියලුම අයිතමයන්ගේ එකතුව (Counts) ලබා ගැනීම
-    // Promise.all භාවිතා කිරීමෙන් සියලුම Queries එකවර (Parallel) ක්‍රියාත්මක වේ.
+    // 1. Get total counts for all items
+    // Using Promise.all allows all queries to execute in parallel for better performance.
     const [
       usersCount, 
       vendorsCount, 
@@ -26,15 +26,15 @@ const getAdminStats = asyncHandler(async (req, res) => {
       vehiclesCount
     ] = await Promise.all([
       User.countDocuments({ role: 'user' }),
-      User.countDocuments({ role: 'vendor' }), // 👈 logic එක මෙහිදී නිවැරදි කරන ලදී
+      User.countDocuments({ role: 'vendor' }), 
       Booking.countDocuments(),
       Hotel.countDocuments(),
       Tour.countDocuments(),
       Vehicle.countDocuments(),
     ]);
 
-    // 2. මුළු ආදායම (Total Revenue) ගණනය කිරීම
-    // Database එක තුළදීම $sum කිරීම වඩාත් වේගවත් වේ.
+    // 2. Calculate Total Revenue
+    // Performing the $sum within the database aggregation is significantly faster than manual calculation.
     const revenueStats = await Booking.aggregate([
       {
         $group: {
@@ -46,8 +46,8 @@ const getAdminStats = asyncHandler(async (req, res) => {
 
     const totalRevenue = revenueStats.length > 0 ? revenueStats[0].total : 0;
 
-    // 3. මෑතකදී සිදු වූ වෙන් කිරීම් (Recent Bookings) - විකල්ප (Optional)
-    // Dashboard එකට මෑත දත්ත කිහිපයක් පෙන්වීම ප්‍රයෝජනවත්ය.
+    // 3. Fetch Recent Bookings (Optional)
+    // Displaying a few recent entries is useful for the primary dashboard view.
     const recentBookings = await Booking.find()
       .sort({ createdAt: -1 })
       .limit(5)
@@ -72,7 +72,7 @@ const getAdminStats = asyncHandler(async (req, res) => {
   } catch (error) {
     console.error("Error calculating admin stats:", error);
     res.status(500);
-    throw new Error("සංඛ්‍යාලේඛන ලබා ගැනීමේදී දෝෂයක් සිදු විය.");
+    throw new Error("An error occurred while retrieving statistics.");
   }
 });
 
