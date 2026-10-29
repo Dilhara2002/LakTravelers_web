@@ -139,16 +139,28 @@ const Register = () => {
             </p>
           </div>
 
-          <form onSubmit={isOtpSent ? handleSubmit : handleSendOtp}>
+          <form onSubmit={isOtpSent ? handleSubmit : handleSendOtp} className="space-y-5">
 
             {!isOtpSent ? (
               <>
-                <input name="name" placeholder="Full Name" onChange={handleChange} className="input" />
-                <input name="email" placeholder="Email" onChange={handleChange} className="input" />
-                <input name="password" type="password" placeholder="Password (8+ characters)" minLength="8" required onChange={handleChange} className="input" />
-                <input name="confirmPassword" type="password" placeholder="Confirm Password" minLength="8" required onChange={handleChange} className="input" />
+                <label htmlFor="name" className="block text-sm font-semibold text-slate-700">
+                  Full Name
+                  <input id="name" name="name" type="text" autoComplete="name" required placeholder="Full Name" onChange={handleChange} className="mt-2 block w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10" />
+                </label>
+                <label htmlFor="email" className="block text-sm font-semibold text-slate-700">
+                  Email Address
+                  <input id="email" name="email" type="email" autoComplete="email" required placeholder="Email" onChange={handleChange} className="mt-2 block w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10" />
+                </label>
+                <label htmlFor="password" className="block text-sm font-semibold text-slate-700">
+                  Password
+                  <input id="password" name="password" autoComplete="new-password" type="password" placeholder="Password (8+ characters)" minLength="8" required onChange={handleChange} className="mt-2 block w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10" />
+                </label>
+                <label htmlFor="confirmPassword" className="block text-sm font-semibold text-slate-700">
+                  Confirm Password
+                  <input id="confirmPassword" name="confirmPassword" autoComplete="new-password" type="password" placeholder="Confirm Password" minLength="8" required onChange={handleChange} className="mt-2 block w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10" />
+                </label>
 
-                <button type="submit" className="btn-primary" disabled={isLoading}>
+                <button type="submit" className="w-full rounded-2xl bg-blue-600 px-6 py-3.5 font-bold text-white shadow-md transition hover:bg-blue-700 disabled:opacity-50" disabled={isLoading}>
                   {isLoading ? 'Sending...' : 'Get OTP'}
                 </button>
 
@@ -167,10 +179,10 @@ const Register = () => {
                   name="otp"
                   placeholder="Enter OTP"
                   onChange={handleChange}
-                  className="input text-center text-xl tracking-widest"
+                  className="mt-2 block w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 text-center text-xl tracking-widest"
                 />
 
-                <button type="submit" className="btn-primary" disabled={isLoading}>
+                <button type="submit" className="w-full rounded-2xl bg-blue-600 px-6 py-3.5 font-bold text-white shadow-md transition hover:bg-blue-700 disabled:opacity-50" disabled={isLoading}>
                   {isLoading ? 'Verifying...' : 'Verify Account'}
                 </button>
               </>
