@@ -99,8 +99,8 @@ const Login = () => {
             </div>
 
             <div className="flex justify-end">
-              <Link to="#" className="text-sm font-bold text-blue-600 hover:underline">
-                Forgot Password?
+              <Link to="/contact" className="text-sm font-bold text-blue-600 hover:underline">
+                Need help signing in?
               </Link>
             </div>
 
@@ -127,7 +127,7 @@ const Login = () => {
           </form>
 
           {/* Social Login Section */}
-          <div className="my-8">
+          {googleEnabled && <div className="my-8">
             <div className="flex items-center gap-3 mb-6">
               <div className="flex-1 h-px bg-slate-200"></div>
               <span className="text-sm text-slate-500 font-medium">
@@ -142,11 +142,9 @@ const Login = () => {
                   onError={() => alert("Google Login Failed")}
                 />}
 
-              {!googleEnabled && (
-                <p className="text-sm text-slate-400">Social login is not configured. Use email and password.</p>
-              )}
+
             </div>
-          </div>
+          </div>}
 
           <div className="mt-10 pt-10 border-t border-slate-100 text-center">
             <p className="text-sm font-medium text-slate-500">

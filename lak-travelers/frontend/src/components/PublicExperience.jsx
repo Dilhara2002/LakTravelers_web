@@ -4,7 +4,7 @@ import { useLocation, useNavigationType } from 'react-router-dom';
 import '../styles/public-experience.css';
 
 const positions = new Map();
-const isPublic = path => ['/', '/about', '/reviews', '/vehicles', '/privacy'].includes(path) || path.startsWith('/vehicles/');
+const isPublic = path => ['/', '/about', '/reviews', '/vehicles', '/privacy', '/gallery'].includes(path) || path.startsWith('/vehicles/');
 
 // Visible by default: motion progressively enhances content without hiding it in CSS.
 export default function PublicExperience({ children }) {

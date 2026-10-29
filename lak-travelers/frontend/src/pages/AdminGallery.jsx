@@ -28,19 +28,22 @@ export default function AdminGallery() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(true);
 
   async function reload() {
     try {
       const { data } = await API.get('/gallery/admin');
       setPhotos(Array.isArray(data) ? data : []);
+      setError('');
     } catch (err) {
       setError(err.response?.data?.message || 'Cannot load admin gallery. Please sign in as an administrator.');
-    }
+    } finally { setLoading(false); }
   }
   useEffect(() => { reload(); }, []);
 
   async function upload(event) {
     event.preventDefault();
+    const formElement = event.currentTarget;
     setError(''); setMessage('');
     if (!file || !caption.trim()) { setError('Choose a photo and enter a caption.'); return; }
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 5 * 1024 * 1024) {
@@ -51,9 +54,9 @@ export default function AdminGallery() {
       const form = new FormData();
       form.append('photo', file);
       form.append('caption', caption.trim());
-      await API.post('/gallery', form);
+      await API.post('/gallery', form, { headers: { 'Content-Type': undefined }, timeout: 60000 });
       setCaption(''); setFile(null);
-      event.currentTarget?.reset?.();
+      formElement.reset();
       setMessage('Photo uploaded privately. Choose Publish to show it on the public gallery.');
       await reload();
     } catch (err) {
@@ -110,7 +113,7 @@ export default function AdminGallery() {
       </form>
       {error && <p className="mt-4 text-red-700" role="alert">{error}</p>}
       {message && <p className="mt-4 text-green-700" role="status">{message}</p>}
-      {photos.length === 0 ? <p className="mt-10 text-slate-600">No gallery photos uploaded yet.</p> :
+      {loading ? <p role="status" className="mt-10">Loading photos…</p> : error ? null : photos.length === 0 ? <p className="mt-10 text-slate-600">No gallery photos uploaded yet.</p> :
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {photos.map(photo => (
             <article key={photo._id} className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">

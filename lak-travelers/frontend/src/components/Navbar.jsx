@@ -166,6 +166,7 @@ const Navbar = () => {
                       {user.role === "user" && (
                         <Link to="/my-bookings" onClick={closeDropdown} className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">My Bookings</Link>
                       )}
+                      {['admin', 'super-admin'].includes(user.role) && <Link to="/admin/gallery" onClick={closeDropdown} className="block px-3 py-2 text-sm font-medium text-blue-600">Manage Gallery</Link>}
                       {['admin', 'super-admin'].includes(user.role) && <Link to="/admin/reviews" onClick={closeDropdown} className="block px-3 py-2 text-sm font-medium text-blue-600">Moderate Reviews</Link>}
                       <Link to="/profile" onClick={closeDropdown} className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">My Profile</Link>
                       <div className="my-1 h-px bg-gray-100" />

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import PhotoLightbox from '../components/PhotoLightbox';
 import API from '../services/api';
 
 const imageURL = id => API.getUri({ url: `/gallery/photos/${id}` });
@@ -21,18 +22,6 @@ export default function PublicGallery() {
     return () => { current = false; };
   }, []);
 
-  useEffect(() => {
-    if (active === null) return;
-    const keydown = event => {
-      if (event.key === 'Escape') setActive(null);
-      if (event.key === 'ArrowRight') setActive(index => (index + 1) % photos.length);
-      if (event.key === 'ArrowLeft') setActive(index => (index - 1 + photos.length) % photos.length);
-    };
-    window.addEventListener('keydown', keydown);
-    return () => window.removeEventListener('keydown', keydown);
-  }, [active, photos.length]);
-
-  const selected = active === null ? null : photos[active];
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
@@ -65,22 +54,9 @@ export default function PublicGallery() {
         </div>
       )}
 
-      {selected && (
-        <div role="dialog" aria-modal="true" aria-label="Travel photo viewer"
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4"
-          onClick={() => setActive(null)}>
-          <button type="button" onClick={() => setActive(null)} aria-label="Close photo viewer"
-            className="absolute right-4 top-4 rounded-full bg-white px-4 py-2 font-bold text-slate-900">Close ×</button>
-          <button type="button" aria-label="Previous photo" onClick={event => { event.stopPropagation(); setActive(index => (index - 1 + photos.length) % photos.length); }}
-            className="absolute left-2 top-1/2 rounded-full bg-white/90 px-3 py-2 text-xl font-bold text-black sm:left-6">‹</button>
-          <div className="max-w-[85vw] text-center" onClick={event => event.stopPropagation()}>
-            <img src={imageURL(selected._id)} alt={selected.caption} className="mx-auto max-h-[75vh] max-w-full object-contain" />
-            <p className="mt-4 text-sm font-medium text-white">{selected.caption}</p>
-          </div>
-          <button type="button" aria-label="Next photo" onClick={event => { event.stopPropagation(); setActive(index => (index + 1) % photos.length); }}
-            className="absolute right-2 top-1/2 rounded-full bg-white/90 px-3 py-2 text-xl font-bold text-black sm:right-6">›</button>
-        </div>
-      )}
+      {active !== null && <PhotoLightbox images={photos.map(photo => imageURL(photo._id))}
+        captions={photos.map(photo => photo.caption)} label="Travel photo" initialIndex={active} onClose={() => setActive(null)} />}
+
     </div>
   );
 }

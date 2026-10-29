@@ -1,14 +1,16 @@
 services:
   - type: web
-    name: lak-travelers-api
+    name: laktravelers-api
     runtime: node
-    plan: starter # Gmail SMTP requires a paid instance; free instances block SMTP.
+    plan: free # HTTPS email API; photos persist in MongoDB, not the filesystem.
     rootDir: lak-travelers/backend
     buildCommand: npm ci
     startCommand: npm start
     healthCheckPath: /api/health
     autoDeploy: true
     envVars:
+      - key: NODE_VERSION
+        value: "22"
       - key: NODE_ENV
         value: production
       - key: MONGO_URI
@@ -23,9 +25,11 @@ services:
         sync: false
       - key: PUBLIC_APP_URL
         sync: false
-      - key: EMAIL_USER
+      - key: EMAIL_PROVIDER
+        value: resend
+      - key: EMAIL_FROM
         sync: false
-      - key: EMAIL_PASS
+      - key: RESEND_API_KEY
         sync: false
       - key: GOOGLE_CLIENT_ID
         sync: false

@@ -103,6 +103,7 @@ function App() {
                <Route path="/admin/gallery" element={<RoleRoute roles={['admin', 'super-admin']}><AdminGallery /></RoleRoute>} />
               <Route path="/admin/reviews/:id/decision" element={<RoleRoute roles={['admin', 'super-admin']}><ReviewDecision /></RoleRoute>} />
               <Route path="/admin/reviews" element={<RoleRoute roles={['admin', 'super-admin']}><CustomerReviews moderate /></RoleRoute>} />
+              <Route path="/contact" element={<Navigate to="/about#contact" replace />} />
               <Route path="/about" element={<AboutUs />} />
 
               {/* --- 🔐 Protected AI & Community Routes --- */}

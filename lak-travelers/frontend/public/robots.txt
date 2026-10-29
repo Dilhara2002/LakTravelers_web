@@ -5,4 +5,4 @@ Disallow: /vendor/
 Disallow: /profile
 Disallow: /my-bookings
 
-Sitemap: https://lak-travelers.vercel.app/sitemap.xml
+Sitemap: https://laktravelers-web.pages.dev/sitemap.xml

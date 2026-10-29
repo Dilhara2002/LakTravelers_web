@@ -64,7 +64,7 @@ const AboutUs = () => {
         </div>
 
         {/* --- Location & Contact --- */}
-        <div data-reveal className="mt-24 text-center">
+        <div id="contact" data-reveal className="mt-24 text-center">
           <div className="inline-block p-1 px-4 mb-6 bg-slate-100 rounded-full text-slate-500 text-[10px] font-bold uppercase tracking-widest italic border border-slate-200">
             Founded by Ishan Wijesinghe
           </div>

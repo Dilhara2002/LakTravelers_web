@@ -22,7 +22,7 @@ const otpStore = new Map();
 export const sendOTP = asyncHandler(async (req, res) => {
   const { email, isUpdate } = req.body;
 
-  if (!email) {
+  if (typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) {
     res.status(400);
     throw new Error('Email is required');
   }
@@ -77,20 +77,6 @@ export const sendOTP = asyncHandler(async (req, res) => {
   };
 
   try {
-    // For development/testing, log OTP to console
-    if (process.env.NODE_ENV === 'development') {
-      console.log('='.repeat(50));
-      console.log(`📧 DEVELOPMENT MODE - OTP for ${normalizedEmail}: ${otp}`);
-      console.log('='.repeat(50));
-      
-      // Response without sending email in development mode
-      res.status(200).json({ 
-        message: 'OTP generated successfully!',
-        debug: process.env.NODE_ENV === 'development' ? otp : undefined
-      });
-      return;
-    }
-
     // Production mode - email 
     await sendEmail(mailOptions);
     console.log(`✅ OTP sent successfully to: ${normalizedEmail}`);
@@ -103,20 +89,9 @@ export const sendOTP = asyncHandler(async (req, res) => {
   } catch (error) {
     console.error('Verification email delivery failed');
     
-    // FALLBACK: If email fails, provide OTP in response for testing
-    // Comment this out in production
-    if (process.env.NODE_ENV !== 'production') {
-      console.log(`⚠️  Email failed, but here's the OTP for testing: ${otp}`);
-      res.status(200).json({ 
-        message: 'OTP generated (email service unavailable)',
-        otp: otp,
-        email: normalizedEmail
-      });
-      return;
-    }
-    
+    otpStore.delete(normalizedEmail);
     // Production mode error throw 
-    res.status(500);
+    res.status(503);
     throw new Error('Unable to send verification email. Please try again later.');
   }
 });

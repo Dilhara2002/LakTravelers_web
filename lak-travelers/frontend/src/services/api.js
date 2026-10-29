@@ -6,7 +6,7 @@ import axios from 'axios';
 const getBaseURL = () => {
   // 1. Use VITE_API_URL if it exists in the .env file
   if (import.meta.env.VITE_API_URL) {
-    const url = import.meta.env.VITE_API_URL;
+    const url = import.meta.env.VITE_API_URL.replace(/\/+$/, '');
     return url.endsWith('/api') ? url : `${url}/api`;
   }
   

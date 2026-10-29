@@ -25,3 +25,6 @@ uploads/*
 **/.env.*
 !**/.env.example
 !**/.env.sample
+
+# Cloudflare local CLI cache
+.wrangler/
