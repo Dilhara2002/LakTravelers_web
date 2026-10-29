@@ -78,12 +78,17 @@ const userSchema = new mongoose.Schema({
 
   lastLogin: { type: Date },
 
+  isDisabled: { type: Boolean, default: false },
+
   isBanned: {
     type: Boolean,
     default: false
   }
 
 }, { timestamps: true });
+
+// Ignore null/unlinked accounts while enforcing one user per Google subject.
+userSchema.index({ googleId: 1 }, { unique: true, partialFilterExpression: { googleId: { $type: 'string' } } });
 
 /**
  * Password Hashing Middleware

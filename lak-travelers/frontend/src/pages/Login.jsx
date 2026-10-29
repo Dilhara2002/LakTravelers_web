@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { GoogleLogin } from "@react-oauth/google";
+import GoogleSignIn from '../components/GoogleSignIn';
 import API from "../services/api";
 import loginImage from "../assets/Login.jpg"; 
 
 const Login = () => {
-  const googleEnabled = Boolean(import.meta.env.VITE_GOOGLE_CLIENT_ID?.trim());
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -35,20 +34,6 @@ const Login = () => {
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse) => {
-    try {
-      const res = await API.post("/users/google", {
-        token: credentialResponse.credential,
-      });
-
-      localStorage.setItem("userInfo", JSON.stringify(res.data));
-      navigate(destination);
-      window.location.reload();
-    } catch (error) {
-      console.error("Google Login Error:", error);
-      alert("Google Login Failed");
-    }
-  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-30 py-10">
@@ -126,25 +111,7 @@ const Login = () => {
             </button>
           </form>
 
-          {/* Social Login Section */}
-          {googleEnabled && <div className="my-8">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="flex-1 h-px bg-slate-200"></div>
-              <span className="text-sm text-slate-500 font-medium">
-                Or continue with
-              </span>
-              <div className="flex-1 h-px bg-slate-200"></div>
-            </div>
-
-            <div className="flex flex-col items-center gap-4">
-              {googleEnabled && <GoogleLogin
-                  onSuccess={handleGoogleSuccess}
-                  onError={() => alert("Google Login Failed")}
-                />}
-
-
-            </div>
-          </div>}
+          <GoogleSignIn />
 
           <div className="mt-10 pt-10 border-t border-slate-100 text-center">
             <p className="text-sm font-medium text-slate-500">

@@ -1,4 +1,5 @@
 import express from 'express';
+import { googleClientId } from '../utils/googleAuthentication.js';
 import {
   registerUser,
   sendOTP,
@@ -37,6 +38,11 @@ router.post('/logout', logoutUser);
 /**
  * Social Login Routes
  */
+// Client IDs are public identifiers; never expose client secrets or other environment settings.
+router.get('/google/config', (_req, res) => {
+  const clientId = googleClientId();
+  res.set('Cache-Control', 'no-store').json({ enabled: Boolean(clientId), clientId });
+});
 router.post('/google', authLimiter, googleLogin);
 
 /**

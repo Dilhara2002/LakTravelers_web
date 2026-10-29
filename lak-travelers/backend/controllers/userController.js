@@ -7,9 +7,9 @@ import Vehicle from '../models/Vehicle.js';
 import generateToken from '../utils/generateToken.js';
 import { sendEmail } from '../utils/sendEmail.js';
 import { randomInt } from 'node:crypto';
-import { OAuth2Client } from 'google-auth-library';
+import { authenticateGoogle } from '../utils/googleAuthentication.js';
 
-const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
 
 // store temporary OTP
 const otpStore = new Map();
@@ -216,7 +216,7 @@ export const authUser = asyncHandler(async (req, res) => {
     }
 
     // Check if user is banned
-    if (user.isBanned) {
+    if (user.isBanned || user.isDisabled) {
       res.status(403);
       throw new Error('Your account has been suspended. Please contact support.');
     }
@@ -248,40 +248,17 @@ export const authUser = asyncHandler(async (req, res) => {
  * @access  Public
  */
 export const googleLogin = asyncHandler(async (req, res) => {
-  const { token } = req.body;
-
-  const ticket = await googleClient.verifyIdToken({
-    idToken: token,
-    audience: process.env.GOOGLE_CLIENT_ID,
-  });
-
-  const payload = ticket.getPayload();
-
-  let user = await User.findOne({
-    email: payload.email.toLowerCase(),
-  });
-
-  if (!user) {
-    user = await User.create({
-      name: payload.name,
-      email: payload.email.toLowerCase(),
-      googleId: payload.sub,
-      avatar: payload.picture,
-      authProvider: 'google',
-      role: 'user',
-      isApproved: true,
-    });
+  try {
+    const user = await authenticateGoogle(req.body);
+    const token = generateToken(res, user._id, user.role);
+    res.status(200).json({ _id: user._id, name: user.name, email: user.email, role: user.role,
+      isApproved: user.isApproved, profileImage: user.profileImage || user.avatar || '', token });
+  } catch (error) {
+    // Never send/log Google library exceptions: they may include credential details.
+    const status = error.statusCode || 503;
+    res.status(status).json({ message: error.statusCode ? error.message : 'Google sign-in is temporarily unavailable. Please try again.',
+      ...(error.code === 'GOOGLE_LINK_REQUIRED' ? { code: error.code } : {}) });
   }
-
-  const jwtToken = generateToken(res, user._id);
-
-  res.status(200).json({
-    _id: user._id,
-    name: user.name,
-    email: user.email,
-    role: user.role,
-    token: jwtToken,
-  });
 });
 
 /**

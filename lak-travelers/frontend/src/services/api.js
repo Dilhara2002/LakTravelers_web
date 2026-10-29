@@ -54,7 +54,7 @@ API.interceptors.response.use(
     console.error('API Error Response:', message);
     
     // If status is 401 Unauthorized, logout the user and redirect to Login
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401 && error.config?.url !== '/users/google') {
       localStorage.removeItem('userInfo');
       if (window.location.pathname !== '/login') {
         window.location.href = `/login?returnTo=${encodeURIComponent(window.location.pathname + window.location.search)}`;

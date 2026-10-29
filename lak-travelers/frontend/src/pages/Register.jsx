@@ -5,10 +5,9 @@ import { toast } from 'react-toastify';
 import registerImage from '../assets/Register.jpg';
 
 // SOCIAL LOGIN IMPORTS
-import { GoogleLogin } from '@react-oauth/google';
+import GoogleSignIn from '../components/GoogleSignIn';
 
 const Register = () => {
-  const googleEnabled = Boolean(import.meta.env.VITE_GOOGLE_CLIENT_ID?.trim());
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -106,20 +105,6 @@ const Register = () => {
   // SOCIAL LOGIN HANDLERS
   // =========================
 
-  const handleGoogleSuccess = async (credentialResponse) => {
-    try {
-      const res = await API.post('/users/google', {
-        token: credentialResponse.credential,
-      });
-
-      localStorage.setItem('userInfo', JSON.stringify(res.data));
-      toast.success('Google login success 🎉');
-      navigate('/');
-      window.location.reload();
-    } catch {
-      toast.error('Google login failed');
-    }
-  };
 
   return (
     <div className="min-h-screen flex items-start justify-center bg-gray-50 p-4 pt-10">
@@ -164,14 +149,6 @@ const Register = () => {
                   {isLoading ? 'Sending...' : 'Get OTP'}
                 </button>
 
-                {/* SOCIAL LOGIN SECTION */}
-                {googleEnabled && <div className="mt-6 text-center">
-                  <p className="text-sm mb-3">Or continue with</p>
-
-                  {googleEnabled && <GoogleLogin onSuccess={handleGoogleSuccess} />}
-
-
-                </div>}
               </>
             ) : (
               <>
@@ -191,6 +168,7 @@ const Register = () => {
               </>
             )}
           </form>
+          {!isOtpSent && <GoogleSignIn />}
 
           <p className="mt-6 text-center">
             Already have account? <Link to="/login">Login</Link>

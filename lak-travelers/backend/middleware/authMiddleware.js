@@ -30,7 +30,7 @@ const protect = asyncHandler(async (req, res, next) => {
       // Find the user and attach to the request (checking for both userId or id in payload)
       req.user = await User.findById(decoded.userId || decoded.id).select('-password');
       
-      if (!req.user) {
+      if (!req.user || req.user.isBanned || req.user.isDisabled) {
         res.status(401);
         throw new Error('Not authorized, user not found');
       }
