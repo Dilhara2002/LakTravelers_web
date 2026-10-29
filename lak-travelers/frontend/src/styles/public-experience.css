@@ -1,0 +1,65 @@
+:root {
+  --travel-ease: cubic-bezier(.22, 1, .36, 1);
+  --travel-shadow: 0 8px 28px -12px rgb(15 23 42 / .16);
+  --travel-shadow-hover: 0 20px 40px -18px rgb(30 64 175 / .24);
+}
+:where(a, button, input, textarea, select):focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 4px;
+}
+.public-experience { min-width: 0; }
+.public-experience :is(h1, h2, h3) { text-wrap: balance; letter-spacing: -.025em; }
+.public-experience p { text-wrap: pretty; }
+.public-experience :is(section, [id]) { scroll-margin-top: 7rem; }
+.public-experience article {
+  border: 1px solid #e2e8f0;
+  box-shadow: var(--travel-shadow);
+  transition: transform 280ms var(--travel-ease), box-shadow 280ms ease;
+}
+.public-experience article > a:first-child { display: block; overflow: hidden; }
+.public-experience article img { transition: transform 400ms var(--travel-ease); }
+.public-experience :is(a, button) {
+  transition: color 200ms ease, background-color 200ms ease, border-color 200ms ease, box-shadow 250ms ease, transform 250ms var(--travel-ease);
+}
+.public-experience :is(input:not([type=radio]), textarea, select) {
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+  max-width: 100%;
+}
+.public-experience :is(input, textarea):focus { border-color: #2563eb; box-shadow: 0 0 0 4px rgb(37 99 235 / .08); }
+.public-experience [role=status], .public-experience [role=alert] { animation: travel-enter 220ms var(--travel-ease); }
+.public-experience dialog { border: 1px solid #e2e8f0; box-shadow: var(--travel-shadow-hover); }
+.public-experience dialog[open] { animation: travel-enter 240ms var(--travel-ease); }
+.public-experience dialog::backdrop { background: rgb(15 23 42 / .85); }
+.travel-lightbox-image { animation: travel-enter 220ms var(--travel-ease); }
+.travel-hero-copy { animation: travel-enter 350ms var(--travel-ease); }
+.travel-hero-copy > p { text-shadow: 0 2px 16px rgb(0 0 0 / .35); }
+.travel-whatsapp { animation: travel-enter 350ms var(--travel-ease); }
+nav [aria-current=page] { color: #2563eb; }
+.travel-mobile-menu { transition: opacity 220ms ease, transform 220ms var(--travel-ease), visibility 220ms; transform-origin: top; }
+.travel-mobile-menu[data-open=false] { opacity: 0; visibility: hidden; transform: translateY(-8px); pointer-events: none; }
+.travel-mobile-menu[data-open=true] { opacity: 1; visibility: visible; transform: translateY(0); }
+footer { padding-bottom: calc(6rem + env(safe-area-inset-bottom)) !important; }
+footer a { text-underline-offset: 5px; }
+@keyframes travel-enter { from { opacity: .35; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@media (hover: hover) and (pointer: fine) {
+  .public-experience article:hover { transform: translateY(-4px); box-shadow: var(--travel-shadow-hover); }
+  .public-experience article > a:hover img { transform: scale(1.025); }
+  .public-experience :is(a, button)[class*="bg-blue-600"]:hover { transform: translateY(-2px); box-shadow: 0 8px 18px -8px rgb(37 99 235 / .5); }
+  .travel-whatsapp:hover { transform: translateY(-3px); }
+  footer a:hover { text-decoration: underline; }
+}
+@media (max-width: 639px) {
+  .public-experience .travel-hero-copy { padding-inline: .5rem; }
+  .public-experience .travel-hero-copy h1 { font-size: clamp(2.25rem, 11vw, 3rem); }
+  .public-experience .travel-hero-copy > .inline-block span { padding-inline: .75rem; letter-spacing: .1em; }
+  .public-experience #write-review { padding: 1rem; }
+  .public-experience #write-review [aria-hidden=true] { padding-inline: .4rem; }
+  .travel-founder-photo { max-width: 100%; }
+  nav > div:first-child { padding-inline: 1rem; }
+  .travel-whatsapp { right: .75rem; width: 3rem; height: 3rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .public-experience article:hover, .travel-whatsapp:hover { transform: none; }
+}

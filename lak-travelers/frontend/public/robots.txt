@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /vendor/
+Disallow: /profile
+Disallow: /my-bookings
+
+Sitemap: https://lak-travelers.vercel.app/sitemap.xml

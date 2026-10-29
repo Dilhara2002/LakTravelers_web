@@ -1,0 +1,106 @@
+import { useLocation } from 'react-router-dom';
+import { FaWhatsapp } from 'react-icons/fa';
+import { features, whatsappUrl } from '../services/features';
+import { Link } from 'react-router-dom';
+import logoImage from "../assets/logo.png"; 
+
+const Footer = () => {
+  const { pathname } = useLocation();
+  return (
+    <footer className="bg-white border-t border-gray-100 pt-10 md:pt-16 pb-8 mt-auto">
+      <div className="container mx-auto px-4 md:px-6 lg:px-8">
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-12 text-center md:text-left">
+          
+          {/* Column 1: Brand & Identity */}
+          <div className="space-y-4 flex flex-col items-center md:items-start">
+            <Link to="/" className="flex items-center gap-2 group">
+              <div className="h-10 w-10 overflow-hidden rounded-full border border-gray-100 shadow-sm">
+                <img 
+                  src={logoImage} 
+                  alt="Lak Travelers" 
+                  className="h-full w-full object-cover"
+                  onError={(e) => {
+                    e.target.onerror = null; 
+                    e.target.src="https://via.placeholder.com/50?text=LT"
+                  }}
+                />
+              </div>
+              <div className="flex flex-col items-start">
+                <span className="text-lg font-extrabold tracking-tight text-gray-900 leading-none">
+                  Lak<span className="text-blue-600">Travelers</span>
+                </span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 leading-none mt-1">
+                  Explore Sri Lanka
+                </span>
+              </div>
+            </Link>
+            <p className="text-gray-500 text-sm leading-relaxed max-w-xs mx-auto md:mx-0">
+              Founded by Ishan Wijesinghe. Experience the pearl of the Indian Ocean. We provide personalized travel assistance and reliable transport across Sri Lanka.
+            </p>
+          </div>
+
+          {/* Column 2: Explore Routes */}
+          <div>
+            <h3 className="font-bold text-gray-900 mb-4">Explore</h3>
+            <ul className="space-y-3 text-sm text-gray-500">
+              <li><Link to="/" className="hover:text-blue-600 transition duration-200">Home</Link></li>
+              {features.hotels && <li><Link to="/hotels" className="hover:text-blue-600 transition duration-200">Luxury Hotels</Link></li>}
+              {features.tourPackages && <li><Link to="/tours" className="hover:text-blue-600 transition duration-200">Tour Packages</Link></li>}
+              <li><Link to="/vehicles" className="hover:text-blue-600 transition duration-200">Vehicle Rentals</Link></li>
+            </ul>
+          </div>
+
+          {/* Column 3: Company & Management */}
+          <div>
+            <h3 className="font-bold text-gray-900 mb-4">Company</h3>
+            <ul className="space-y-3 text-sm text-gray-500">
+              <li><Link to="/profile" className="hover:text-blue-600 transition duration-200">My Profile</Link></li>
+              <li><Link to="/my-bookings" className="hover:text-blue-600 transition duration-200">Manage Bookings</Link></li>
+              <li><Link to="/about" className="hover:text-blue-600 transition duration-200">About Us</Link></li>
+              <li><Link to="/privacy" className="hover:text-blue-600 transition duration-200">Privacy Policy</Link></li>
+            </ul>
+          </div>
+
+          {/* Column 4: Contact & Social Presence - UPDATED WITH REAL DATA */}
+          <div>
+            <h3 className="font-bold text-gray-900 mb-4">Contact Us</h3>
+            <ul className="space-y-3 text-sm text-gray-500 mb-6">
+              <li className="flex items-start gap-3 justify-center md:justify-start">
+                <span className="text-blue-600">📍</span>
+                <span>73/D Walagedara, Wattappola,<br/>Sri Lanka</span>
+              </li>
+              <li className="flex items-center gap-3 justify-center md:justify-start">
+                <span className="text-blue-600">📞</span>
+                <span>+94 72 320 1365</span>
+              </li>
+              <li className="flex items-center gap-3 justify-center md:justify-start">
+                <span className="text-blue-600">✉️</span>
+                <span>laktravelers@gmail.com</span>
+              </li>
+            </ul>
+            
+            {/* Social Media Links */}
+            <div className="flex gap-4 justify-center md:justify-start">
+              <a href={whatsappUrl({ pathname })} target="_blank" rel="noopener noreferrer" aria-label="Contact Lak Travelers" className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-green-600 hover:bg-green-600 hover:text-white transition-all">
+                <FaWhatsapp className="w-5 h-5" />
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-slate-700 text-center md:text-left">
+          <p className="font-semibold">&copy; {new Date().getFullYear()} LakTravelers | A Brand of IDW (Pvt) Ltd</p>
+          <div className="flex gap-6 mt-4 md:mt-0">
+            <Link to="/privacy" className="hover:text-blue-600 transition">Privacy Policy</Link>
+            <Link to="/privacy" className="hover:text-blue-600 transition">Terms of Use</Link>
+          </div>
+        </div>
+      </div>
+    
+    </footer>
+  );
+};
+
+export default Footer;

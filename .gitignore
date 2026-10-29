@@ -1,0 +1,27 @@
+# Environment and credentials
+.env
+.env.*
+!.env.example
+
+# Dependencies and builds
+node_modules/
+dist/
+coverage/
+
+# Runtime files
+logs/
+*.log
+uploads/*
+!uploads/.gitkeep
+
+# OS and editor files
+.DS_Store
+.idea/
+.vscode/
+
+
+# Keep credentials outside Git
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.sample

@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"name": "Lak Travelers Backend",
+			"path": "backend"
+		},
+		{
+			"name": "Lak Travelers Frontend",
+			"path": "frontend"
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"**/node_modules": true,
+			"**/dist": true
+		}
+	}
+}
