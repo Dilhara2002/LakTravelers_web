@@ -1,26 +1,11 @@
 import axios from 'axios';
+import { PUBLIC_AUTH_ENABLED } from './features';
 
-/**
- * 🚀 Automatically determine the Base API URL
- */
-const getBaseURL = () => {
-  // 1. Use VITE_API_URL if it exists in the .env file
-  if (import.meta.env.VITE_API_URL) {
-    const url = import.meta.env.VITE_API_URL.replace(/\/+$/, '');
-    return url.endsWith('/api') ? url : `${url}/api`;
-  }
-  
-  // 2. Default to localhost port 5001 if working locally
-  if (["localhost", "127.0.0.1"].includes(window.location.hostname)) {
-    return "http://localhost:5001/api";
-  }
-
-  // 3. Same-origin fallback for deployments that proxy /api to the backend.
-  return "/api";
-};
+import { resolveApiURL } from './apiConfig.js';
 
 const API = axios.create({
-  baseURL: getBaseURL(),
+  baseURL: resolveApiURL(import.meta.env.VITE_API_URL, window.location.hostname),
+  timeout: 20000,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -54,10 +39,11 @@ API.interceptors.response.use(
     console.error('API Error Response:', message);
     
     // If status is 401 Unauthorized, logout the user and redirect to Login
-    if (error.response?.status === 401 && error.config?.url !== '/users/google') {
+    if (error.response?.status === 401 && !['/users/google', '/users/auth', '/users/admin/auth', '/users', '/users/send-otp'].includes(error.config?.url)) {
       localStorage.removeItem('userInfo');
-      if (window.location.pathname !== '/login') {
-        window.location.href = `/login?returnTo=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+      const loginPath = PUBLIC_AUTH_ENABLED ? '/login' : '/admin/login';
+      if (window.location.pathname !== loginPath) {
+        window.location.href = `${loginPath}?returnTo=${encodeURIComponent(window.location.pathname + window.location.search)}`;
       }
     }
     

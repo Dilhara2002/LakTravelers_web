@@ -1,12 +1,13 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import React, { lazy, Suspense, useEffect, useRef } from "react";
-import { features } from './services/features';
+import { features, PUBLIC_AUTH_ENABLED } from './services/features';
 import PublicExperience from './components/PublicExperience';
 import WhatsApp from './components/WhatsApp';
 import PublicVehicles from './pages/PublicVehicles';
 import CustomerReviews from './pages/CustomerReviews';
 import ReviewDecision from './pages/ReviewDecision';
 const ComingSoon = () => <section className="text-center py-24"><h1 className="text-3xl font-bold text-blue-600">Lak Travelers — Coming Soon</h1><p className="mt-4">This service is not available yet.</p><a href="/" className="inline-block mt-6 text-blue-600 underline">Explore Lak Travelers</a></section>;
+import PageMetadata from './components/PageMetadata';
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { ToastContainer, toast } from 'react-toastify';
@@ -62,22 +63,23 @@ const ProtectedRoute = ({ children }) => {
     }
   }, [userInfo]);
 
-  return userInfo ? children : <Navigate to="/login" state={{ from: location }} replace />;
+  return userInfo ? children : <Navigate to={PUBLIC_AUTH_ENABLED ? "/login" : "/admin/login"} state={{ from: location }} replace />;
 };
 
 const RoleRoute = ({ children, roles }) => {
   const location = useLocation();
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-  if (!userInfo) return <Navigate to="/login" state={{ from: location }} replace />;
-  return roles.includes(userInfo.role)
+  if (!userInfo) return <Navigate to={PUBLIC_AUTH_ENABLED ? "/login" : "/admin/login"} state={{ from: location }} replace />;
+  return (roles.includes(userInfo.role) || (userInfo.role === 'super-admin' && roles.includes('admin')))
     ? children
-    : <Navigate to="/dashboard" replace />;
+    : <Navigate to="/" replace />;
 };
 
 function App() {
   return (
     <CurrencyProvider>
       <Router>
+        <PageMetadata />
         {/* limit={1} also helps control multiple simultaneous notifications */}
         <ToastContainer position="top-center" autoClose={3000} limit={1} />
         
@@ -89,8 +91,9 @@ function App() {
             <PublicExperience><Routes>
               {/* --- 🌍 Public Routes --- */}
               <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={PUBLIC_AUTH_ENABLED ? <Login /> : <Navigate to="/" replace />} />
+              <Route path="/admin/login" element={<Login adminOnly />} />
+              <Route path="/register" element={PUBLIC_AUTH_ENABLED ? <Register /> : <Navigate to="/" replace />} />
               <Route path="/hotels" element={features.hotels ? <HotelList /> : <ComingSoon />} />
               <Route path="/hotels/:id" element={features.hotels ? <HotelDetails /> : <ComingSoon />} />
               <Route path="/tours" element={features.tourPackages ? <TourList /> : <ComingSoon />} />
@@ -98,6 +101,7 @@ function App() {
               <Route path="/vehicles" element={features.marketplaceVehicles ? <VehicleList /> : <PublicVehicles />} />
               <Route path="/vehicles/:id" element={features.marketplaceVehicles ? <VehicleDetails /> : <PublicVehicles detail />} />
               <Route path="/privacy" element={<LegalPolicy />} />
+              <Route path="/terms" element={<LegalPolicy terms />} />
               <Route path="/reviews" element={<CustomerReviews />} />
                <Route path="/gallery" element={<PublicGallery />} />
                <Route path="/admin/gallery" element={<RoleRoute roles={['admin', 'super-admin']}><AdminGallery /></RoleRoute>} />

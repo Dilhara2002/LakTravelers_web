@@ -14,7 +14,7 @@ export const submitReview = async (req, res) => {
     if (!['hotel', 'vehicle'].includes(targetType)) {
       return res.status(400).json({ success: false, message: 'Invalid review target type' });
     }
-    if (!comment || comment.trim().length < 10 || comment.length > 2000) {
+    if (typeof comment !== 'string' || comment.trim().length < 10 || comment.length > 2000) {
       return res.status(400).json({ success: false, message: 'Review must be between 10 and 2000 characters' });
     }
     const existingReview = await Review.findOne({ user: userId, [targetType]: targetId });
@@ -55,8 +55,8 @@ export const submitReview = async (req, res) => {
       newTrustScore
     });
 
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+  } catch {
+    res.status(500).json({ success: false, message: 'Unable to process reviews. Please try again.' });
   }
 };
 
@@ -69,7 +69,7 @@ export const getServiceReputation = async (req, res) => {
         const { id } = req.params;
         const reviews = await Review.find({ hotel: id }).populate("user", "name");
         res.status(200).json({ success: true, reviews });
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+    } catch {
+        res.status(500).json({ success: false, message: 'Unable to process reviews. Please try again.' });
     }
 };

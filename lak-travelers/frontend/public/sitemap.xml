@@ -5,4 +5,6 @@
   <url><loc>https://laktravelers-web.pages.dev/about</loc><priority>0.6</priority></url>
   <url><loc>https://laktravelers-web.pages.dev/privacy</loc><priority>0.3</priority></url>
   <url><loc>https://laktravelers-web.pages.dev/reviews</loc><priority>0.6</priority></url>
+  <url><loc>https://laktravelers-web.pages.dev/gallery</loc><priority>0.6</priority></url>
+  <url><loc>https://laktravelers-web.pages.dev/terms</loc><priority>0.3</priority></url>
 </urlset>

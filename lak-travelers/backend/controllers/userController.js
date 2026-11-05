@@ -13,6 +13,7 @@ import { authenticateGoogle } from '../utils/googleAuthentication.js';
 
 // store temporary OTP
 const otpStore = new Map();
+const otpRequestsInFlight = new Set();
 
 /**
  * @desc    Send OTP to Email
@@ -29,13 +30,16 @@ export const sendOTP = asyncHandler(async (req, res) => {
 
   const normalizedEmail = email.trim().toLowerCase();
   
-  // Preventing multiple OTP requests per email
+  // Reserve before any await so parallel requests cannot pass the cooldown together.
   const lastRequest = otpStore.get(`${normalizedEmail}_time`);
-  if (lastRequest && Date.now() - lastRequest < 30000) {
-    res.status(429);
-    throw new Error('Please wait 30 seconds before requesting another OTP');
+  const retryAfter = Math.max(0, Math.ceil(((lastRequest ?? 0) + 30000 - Date.now()) / 1000));
+  if (otpRequestsInFlight.has(normalizedEmail) || retryAfter > 0) {
+    const seconds = otpRequestsInFlight.has(normalizedEmail) ? Math.max(1, retryAfter || 30) : retryAfter;
+    res.set('Retry-After', String(seconds));
+    return res.status(429).json({ message: `Please wait ${seconds} seconds before requesting another OTP`, retryAfter: seconds });
   }
-
+  otpRequestsInFlight.add(normalizedEmail);
+  try {
   const userExists = await User.findOne({ email: normalizedEmail });
 
   if (!isUpdate && userExists) {
@@ -78,11 +82,13 @@ export const sendOTP = asyncHandler(async (req, res) => {
 
   try {
     // Production mode - email 
-    await sendEmail(mailOptions);
-    console.log(`✅ OTP sent successfully to: ${normalizedEmail}`);
+    const delivery = await sendEmail(mailOptions);
+    if (!delivery.accepted?.length || delivery.rejected?.length) throw new Error('Email not accepted');
+    otpStore.set(`${normalizedEmail}_time`, Date.now());
     
     res.status(200).json({ 
       message: 'OTP sent successfully!',
+      retryAfter: 30,
       email: normalizedEmail
     });
     
@@ -90,9 +96,13 @@ export const sendOTP = asyncHandler(async (req, res) => {
     console.error('Verification email delivery failed');
     
     otpStore.delete(normalizedEmail);
+    otpStore.delete(`${normalizedEmail}_time`);
     // Production mode error throw 
     res.status(503);
     throw new Error('Unable to send verification email. Please try again later.');
+  }
+  } finally {
+    otpRequestsInFlight.delete(normalizedEmail);
   }
 });
 
@@ -209,6 +219,10 @@ export const authUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email: normalizedEmail });
 
   if (user && (await user.matchPassword(password))) {
+    if (req.adminLogin && !['admin', 'super-admin'].includes(user.role)) {
+      res.status(403);
+      throw new Error('Administrator access required');
+    }
     // Check if vendor is approved
     if (user.role === 'vendor' && !user.isApproved) {
       res.status(403);

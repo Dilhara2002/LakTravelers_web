@@ -4,14 +4,15 @@ import GoogleSignIn from '../components/GoogleSignIn';
 import API from "../services/api";
 import loginImage from "../assets/Login.jpg"; 
 
-const Login = () => {
+const Login = ({ adminOnly = false }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const requested = location.state?.from ? `${location.state.from.pathname}${location.state.from.search || ''}` : new URLSearchParams(location.search).get('returnTo');
-  const destination = requested?.startsWith('/') && !requested.startsWith('//') ? requested : '/';
+  const safePath = requested?.startsWith('/') && !requested.startsWith('//') && !requested.includes('\\');
+  const destination = safePath && (!adminOnly || requested.startsWith('/admin/') && !requested.startsWith('/admin/login')) ? requested : adminOnly ? '/admin/reviews' : '/';
 
   // Scroll to the top of the page immediately upon loading
   useEffect(() => {
@@ -23,7 +24,7 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const res = await API.post("/users/auth", { email, password });
+      const res = await API.post(adminOnly ? "/users/admin/auth" : "/users/auth", { email, password });
       localStorage.setItem("userInfo", JSON.stringify(res.data));
       navigate(destination);
       window.location.reload();
@@ -43,7 +44,7 @@ const Login = () => {
         <div className="w-full md:w-1/2 p-8 md:p-14 flex flex-col justify-center">
           <div className="mb-10 text-center md:text-left">
             <h2 className="text-4xl font-black text-slate-900 mb-2 tracking-tight">
-              Welcome Back 👋
+              {adminOnly ? 'Administrator Sign In' : 'Welcome Back 👋'}
             </h2>
             <p className="text-slate-500 font-medium italic">
               Please enter your details to sign in
@@ -54,11 +55,11 @@ const Login = () => {
             <div className="space-y-4">
               {/* Email Input */}
               <div className="group">
-                <label className="block text-xs font-black text-slate-400 mb-2 uppercase tracking-widest ml-1">
+                <label htmlFor="login-email" className="block text-xs font-black text-slate-400 mb-2 uppercase tracking-widest ml-1">
                   Email Address
                 </label>
                 <input
-                  type="email"
+                  id="login-email" autoComplete="username" type="email"
                   placeholder="name@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -69,11 +70,11 @@ const Login = () => {
 
               {/* Password Input */}
               <div className="group">
-                <label className="block text-xs font-black text-slate-400 mb-2 uppercase tracking-widest ml-1">
+                <label htmlFor="login-password" className="block text-xs font-black text-slate-400 mb-2 uppercase tracking-widest ml-1">
                   Password
                 </label>
                 <input
-                  type="password"
+                  id="login-password" autoComplete="current-password" type="password"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -111,16 +112,16 @@ const Login = () => {
             </button>
           </form>
 
-          <GoogleSignIn />
+          {!adminOnly && <GoogleSignIn />}
 
-          <div className="mt-10 pt-10 border-t border-slate-100 text-center">
+          {!adminOnly && <div className="mt-10 pt-10 border-t border-slate-100 text-center">
             <p className="text-sm font-medium text-slate-500">
               Don't have an account?{' '}
               <Link to="/register" className="font-bold text-blue-600 hover:underline">
                 Register now
               </Link>
             </p>
-          </div>
+          </div>}
         </div>
 
         {/* RIGHT: IMAGE SECTION */}

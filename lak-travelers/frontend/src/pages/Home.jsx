@@ -1,6 +1,6 @@
 import { useReducedMotion } from 'framer-motion';
 import CustomerReviews from './CustomerReviews';
-import { features } from '../services/features';
+import { features, whatsappUrl, PUBLIC_AUTH_ENABLED } from '../services/features';
 import PublicVehicles from './PublicVehicles';
 import { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
@@ -41,7 +41,7 @@ const Home = () => {
       {heroImages.map((imgUrl, index) => (
         <img
           key={index}
-          src={imgUrl}
+          src={index <= currentImageIndex + 1 ? imgUrl : undefined}
           alt="Sri Lanka Paradise"
           fetchPriority={index === 0 ? "high" : "low"}
           decoding="async"
@@ -63,7 +63,7 @@ const Home = () => {
   const LoggedInUI = () => (
     <div className="bg-slate-50 min-h-screen font-sans text-slate-800">
       {/* Updated to h-screen for full viewport height */}
-      <div className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
+      <div className="relative min-h-[640px] py-16 flex items-center justify-center overflow-hidden">
         {BackgroundSlider()}
         <div className="travel-hero-copy relative z-30 max-w-5xl w-full text-center text-white space-y-8 px-6">
           <div className="inline-block">
@@ -81,14 +81,9 @@ const Home = () => {
           <p className="text-lg md:text-2xl text-slate-100 max-w-2xl mx-auto font-light leading-relaxed drop-shadow-md">
             Explore Sri Lanka with personalized travel assistance and transport. Your ultimate island journey awaits.
           </p>
-          <div className="mt-10 bg-white/10 backdrop-blur-xl p-2 rounded-3xl border border-white/30 max-w-2xl mx-auto flex flex-col sm:flex-row gap-2 shadow-2xl">
-            <div className="flex-grow flex items-center px-6">
-                <svg className="w-6 h-6 text-white/70 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                <input type="text" placeholder="Where to next?" className="w-full bg-transparent text-white placeholder-white/70 py-4 outline-none text-lg font-medium" />
-            </div>
-            <Link to={features.hotels ? "/hotels" : "/vehicles"} className="w-full sm:w-auto bg-yellow-400 hover:bg-yellow-500 text-slate-900 px-10 py-4 rounded-3xl font-bold transition shadow-lg flex items-center justify-center gap-2">
-              Explore Now
-            </Link>
+          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
+            <Link to="/vehicles" className="bg-yellow-400 text-slate-900 px-8 py-4 rounded-2xl font-bold">View Vehicles</Link>
+            <a href={whatsappUrl({ pathname: '/' })} target="_blank" rel="noopener noreferrer" className="bg-green-700 text-white px-8 py-4 rounded-2xl font-bold">WhatsApp Enquiry</a>
           </div>
         </div>
       </div>
@@ -160,7 +155,7 @@ const Home = () => {
   const GuestUI = () => (
     <div className="bg-slate-50 min-h-screen font-sans text-slate-800">
       {/* Updated to h-screen for full viewport height */}
-      <div className="relative h-screen min-h-[600px] flex items-center justify-center px-4 overflow-hidden">
+      <div className="relative min-h-[640px] py-16 flex items-center justify-center px-4 overflow-hidden">
         {BackgroundSlider()}
         <div className="travel-hero-copy relative z-30 max-w-5xl w-full text-center text-white space-y-8 px-6">
           <div className="inline-block"><span className="uppercase tracking-[0.2em] text-xs md:text-sm font-bold bg-white/10 px-6 py-2 rounded-full backdrop-blur-md border border-white/20">The Pearl of the Indian Ocean </span></div>
@@ -168,8 +163,8 @@ const Home = () => {
           <p className="text-white text-base md:text-lg font-semibold tracking-wide">LakTravelers · A Brand of IDW (Pvt) Ltd</p>
           <p className="text-lg md:text-2xl text-slate-100 max-w-2xl mx-auto font-light leading-relaxed">Personalized travel experiences and reliable transport across Sri Lanka.</p>
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-            <Link to="/register" className="bg-yellow-400 hover:bg-yellow-500 text-slate-900 px-10 py-4 rounded-2xl font-bold transition shadow-lg text-lg">Get Started Free</Link>
-            <Link to={features.hotels ? "/hotels" : "/vehicles"} className="bg-white/10 backdrop-blur-md hover:bg-white/20 text-white px-10 py-4 rounded-2xl font-bold border border-white/30 transition text-lg">View Listings</Link>
+            <Link to="/vehicles" className="bg-yellow-400 hover:bg-yellow-500 text-slate-900 px-8 py-4 rounded-2xl font-bold transition shadow-lg text-lg">View Vehicles</Link>
+            <a href={whatsappUrl({ pathname: "/" })} target="_blank" rel="noopener noreferrer" className="bg-green-700 text-white px-8 py-4 rounded-2xl font-bold text-lg">WhatsApp Enquiry</a>
           </div>
         </div>
       </div>
@@ -178,14 +173,14 @@ const Home = () => {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-4">Your Journey Starts Here</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mt-16 text-center">
-            <div className="group"><div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 transition group-hover:bg-blue-600 group-hover:text-white">1</div><h3 className="text-xl font-bold mb-3">Create Account</h3><p className="text-slate-500 max-w-xs mx-auto">Register as a Traveler or Vendor with your email within minutes.</p></div>
-            <div className="group"><div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 transition group-hover:bg-blue-600 group-hover:text-white">2</div><h3 className="text-xl font-bold mb-3">Verify Profile</h3><p className="text-slate-500 max-w-xs mx-auto">Submit details for admin approval to ensure a safe community.</p></div>
-            <div className="group"><div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 transition group-hover:bg-blue-600 group-hover:text-white">3</div><h3 className="text-xl font-bold mb-3">Start Exploring</h3><p className="text-slate-500 max-w-xs mx-auto">Explore our vehicles and contact us to plan your journey.</p></div>
+            <div className="group"><div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 transition group-hover:bg-blue-600 group-hover:text-white">1</div><h3 className="text-xl font-bold mb-3">Choose a Vehicle</h3><p className="text-slate-500 max-w-xs mx-auto">Browse our vehicles and choose one for your journey.</p></div>
+            <div className="group"><div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 transition group-hover:bg-blue-600 group-hover:text-white">2</div><h3 className="text-xl font-bold mb-3">Send an Enquiry</h3><p className="text-slate-500 max-w-xs mx-auto">Share your dates and route on WhatsApp. No account is required.</p></div>
+            <div className="group"><div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 transition group-hover:bg-blue-600 group-hover:text-white">3</div><h3 className="text-xl font-bold mb-3">Confirm Your Journey</h3><p className="text-slate-500 max-w-xs mx-auto">Confirm availability, price and arrangements directly with our team.</p></div>
           </div>
         </div>
       </section>
 
-      {features.hotels && <section className="py-20 bg-slate-50">
+      {features.hotels && PUBLIC_AUTH_ENABLED && <section className="py-20 bg-slate-50">
         <div className="container mx-auto px-4">
           <div className="bg-slate-900 rounded-[3rem] p-8 md:p-16 flex flex-col md:flex-row items-center gap-12 text-white">
             <div className="flex-1 space-y-6">

@@ -48,6 +48,9 @@ test('gallery upload stays private, requires admin, persists bytes and supports 
  assert.equal((await fetch(`${base}/${photo._id}`, { method: 'PATCH', headers, body: JSON.stringify({ published: true, caption: 'Edited test caption' }) })).status, 200);
  assert.equal((await (await fetch(base)).json()).length, 1);
  assert.deepEqual(Buffer.from(await (await fetch(`${base}/photos/${photo._id}`)).arrayBuffer()), bytes);
+ assert.equal((await fetch(`${base}/${photo._id}`, { method: 'PATCH', headers, body: JSON.stringify({ published: false }) })).status, 200);
+ assert.equal((await (await fetch(base)).json()).length, 0);
+ assert.equal((await fetch(`${base}/photos/${photo._id}`)).status, 404);
  assert.equal((await fetch(`${base}/${photo._id}`, { method: 'DELETE', headers })).status, 204);
  assert.equal(records.length, 0);
 });
@@ -77,6 +80,16 @@ test('email/password login, OTP registration, role restriction and email failure
  assert.equal(login.status, 200); assert.equal((await login.json()).role, 'admin');
  assert.match(login.headers.get('set-cookie'), /HttpOnly/); assert.match(login.headers.get('set-cookie'), /Secure/);
  assert.equal((await post('/auth', { email: user.email, password: 'wrong-password' })).status, 401);
+ for (const role of ['admin', 'super-admin']) {
+  user.role = role;
+  const adminLogin = await post('/admin/auth', { email: user.email, password: 'test-password' });
+  assert.equal(adminLogin.status, 200); assert.equal((await adminLogin.json()).role, role);
+ }
+ user.role = 'user';
+ const denied = await post('/admin/auth', { email: user.email, password: 'test-password' });
+ assert.equal(denied.status, 403); assert.equal(denied.headers.get('set-cookie'), null);
+ assert.equal((await post('/admin/auth', { email: user.email, password: 'wrong-password' })).status, 401);
+ user.role = 'admin';
  const email = 'register@example.test';
  const requested = await post('/send-otp', { email }); assert.equal(requested.status, 200);
  const response = await requested.json(); assert.equal(response.otp, undefined); assert.equal(response.debug, undefined);

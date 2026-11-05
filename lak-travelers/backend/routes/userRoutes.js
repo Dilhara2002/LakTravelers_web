@@ -33,6 +33,7 @@ const router = express.Router();
 router.post('/', authLimiter, registerUser);
 router.post('/send-otp', authLimiter, sendOTP);
 router.post('/auth', authLimiter, authUser);
+router.post('/admin/auth', authLimiter, (req, _res, next) => { req.adminLogin = true; next(); }, authUser);
 router.post('/logout', logoutUser);
 
 /**

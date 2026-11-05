@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { FaWhatsapp } from 'react-icons/fa';
-import { features, whatsappUrl } from '../services/features';
+import { features, whatsappUrl, PUBLIC_AUTH_ENABLED } from '../services/features';
 import { Link } from 'react-router-dom';
 import logoImage from "../assets/logo.png"; 
 
@@ -55,9 +55,10 @@ const Footer = () => {
           <div>
             <h3 className="font-bold text-gray-900 mb-4">Company</h3>
             <ul className="space-y-3 text-sm text-gray-500">
-              <li><Link to="/profile" className="hover:text-blue-600 transition duration-200">My Profile</Link></li>
-              <li><Link to="/my-bookings" className="hover:text-blue-600 transition duration-200">Manage Bookings</Link></li>
+              {PUBLIC_AUTH_ENABLED && <li><Link to="/profile" className="hover:text-blue-600 transition duration-200">My Profile</Link></li>}
+              {PUBLIC_AUTH_ENABLED && <li><Link to="/my-bookings" className="hover:text-blue-600 transition duration-200">Manage Bookings</Link></li>}
               <li><Link to="/contact" className="hover:text-blue-600 transition">Contact Us</Link></li>
+              <li><Link to="/reviews" className="hover:text-blue-600 transition">Reviews</Link></li>
               <li><Link to="/gallery" className="hover:text-blue-600 transition">Gallery</Link></li>
               <li><Link to="/about" className="hover:text-blue-600 transition duration-200">About Us</Link></li>
               <li><Link to="/privacy" className="hover:text-blue-600 transition duration-200">Privacy Policy</Link></li>
@@ -74,12 +75,13 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-3 justify-center md:justify-start">
                 <span className="text-blue-600">📞</span>
-                <span>+94 72 320 1365</span>
+                <a href="tel:+94723201365">Ishan: +94 72 320 1365</a>
               </li>
               <li className="flex items-center gap-3 justify-center md:justify-start">
                 <span className="text-blue-600">✉️</span>
-                <span>laktravelers@gmail.com</span>
+                <a className="break-all" href="mailto:wijesinghelageishan@gmail.com">wijesinghelageishan@gmail.com</a>
               </li>
+              <li><a href="tel:+94766860552">Manjula: +94 76 686 0552</a></li>
             </ul>
             
             {/* Social Media Links */}
@@ -96,7 +98,7 @@ const Footer = () => {
           <p className="font-semibold">&copy; {new Date().getFullYear()} LakTravelers | A Brand of IDW (Pvt) Ltd</p>
           <div className="flex gap-6 mt-4 md:mt-0">
             <Link to="/privacy" className="hover:text-blue-600 transition">Privacy Policy</Link>
-            <Link to="/privacy" className="hover:text-blue-600 transition">Terms of Use</Link>
+            <Link to="/terms" className="hover:text-blue-600 transition">Terms of Use</Link>
           </div>
         </div>
       </div>

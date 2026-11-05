@@ -13,7 +13,7 @@ const notFound = (req, res, next) => {
  */
 const errorHandler = (err, req, res, next) => {
   // If the status code is still 200, default it to 500 (Internal Server Error)
-  let statusCode = err.statusCode || (res.statusCode === 200 ? 500 : res.statusCode);
+  let statusCode = err.statusCode || err.status || (res.statusCode === 200 ? 500 : res.statusCode);
   let message = err.message;
 
   // Handle specific MongoDB invalid ObjectId errors (CastError)
@@ -23,13 +23,13 @@ const errorHandler = (err, req, res, next) => {
   }
 
   // Log error details for server-side debugging
-  console.error(`🚨 Backend Error (${statusCode}): ${message}`);
+  console.error(`Backend error (${statusCode}): ${err.name || "Error"}`);
   if (process.env.NODE_ENV !== 'production') console.error(err.stack);
 
   // Respond to the frontend with a structured JSON error object
   res.status(statusCode).json({
     success: false,
-    message: message,
+    message: statusCode >= 500 ? 'The service is temporarily unavailable. Please try again.' : message,
     // Hide the stack trace in production (e.g., Vercel/Render) for security purposes
     stack: process.env.NODE_ENV === 'production' ? null : err.stack,
   });

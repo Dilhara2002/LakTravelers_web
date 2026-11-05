@@ -1,4 +1,4 @@
-import { publicRouteEnabled } from '../services/features';
+import { publicRouteEnabled, PUBLIC_AUTH_ENABLED } from '../services/features';
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import API from "../services/api";
@@ -44,12 +44,12 @@ const Navbar = () => {
       await API.post("/users/logout");
       localStorage.removeItem("userInfo");
       setIsDropdownOpen(false);
-      navigate("/login");
+      navigate("/");
       window.location.reload(); 
     } catch (error) {
       console.error("Logout error:", error);
       localStorage.removeItem("userInfo");
-      navigate("/login");
+      navigate("/");
     }
   };
 
@@ -96,7 +96,7 @@ const Navbar = () => {
         </Link>
 
         {/* NAVIGATION LINKS */}
-        <div className="hidden xl:flex items-center space-x-8 ml-auto mr-8">
+        <div className="hidden xl:flex items-center space-x-5 ml-auto mr-6">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
             return (
@@ -132,7 +132,7 @@ const Navbar = () => {
         {/* AUTH TOOLS */}
         <div className="flex items-center gap-4 ml-auto xl:ml-0">
           
-          {user ? (
+          {user && (PUBLIC_AUTH_ENABLED || ['admin', 'super-admin'].includes(user.role)) ? (
             <div className="relative">
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -176,7 +176,7 @@ const Navbar = () => {
                 </>
               )}
             </div>
-          ) : (
+          ) : PUBLIC_AUTH_ENABLED && (
             <div className="hidden md:flex items-center gap-4">
               <Link to="/login" className="text-sm font-bold text-gray-600 hover:text-blue-600 transition">Log In</Link>
               <Link to="/register" className="rounded-full bg-blue-600 px-7 py-3 text-sm font-bold text-white shadow-md hover:bg-blue-700 hover:shadow-lg transition-all hover:-translate-y-0.5">Sign Up</Link>
@@ -219,7 +219,7 @@ const Navbar = () => {
               </Link>
             ))}
 
-            {!user && (
+            {PUBLIC_AUTH_ENABLED && !user && (
               <div className="flex flex-col gap-3 pt-6 mt-4 border-t border-gray-100">
                 <Link to="/login" onClick={closeDropdown} className="text-center py-4 text-gray-600 font-bold rounded-xl border border-gray-100">Log In</Link>
                 <Link to="/register" onClick={closeDropdown} className="text-center py-4 bg-blue-600 text-white rounded-xl font-bold shadow-md shadow-blue-100">Sign Up</Link>

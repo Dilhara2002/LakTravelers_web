@@ -38,8 +38,10 @@ test('multipart submission, moderation authorization and photo privacy work thro
  try {
   const body = new FormData(); body.set('name','Test guest'); body.set('rating','4'); body.set('comment','A thoughtful journey through Sri Lanka.');
   const photo = await readFile(new URL('../../frontend/src/assets/toyota-axio.jpg',import.meta.url));
-  body.append('photos',new Blob([photo],{type:'image/jpeg'}),'travel.jpg');
-  const result = await fetch(url,{method:'POST',body}); assert.equal(result.status,201); assert.equal(records[0].status,'pending'); assert.equal(images.length,1);
+  for (let i = 0; i < 5; i++) body.append('photos',new Blob([photo],{type:'image/jpeg'}),`travel-${i}.jpg`);
+  const result = await fetch(url,{method:'POST',body}); assert.equal(result.status,201); assert.equal(records[0].status,'pending'); assert.equal(images.length,5);
+  assert.equal(records[0].images.length,5);
+  assert.equal(records[0].notification.status, 'not-sent'); // Email configuration failure must not erase the saved submission.
   assert.equal((await (await fetch(url)).json()).length,0);
   const photoUrl = `${url}/photos/${images[0]._id}`;
   assert.equal((await fetch(photoUrl)).status,404);
@@ -60,8 +62,16 @@ test('multipart submission, moderation authorization and photo privacy work thro
   assert.equal((await change('details', {name:'Genuine name',comment:'A real customer experience.',rating:5})).status,200);
   assert.equal(draft.status,'draft');
   assert.equal((await change('status', {status:'approved'})).status,200);
+  const rejected = new CustomerReview({ name: 'Test rejection', comment: 'Isolated test review only.', rating: 3 }); records.push(rejected);
+  const reject = await fetch(`${url}/${rejected._id}/decision`, { method: 'POST', headers: {...auth('admin-test'), 'Content-Type':'application/json'}, body: JSON.stringify({ status: 'rejected' }) });
+  assert.equal(reject.status, 200); assert.equal(rejected.status, 'rejected');
+  assert.ok(!(await (await fetch(url)).json()).some(r => r._id === String(rejected._id)));
   const invalid = new FormData(); invalid.set('name','Guest'); invalid.set('rating','4'); invalid.set('comment','Another journey.'); invalid.append('photos',new Blob(['<script>bad</script>'],{type:'image/png'}),'fake.png');
   assert.equal((await fetch(url,{method:'POST',body:invalid})).status,400);
+  const excess = new FormData(); excess.set('name','Guest'); excess.set('rating','4'); excess.set('comment','Isolated six-photo limit check.');
+  for (let i = 0; i < 6; i++) excess.append('photos',new Blob([photo],{type:'image/jpeg'}),`extra-${i}.jpg`);
+  assert.equal((await fetch(url,{method:'POST',body:excess})).status,400);
+  assert.equal(images.length,5);
  } finally { await new Promise(resolve => server.close(resolve)); }
 });
 

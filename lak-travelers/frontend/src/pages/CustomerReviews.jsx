@@ -48,11 +48,10 @@ export default function CustomerReviews({ moderate = false, embedded = false }) 
    finally { inFlight = false; if (active) setLoading(false); }
   };
   refresh();
-  const timer = !moderate ? setInterval(refresh, 10000) : null;
   window.addEventListener('focus', refresh);
   const onStorage = event => { if (event.key === 'reviewsUpdatedAt') refresh(); };
   window.addEventListener('storage', onStorage);
-  return () => { active = false; clearInterval(timer); window.removeEventListener('focus', refresh); window.removeEventListener('storage', onStorage); };
+  return () => { active = false; window.removeEventListener('focus', refresh); window.removeEventListener('storage', onStorage); };
  }, [moderate]);
  const changePhotos = next => { photoRef.current = next; setPhotos(next); };
  const addPhotos = e => {
@@ -60,16 +59,18 @@ export default function CustomerReviews({ moderate = false, embedded = false }) 
   if (photos.length + files.length > 5 || files.some(f => !['image/jpeg','image/png','image/webp'].includes(f.type) || f.size > 5 * 1024 * 1024)) { setNotice('Choose up to 5 JPG, PNG or WebP photos, maximum 5 MB each.'); return; }
   setNotice(''); changePhotos([...photos, ...files.map(file => ({ file, url: URL.createObjectURL(file) }))]);
  };
+ const submitting = useRef(false);
  const submit = async e => {
-  e.preventDefault(); setNotice('');
+  e.preventDefault();
+  if (submitting.current) return; setNotice('');
   if (!name.trim() || comment.trim().length < 10 || !rating || /[<>]/.test(name + comment)) { setNotice('Enter your name, a rating and at least 10 characters of plain text.'); return; }
   const body = new FormData(); body.append('name', name.trim()); body.append('rating', rating); body.append('comment', comment.trim()); body.append('website', website.current.value);
-  photos.forEach(p => body.append('photos', p.file)); setBusy(true);
+  photos.forEach(p => body.append('photos', p.file)); submitting.current = true; setBusy(true);
   try {
    const { data } = await API.post('/customer-reviews', body, { headers: { 'Content-Type': undefined }, timeout: 60000 });
    setNotice(data.message); setName(''); setRating(''); setComment(''); photos.forEach(p => URL.revokeObjectURL(p.url)); changePhotos([]);
   } catch (err) { setNotice(err.response?.data?.message || 'Unable to submit. Please try again.'); }
-  finally { setBusy(false); }
+  finally { submitting.current = false; setBusy(false); }
  };
  const approve = async (id, status) => {
   setBusy(true); setNotice('');

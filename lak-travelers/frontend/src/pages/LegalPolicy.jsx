@@ -1,36 +1,22 @@
-import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
-const LegalPolicy = () => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  return (
-    <div className="bg-[#f8fafc] min-h-screen py-16 md:py-24 font-sans">
-      <div className="container mx-auto px-4 max-w-4xl">
-        <div className="text-center mb-16 animate-bounce-subtle">
-          <h1 className="text-4xl md:text-6xl font-black text-slate-900 mb-6">
-            Privacy <span className="text-blue-600">Policy</span>
-          </h1>
-          <p className="text-slate-500 text-lg">Your trust is our foundation at Lak Travelers.</p>
-        </div>
-
-        <div className="space-y-8">
-          <section className="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100">
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">01. Introduction</h2>
-            <p className="text-slate-600 leading-relaxed">
-              Welcome to Lak Travelers, managed by <strong>Mr. Wijesinghe</strong>. We ensure your data is safe.
-            </p>
-          </section>
-
-          <section className="bg-slate-900 rounded-[2rem] p-8 text-white shadow-xl">
-            <h2 className="text-2xl font-bold mb-4">🛡️ Security</h2>
-            <p className="text-slate-300">We use 100% encryption for all your travel bookings and personal details.</p>
-          </section>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default LegalPolicy;
+export default function LegalPolicy({ terms = false }) {
+  const sections = terms ? [
+    ['Enquiries and confirmation', 'Lak Travelers is a Sri Lankan travel and vehicle enquiry service under IDW (Pvt) Ltd. Sending an enquiry does not confirm a booking. Confirm vehicle availability, itinerary, price, payment arrangements and any cancellation conditions with our team before committing.'],
+    ['Using this website', 'Provide accurate information and use the service lawfully. Do not upload harmful files, impersonate others or attempt to access another person’s account. Keep your account credentials private.'],
+    ['Reviews and photos', 'Submit genuine experiences and only photos you have permission to share. Avoid private contact details or images of others without their permission. Submissions are moderated before public display and may be declined.'],
+    ['Service information', 'Listings and photos help you make an enquiry. Availability and arrangements may change; confirm current details with us. WhatsApp and other external services operate under their own terms and privacy policies.'],
+    ['Questions', 'Contact us before booking if you have questions about arrangements, cancellations or these terms.'],
+  ] : [
+    ['Information you provide', 'Lak Travelers, a brand of IDW (Pvt) Ltd, processes account details such as name, email and a password hash; booking or enquiry details; and reviews, ratings and uploaded photos. Information you send on WhatsApp is handled through that service as well as by our team.'],
+    ['How information is used', 'We use this information to respond to enquiries, manage accounts and bookings, moderate submissions and operate the website. Approved reviews display your submitted name, rating, review text and photos publicly. Pending reviews and private drafts are restricted to administrators.'],
+    ['Storage and service providers', 'Reviews and gallery photos are stored in MongoDB. Website hosting, API hosting, email delivery and optional sign-in providers process information needed to provide their services. Admin review notifications may include submitted review details. Authentication uses a session cookie and browser storage.'],
+    ['Security and retention', 'We use access controls, password hashing and HTTPS on the deployed service. No system can guarantee absolute security. Information remains stored until removed through applicable administration processes; the website does not currently apply an automatic retention period. Backups may retain earlier copies.'],
+    ['Your choices', 'WhatsApp enquiries do not require a website account. Avoid submitting sensitive information or photos you lack permission to share. Contact us to request access, correction or removal of your information or published content; we may need to verify your identity and review any outstanding booking obligations.'],
+  ];
+  return <section className="mx-auto max-w-4xl px-4 py-12 md:py-20">
+    <h1 className="text-4xl md:text-5xl font-black mb-8">{terms ? 'Terms of Use' : 'Privacy Policy'}</h1>
+    <div className="space-y-6">{sections.map(([title, text]) => <section key={title} className="rounded-2xl bg-white border p-6 md:p-8"><h2 className="text-xl font-bold mb-3">{title}</h2><p className="text-slate-600 leading-relaxed">{text}</p></section>)}</div>
+    <p className="mt-8">Questions or requests? <Link to="/contact" className="text-blue-700 underline">Contact Lak Travelers</Link>.</p>
+  </section>;
+}

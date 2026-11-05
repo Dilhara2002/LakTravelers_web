@@ -21,9 +21,10 @@ import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 const app = express();
 const projectRoot = path.resolve();
-const configuredOrigins = (process.env.ALLOWED_ORIGINS || process.env.FRONTEND_URL || '')
+const configuredOrigins = [process.env.ALLOWED_ORIGINS, process.env.FRONTEND_URL].filter(Boolean).join(',')
   .split(',').map((origin) => origin.trim()).filter(Boolean);
 const allowedOrigins = new Set([
+  'https://laktravelers-web.pages.dev',
   ...(process.env.NODE_ENV === 'production' ? [] : ['http://localhost:5173', 'http://127.0.0.1:5173']),
   ...configuredOrigins,
 ]);
@@ -39,6 +40,7 @@ app.use(cors({
     return callback(Object.assign(new Error('Origin is not allowed'), { statusCode: 403 }));
   },
   credentials: true,
+  exposedHeaders: ['Retry-After'],
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
 }));

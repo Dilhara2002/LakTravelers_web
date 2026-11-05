@@ -3,6 +3,7 @@ import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
 import dotenv from 'dotenv';
 import { protect, vendor } from '../middleware/authMiddleware.js';
+import { imageType } from './customerReviewRoutes.js';
 import { uploadLimiter } from '../middleware/rateLimitMiddleware.js';
 
 dotenv.config();
@@ -29,8 +30,8 @@ const upload = multer({
 // Access this via: POST /api/upload
 router.post('/', protect, vendor, uploadLimiter, upload.single('image'), async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ message: 'No file uploaded' });
+    if (!req.file || imageType(req.file.buffer) !== req.file.mimetype) {
+      return res.status(400).json({ message: 'Choose a valid JPEG, PNG or WebP image' });
     }
 
     const result = await new Promise((resolve, reject) => {
@@ -48,8 +49,8 @@ router.post('/', protect, vendor, uploadLimiter, upload.single('image'), async (
       publicId: result.public_id,
     });
   } catch (error) {
-    console.error('Upload Error:', error);
-    res.status(500).json({ message: 'Upload failed', error: error.message });
+    console.error('Upload failed:', error.name);
+    res.status(500).json({ message: 'Upload failed. Please try again.' });
   }
 });
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import API from '../services/api';
 import { toast } from 'react-toastify';
@@ -22,6 +22,26 @@ const Register = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isOtpSent, setIsOtpSent] = useState(false);
+  const [retryAt, setRetryAt] = useState(0);
+  const [secondsLeft, setSecondsLeft] = useState(0);
+  const sendingOtp = useRef(false);
+
+  const startCooldown = (seconds) => {
+    const duration = Number.isFinite(Number(seconds)) && Number(seconds) > 0 ? Math.ceil(Number(seconds)) : 30;
+    setSecondsLeft(duration);
+    setRetryAt(Date.now() + duration * 1000);
+  };
+  useEffect(() => {
+    if (!retryAt) return;
+    const update = () => {
+      const remaining = Math.max(0, Math.ceil((retryAt - Date.now()) / 1000));
+      setSecondsLeft(remaining);
+      if (!remaining) setRetryAt(0);
+    };
+    update();
+    const timer = setInterval(update, 250);
+    return () => clearInterval(timer);
+  }, [retryAt]);
 
   const userInfo = useMemo(() => {
     const saved = localStorage.getItem('userInfo');
@@ -56,23 +76,28 @@ const Register = () => {
 
   const handleSendOtp = async (e) => {
     e.preventDefault();
+    if (sendingOtp.current || isLoading || Date.now() < retryAt) return;
 
     if (formData.password !== formData.confirmPassword) {
       toast.error('Passwords do not match! ❌');
       return;
     }
 
+    sendingOtp.current = true;
     setIsLoading(true);
     try {
-      await API.post('/users/send-otp', {
+      const { data } = await API.post('/users/send-otp', {
         email: formData.email.trim().toLowerCase(),
       });
 
+      startCooldown(data.retryAfter || 30);
       setIsOtpSent(true);
       toast.success('Verification code sent! 📩');
     } catch (error) {
+      if (error.response?.status === 429) startCooldown(error.response.headers?.['retry-after'] || error.response.data?.retryAfter || 30);
       toast.error(error.response?.data?.message || 'OTP failed');
     } finally {
+      sendingOtp.current = false;
       setIsLoading(false);
     }
   };
@@ -134,7 +159,7 @@ const Register = () => {
                 </label>
                 <label htmlFor="email" className="block text-sm font-semibold text-slate-700">
                   Email Address
-                  <input id="email" name="email" value={formData.email} type="email" autoComplete="email" required placeholder="Email" onChange={handleChange} className="mt-2 block w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10" />
+                  <input id="email" name="email" disabled={isLoading} value={formData.email} type="email" autoComplete="email" required placeholder="Email" onChange={handleChange} className="mt-2 block w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10" />
                 </label>
                 <label htmlFor="password" className="block text-sm font-semibold text-slate-700">
                   Password
@@ -145,8 +170,8 @@ const Register = () => {
                   <input id="confirmPassword" name="confirmPassword" value={formData.confirmPassword} autoComplete="new-password" type="password" placeholder="Confirm Password" minLength="8" required onChange={handleChange} className="mt-2 block w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10" />
                 </label>
 
-                <button type="submit" className="w-full rounded-2xl bg-blue-600 px-6 py-3.5 font-bold text-white shadow-md transition hover:bg-blue-700 disabled:opacity-50" disabled={isLoading}>
-                  {isLoading ? 'Sending...' : 'Get OTP'}
+                <button type="submit" className="w-full rounded-2xl bg-blue-600 px-6 py-3.5 font-bold text-white shadow-md transition hover:bg-blue-700 disabled:opacity-50" disabled={isLoading || secondsLeft > 0}>
+                  {isLoading ? 'Sending...' : secondsLeft > 0 ? `Request again in ${secondsLeft}s` : 'Get OTP'}
                 </button>
 
               </>
@@ -167,6 +192,7 @@ const Register = () => {
                 <button type="button" disabled={isLoading} onClick={() => { setIsOtpSent(false); setFormData(previous => ({ ...previous, otp: '' })); }} className="w-full rounded-xl border border-slate-300 px-4 py-3 font-semibold text-blue-700">Change email or request a new code</button>
               </>
             )}
+            {secondsLeft > 0 && <p role="status" className="text-sm text-slate-600">You can request another code in {secondsLeft} seconds.</p>}
           </form>
           {!isOtpSent && <GoogleSignIn />}
 
