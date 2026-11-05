@@ -1,4 +1,5 @@
 import React from 'react';
+import founderPhoto from "../assets/founder.jpg";
 import ceoPhoto from "../assets/manjula-kumara-ceo.jpg";
 
 const AboutUs = () => {
@@ -43,24 +44,36 @@ const AboutUs = () => {
           </div>
         </div>
 
-        {/* --- CEO profile --- */}
-        <div data-reveal className="bg-slate-900 rounded-[4rem] p-8 md:p-16 text-white flex flex-col md:flex-row items-center gap-12 shadow-2xl shadow-blue-900/10">
-          <div className="travel-founder-photo w-60 h-80 md:w-72 md:h-96 rounded-[2.5rem] overflow-hidden bg-slate-800 flex-shrink-0 border-4 border-slate-700 shadow-inner">
-            <img
-              src={ceoPhoto}
-              alt="Manjula Kumara, Chief Executive Officer of Lak Travelers" width="768" height="1001"
-              loading="lazy" decoding="async" className="w-full h-full object-cover object-top"
-            />
-          </div>
-          <div className="space-y-6 text-center md:text-left">
-            <span className="bg-blue-600 text-[10px] px-3 py-1 rounded-full uppercase font-bold tracking-widest">Chief Executive Officer (CEO)</span>
-            <h2 className="text-3xl md:text-5xl font-black italic">Manjula Kumara</h2>
-            <p className="text-slate-400 text-lg font-medium">Lak Travelers · A Brand of IDW (Pvt) Ltd</p>
-            <p className="text-slate-300 leading-relaxed max-w-xl text-base md:text-lg">
-              Contact our team for vehicle availability and help planning your journey across Sri Lanka.
-            </p>
-          </div>
-        </div>
+        {/* --- Leadership profiles --- */}
+        <section aria-label="Our leadership" className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <article data-reveal className="min-w-0 bg-slate-900 rounded-[3rem] p-6 sm:p-8 text-white flex flex-col items-center gap-8 shadow-2xl shadow-blue-900/10">
+            <div className="w-full max-w-72 aspect-[3/4] rounded-[2.5rem] overflow-hidden bg-slate-800 border-4 border-slate-700">
+              <img src={founderPhoto} alt="Ishan Wijesinghe, Founder of Lak Travelers" width="750" height="1000" loading="lazy" decoding="async" className="w-full h-full object-cover object-top" />
+            </div>
+            <div className="space-y-5 text-center">
+              <span className="inline-block bg-blue-600 text-xs px-3 py-1 rounded-full font-bold">Founder — Lak Travelers</span>
+              <h2 className="text-3xl sm:text-4xl font-black">Ishan Wijesinghe</h2>
+              <p className="text-slate-400 text-lg font-medium">Ishan Wijesinghe — Founder — LakTravelers</p>
+              <blockquote className="text-xl font-bold italic">"Travel is the only thing you buy that makes you richer."</blockquote>
+              <p className="text-slate-300 leading-relaxed text-base md:text-lg">
+                I founded Lak Travelers to help you experience Sri Lanka in a way that feels personal. From listening to your travel plans to helping with the details, I focus on thoughtful customer care and reliable service so you can enjoy the journey.
+              </p>
+            </div>
+          </article>
+          <article data-reveal className="min-w-0 bg-slate-900 rounded-[3rem] p-6 sm:p-8 text-white flex flex-col items-center gap-8 shadow-2xl shadow-blue-900/10">
+            <div className="w-full max-w-72 aspect-[3/4] rounded-[2.5rem] overflow-hidden bg-slate-800 border-4 border-slate-700">
+              <img src={ceoPhoto} alt="Manjula Kumara, Chief Executive Officer of Lak Travelers" width="767" height="1000" loading="lazy" decoding="async" className="w-full h-full object-cover object-top" />
+            </div>
+            <div className="space-y-5 text-center">
+              <span className="inline-block bg-blue-600 text-xs px-3 py-1 rounded-full font-bold">Chief Executive Officer (CEO)</span>
+              <h2 className="text-3xl sm:text-4xl font-black">Manjula Kumara</h2>
+              <p className="text-slate-400 text-lg font-medium">Lak Travelers · A Brand of IDW (Pvt) Ltd</p>
+              <p className="text-slate-300 leading-relaxed text-base md:text-lg">
+                Contact our team for vehicle availability and help planning your journey across Sri Lanka.
+              </p>
+            </div>
+          </article>
+        </section>
 
         {/* --- Location & Contact --- */}
         <div id="contact" data-reveal className="mt-24 text-center">
