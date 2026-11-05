@@ -29,7 +29,7 @@ export function validateReview(body, files) {
 }
 const publicFields = 'name rating comment images createdAt';
 router.get('/', async (_req, res) => res.json(await CustomerReview.find({ status: 'approved' }).select(publicFields).sort({ createdAt: -1 }).limit(100).lean()));
-router.get('/moderation', protect, admin, async (_req, res) => res.json(await CustomerReview.find({ status: { $in: ['draft', 'pending'] } }).select(`${publicFields} status draftLabel updatedAt notification decisionAt`).sort({ createdAt: 1 }).limit(100).lean()));
+router.get('/moderation', protect, admin, async (_req, res) => res.json(await CustomerReview.find({ status: { $in: ['draft', 'pending', 'approved'] } }).select(`${publicFields} status draftLabel updatedAt notification decisionAt`).sort({ createdAt: 1 }).limit(100).lean()));
 router.patch('/:id/details', protect, admin, async (req, res) => {
  const review = await CustomerReview.findById(req.params.id);
  if (!review) return res.status(404).json({ message: 'Review not found.' });
@@ -50,7 +50,7 @@ async function decide(req, res) {
  if (!['approved', 'rejected'].includes(req.body.status)) throw fail('Invalid moderation status.');
  const existing = await CustomerReview.findById(req.params.id).select('name comment rating status updatedAt');
  if (!existing) return res.status(404).json({ message: 'Review not found.' });
- if (!['draft', 'pending'].includes(existing.status)) return res.status(409).json({ message: 'This review has already been processed.' });
+ if (!['draft', 'pending', 'approved'].includes(existing.status) || (existing.status === 'approved' && req.body.status !== 'rejected')) return res.status(409).json({ message: 'This review has already been processed.' });
  if (req.body.status === 'approved') validateReview(existing, []);
  // Compare-and-set makes simultaneous or repeated decisions safe, including edits during confirmation.
  const review = await CustomerReview.findOneAndUpdate({ _id: existing._id, status: existing.status, updatedAt: existing.updatedAt }, { $set: { status: req.body.status, decisionAt: new Date() } }, { new: true, runValidators: true }).select(publicFields);
@@ -79,7 +79,7 @@ router.get('/photos/:id', photo);
 router.get('/moderation/photos/:id', protect, admin, photo);
 router.post('/', createRateLimiter({ windowMs: 60 * 60 * 1000, max: 5, message: 'Please wait before submitting another review.' }), (req, res, next) => upload(req, res, err => next(err ? fail(err.message) : undefined)), async (req, res) => {
  const fields = validateReview(req.body, req.files || []);
- const review = new CustomerReview(fields);
+ const review = new CustomerReview({ ...fields, status: 'approved', decisionAt: new Date() });
  try {
   for (const file of req.files || []) {
    const image = await CustomerReviewImage.create({ review: review._id, data: file.buffer, contentType: imageType(file.buffer) });
@@ -90,7 +90,6 @@ router.post('/', createRateLimiter({ windowMs: 60 * 60 * 1000, max: 5, message: 
   await CustomerReviewImage.deleteMany({ review: review._id });
   throw err;
  }
- await notifyReview(review);
- res.status(201).json({ message: 'Thank you! Your review has been submitted for approval.' });
+ res.status(201).json({ message: 'Thank you! Your review is now published.' });
 });
 export default router;

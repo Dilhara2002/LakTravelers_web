@@ -39,21 +39,29 @@ test('multipart submission, moderation authorization and photo privacy work thro
   const body = new FormData(); body.set('name','Test guest'); body.set('rating','4'); body.set('comment','A thoughtful journey through Sri Lanka.');
   const photo = await readFile(new URL('../../frontend/src/assets/toyota-axio.jpg',import.meta.url));
   for (let i = 0; i < 5; i++) body.append('photos',new Blob([photo],{type:'image/jpeg'}),`travel-${i}.jpg`);
-  const result = await fetch(url,{method:'POST',body}); assert.equal(result.status,201); assert.equal(records[0].status,'pending'); assert.equal(images.length,5);
+  const result = await fetch(url,{method:'POST',body}); assert.equal(result.status,201); assert.equal(records[0].status,'approved'); assert.equal(images.length,5);
   assert.equal(records[0].images.length,5);
   assert.equal(records[0].notification.status, 'not-sent'); // Email configuration failure must not erase the saved submission.
-  assert.equal((await (await fetch(url)).json()).length,0);
+  assert.equal((await (await fetch(url)).json()).length,1);
   const photoUrl = `${url}/photos/${images[0]._id}`;
-  assert.equal((await fetch(photoUrl)).status,404);
+  assert.equal((await fetch(photoUrl)).status,200);
   assert.equal((await fetch(`${url}/moderation`)).status,401);
   const auth = role => ({Authorization:`Bearer ${jwt.sign({userId:role},process.env.JWT_SECRET,{issuer:'lak-travelers-api',audience:'lak-travelers-client'})}`});
   assert.equal((await fetch(`${url}/moderation`,{headers:auth('user-test')})).status,403);
   assert.equal((await fetch(`${url}/moderation`,{headers:auth('admin-test')})).status,200);
   assert.equal((await fetch(`${url}/moderation/photos/${images[0]._id}`,{headers:auth('admin-test')})).status,200);
-  assert.equal((await fetch(`${url}/${records[0]._id}/status`,{method:'PATCH',headers:{...auth('admin-test'),'Content-Type':'application/json'},body:JSON.stringify({status:'approved'})})).status,200);
+  assert.equal((await fetch(`${url}/${records[0]._id}/status`,{method:'PATCH',headers:{...auth('admin-test'),'Content-Type':'application/json'},body:JSON.stringify({status:'approved'})})).status,409);
   assert.equal((await (await fetch(url)).json()).length,1);
   const publicPhoto = await fetch(photoUrl); assert.equal(publicPhoto.status,200); assert.equal(publicPhoto.headers.get('content-type'),'image/jpeg');
   assert.deepEqual(Buffer.from(await publicPhoto.arrayBuffer()),photo);
+  const unpublish = await fetch(`${url}/${records[0]._id}/decision`, {
+    method:'POST',
+    headers:{...auth('admin-test'),'Content-Type':'application/json'},
+    body:JSON.stringify({status:'rejected'})
+  });
+  assert.equal(unpublish.status,200);
+  assert.equal((await (await fetch(url)).json()).length,0);
+  assert.equal((await fetch(photoUrl)).status,404);
   const draft = new CustomerReview({ name: '', comment: '', status: 'draft', rating: 5 }); records.push(draft);
   await draft.validate();
   const change = (path, data, role = 'admin-test') => fetch(`${url}/${draft._id}/${path}`, { method: 'PATCH', headers: {...auth(role), 'Content-Type':'application/json'}, body: JSON.stringify(data) });
