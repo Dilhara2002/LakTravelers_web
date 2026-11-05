@@ -69,7 +69,7 @@ const AboutUs = () => {
               <h2 className="text-3xl sm:text-4xl font-black">Manjula Kumara</h2>
               <p className="text-slate-400 text-lg font-medium">Lak Travelers · A Brand of IDW (Pvt) Ltd</p>
               <p className="text-slate-300 leading-relaxed text-base md:text-lg">
-                Contact our team for vehicle availability and help planning your journey across Sri Lanka.
+                As the Chief Executive Officer of Lak Travelers, Manjula Kumara is focused on making every journey comfortable and well-organized. From vehicle arrangements to travel planning, our goal is to provide reliable service, clear communication, and thoughtful customer care so every traveler can explore Sri Lanka with confidence.
               </p>
             </div>
           </article>
