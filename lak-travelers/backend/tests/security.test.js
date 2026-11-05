@@ -20,5 +20,16 @@ test('Cloudflare preflight works and unrelated origins are rejected', async t =>
   const allowed = await fetch(url, { method: 'OPTIONS', headers: { Origin: 'https://laktravelers-web.pages.dev', 'Access-Control-Request-Method': 'POST' } });
   assert.equal(allowed.status, 204);
   assert.equal(allowed.headers.get('access-control-allow-origin'), 'https://laktravelers-web.pages.dev');
+  const previewOrigin = 'https://b580029e.laktravelers-web.pages.dev';
+  const preview = await fetch(url, {
+    method: 'OPTIONS',
+    headers: {
+      Origin: previewOrigin,
+      'Access-Control-Request-Method': 'POST'
+    }
+  });
+  assert.equal(preview.status, 204);
+  assert.equal(preview.headers.get('access-control-allow-origin'), previewOrigin);
   assert.equal((await fetch(url, { headers: { Origin: 'https://untrusted.example' } })).status, 403);
+  assert.equal((await fetch(url, { headers: { Origin: 'https://fake.laktravelers-web.pages.dev.evil.com' } })).status, 403);
 });

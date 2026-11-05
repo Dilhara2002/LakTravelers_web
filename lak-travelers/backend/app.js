@@ -36,7 +36,9 @@ app.use(helmet({
 }));
 app.use(cors({
   origin(origin, callback) {
-    if (!origin || allowedOrigins.has(origin)) return callback(null, true);
+    const isCloudflarePreview = typeof origin === 'string'
+      && /^https:\/\/[a-z0-9-]+\.laktravelers-web\.pages\.dev$/.test(origin);
+    if (!origin || allowedOrigins.has(origin) || isCloudflarePreview) return callback(null, true);
     return callback(Object.assign(new Error('Origin is not allowed'), { statusCode: 403 }));
   },
   credentials: true,
