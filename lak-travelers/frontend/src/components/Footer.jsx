@@ -81,7 +81,6 @@ const Footer = () => {
                 <span className="text-blue-600">✉️</span>
                 <a className="break-all" href="mailto:wijesinghelageishan@gmail.com">wijesinghelageishan@gmail.com</a>
               </li>
-              <li><a href="tel:+94766860552">Manjula: +94 76 686 0552</a></li>
             </ul>
             
             {/* Social Media Links */}
