@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import PhotoLightbox from '../components/PhotoLightbox';
 import API from '../services/api';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 export function Photo({ id, moderate, open }) {
  const [failed, setFailed] = useState(false);
@@ -36,7 +37,10 @@ export default function CustomerReviews({ moderate = false, embedded = false }) 
  const [reviews, setReviews] = useState([]), [loading, setLoading] = useState(true), [error, setError] = useState('');
  const [name, setName] = useState(''), [rating, setRating] = useState(''), [comment, setComment] = useState('');
  const [photos, setPhotos] = useState([]), [busy, setBusy] = useState(false), [notice, setNotice] = useState(''), [lightbox, setLightbox] = useState('');
- const photoRef = useRef([]), website = useRef(null);
+ const photoRef = useRef([]), website = useRef(null), formRef = useRef(null);
+ const [formOpen, setFormOpen] = useState(() => !moderate && !embedded && window.location.hash === '#write-review');
+ const [refreshVersion, setRefreshVersion] = useState(0);
+ const reducedMotion = useReducedMotion();
  useEffect(() => () => photoRef.current.forEach(p => URL.revokeObjectURL(p.url)), []);
  useEffect(() => {
   let active = true, inFlight = false;
@@ -52,7 +56,7 @@ export default function CustomerReviews({ moderate = false, embedded = false }) 
   const onStorage = event => { if (event.key === 'reviewsUpdatedAt') refresh(); };
   window.addEventListener('storage', onStorage);
   return () => { active = false; window.removeEventListener('focus', refresh); window.removeEventListener('storage', onStorage); };
- }, [moderate]);
+ }, [moderate, refreshVersion]);
  const changePhotos = next => { photoRef.current = next; setPhotos(next); };
  const addPhotos = e => {
   const files = Array.from(e.target.files); e.target.value = '';
@@ -68,7 +72,7 @@ export default function CustomerReviews({ moderate = false, embedded = false }) 
   photos.forEach(p => body.append('photos', p.file)); submitting.current = true; setBusy(true);
   try {
    const { data } = await API.post('/customer-reviews', body, { headers: { 'Content-Type': undefined }, timeout: 60000 });
-   setNotice(data.message); API.get('/customer-reviews').then(({ data: latest }) => setReviews(latest)).catch(() => {}); setName(''); setRating(''); setComment(''); photos.forEach(p => URL.revokeObjectURL(p.url)); changePhotos([]);
+   setNotice(data.message); setFormOpen(false); setRefreshVersion(version => version + 1); setName(''); setRating(''); setComment(''); photos.forEach(p => URL.revokeObjectURL(p.url)); changePhotos([]);
   } catch (err) { setNotice(err.response?.data?.message || 'Unable to submit. Please try again.'); }
   finally { submitting.current = false; setBusy(false); }
  };
@@ -86,22 +90,26 @@ export default function CustomerReviews({ moderate = false, embedded = false }) 
  };
  const Heading = embedded ? 'h2' : 'h1';
  const input = 'block mt-2 w-full rounded-xl border border-slate-300 p-3 focus:outline-blue-600';
- return <section className="mx-auto max-w-6xl px-4 py-12 md:py-20 pb-28">
+ return <section className="mx-auto max-w-6xl px-3 sm:px-4 py-8 md:py-14 pb-20">
  <Heading className="text-3xl md:text-5xl font-black">{moderate ? 'Review Moderation' : 'Customer Reviews'}</Heading>
- <p className="mt-4 mb-10 text-slate-500">{moderate ? 'Complete the private drafts with genuine customer details, save your changes, then approve them for public display.' : 'Share your Sri Lanka journey with Lak Travelers. Reviews are published immediately and may be removed if inappropriate. Visitor reviews are not independently verified.'}</p>
- <div className={`grid gap-10 ${moderate || embedded ? '' : 'lg:grid-cols-2'}`}>
- {!moderate && !embedded && <form id="write-review" onSubmit={submit} className="bg-white rounded-3xl border p-6 md:p-8 shadow-sm self-start"><h2 className="text-2xl font-bold mb-6">Share your experience</h2><fieldset disabled={busy} className="space-y-5">
+ <p className="mt-3 mb-5 text-sm sm:text-base text-slate-500">{moderate ? 'Complete the private drafts with genuine customer details, save your changes, then approve them for public display.' : 'Share your Sri Lanka journey with Lak Travelers. Reviews are published immediately and may be removed if inappropriate. Visitor reviews are not independently verified.'}</p>
+ {!moderate && !embedded && <button type="button" disabled={busy} aria-expanded={formOpen} aria-controls="write-review" onClick={() => setFormOpen(open => !open)} className="mb-5 min-h-11 rounded-xl bg-blue-600 px-4 py-2 text-sm sm:text-base font-bold text-white disabled:opacity-50">{formOpen ? 'Cancel / Close Form' : 'Write a Review'}</button>}
+ {!moderate && notice && <p role="status" className="mb-5 rounded-xl bg-blue-50 p-3 text-sm text-blue-900">{notice}</p>}
+ <div className={`grid items-start gap-5 md:gap-8 ${formOpen && !moderate && !embedded ? 'lg:grid-cols-2' : ''}`}>
+ <AnimatePresence initial={false}>
+ {!moderate && !embedded && formOpen && <motion.div key="review-form" initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: reducedMotion ? 0 : 0.25 }} className="min-w-0 overflow-hidden" onAnimationComplete={() => { if (formOpen) formRef.current?.scrollIntoView({ behavior: reducedMotion ? 'instant' : 'smooth', block: 'start' }); }}><form ref={formRef} id="write-review" onSubmit={submit} className="scroll-mt-28 bg-white rounded-2xl border p-4 sm:p-6 shadow-sm"><h2 className="text-xl sm:text-2xl font-bold mb-4">Share your experience</h2><fieldset disabled={busy} className="space-y-4">
  <label className="block font-medium">Your name<input required maxLength={80} autoComplete="name" value={name} onChange={e => setName(e.target.value)} className={input} /></label>
- <fieldset><legend className="font-medium mb-2">Your rating (required)</legend><div className="flex gap-1 sm:gap-2">{[1,2,3,4,5].map(n => <label key={n} className="cursor-pointer text-center"><input required type="radio" name="rating" value={n} checked={Number(rating) === n} onChange={e => setRating(e.target.value)} className="peer sr-only" /><span aria-hidden="true" className={`block rounded-lg px-2 sm:px-3 py-2 text-3xl peer-focus-visible:outline peer-focus-visible:outline-blue-600 ${n <= Number(rating) ? 'text-amber-500 bg-amber-50' : 'text-slate-400 bg-slate-50'}`}>★</span><span className="sr-only">{n} {n === 1 ? 'star' : 'stars'}</span></label>)}</div></fieldset>
+ <fieldset><legend className="font-medium mb-2">Your rating (required)</legend><div className="flex gap-1 sm:gap-2">{[1,2,3,4,5].map(n => <label key={n} className="cursor-pointer text-center"><input required type="radio" name="rating" value={n} checked={Number(rating) === n} onChange={e => setRating(e.target.value)} className="peer sr-only" /><span aria-hidden="true" className={`flex h-11 w-11 items-center justify-center rounded-lg text-2xl peer-focus-visible:outline peer-focus-visible:outline-blue-600 ${n <= Number(rating) ? 'text-amber-500 bg-amber-50' : 'text-slate-400 bg-slate-50'}`}>★</span><span className="sr-only">{n} {n === 1 ? 'star' : 'stars'}</span></label>)}</div></fieldset>
  <label className="block font-medium">Your review<textarea required minLength={10} maxLength={2000} rows={5} value={comment} onChange={e => setComment(e.target.value)} className={input} /><span className="text-xs text-slate-500">10–2000 characters. Please avoid personal contact information.</span></label>
- <label className="block font-medium">Travel photos (optional)<input type="file" accept="image/jpeg,image/png,image/webp" multiple onChange={addPhotos} className="block mt-2 w-full text-sm" /><span className="text-xs text-slate-500">Up to 5 photos, maximum 5 MB each. Uploaded photos will appear publicly immediately.</span></label>
+ <label className="block font-medium">Travel photos (optional)<input type="file" accept="image/jpeg,image/png,image/webp" multiple onChange={addPhotos} className="block mt-2 w-full min-w-0 text-sm" /><span className="text-xs text-slate-500">Up to 5 photos, maximum 5 MB each. Uploaded photos will appear publicly immediately.</span></label>
  <div className="flex flex-wrap gap-3">{photos.map((p,i) => <div key={p.url}><img src={p.url} alt={`Selected photo ${i+1}`} className="w-24 h-24 rounded-xl object-cover" /><button type="button" aria-label={`Remove photo ${i+1}`} className="text-red-700 text-sm underline" onClick={() => { URL.revokeObjectURL(p.url); changePhotos(photos.filter((_,j) => i !== j)); }}>Remove</button></div>)}</div>
  <div hidden><label>Leave empty<input ref={website} name="website" tabIndex={-1} autoComplete="off" /></label></div>
- <button className="rounded-xl bg-blue-600 px-6 py-3 font-bold text-white disabled:opacity-50" type="submit">{busy ? 'Submitting…' : 'Submit Review'}</button></fieldset>
- {notice && <p role="status" className="mt-5 rounded-xl bg-blue-50 p-4 text-blue-900">{notice}</p>}</form>}
- <div className="space-y-6">{loading && <p role="status">Loading reviews…</p>}{error && <p role="alert" className="text-red-700">{error}</p>}
- {!loading && !error && !reviews.length && <div className="bg-white p-10 rounded-3xl border border-dashed"><h2 className="text-xl font-bold">{moderate ? 'No reviews awaiting approval' : 'No reviews yet'}</h2><p className="mt-3 text-slate-500">{moderate ? 'New submissions will appear here.' : 'Have you travelled with us? Be the first to share your experience.'}</p>{!moderate && <Link to={embedded ? '/reviews#write-review' : '#write-review'} className="inline-block mt-5 rounded-xl bg-blue-600 px-5 py-3 text-white font-bold">Write a Review</Link>}</div>}
- {reviews.map(r => <article key={r._id} className="bg-white p-6 rounded-3xl border shadow-sm"><h2 className="text-xl font-bold break-words">{r.name || r.draftLabel || 'Unnamed review'}</h2>{moderate && <p className="mt-1 text-sm text-blue-700">{r.status === 'draft' ? `${r.draftLabel || 'Admin draft'} — private` : r.status === 'approved' ? 'Published' : 'Pending approval'}</p>}<div className="text-amber-600 my-2" aria-label={`${r.rating} out of 5 stars`}>{'★'.repeat(r.rating)}{'☆'.repeat(5-r.rating)}</div><time dateTime={r.createdAt} className="text-sm text-slate-500">{new Date(r.createdAt).toLocaleDateString()}</time><p className="my-4 whitespace-pre-wrap break-words">{r.comment}</p><div className="flex flex-wrap gap-2">{r.images.map(id => <Photo key={id} id={id} moderate={moderate} open={setLightbox} />)}</div>{moderate && r.status !== 'approved' && <ReviewEditor review={r} onSaved={data => setReviews(current => current.map(item => item._id === data._id ? { ...item, ...data } : item))} />}{moderate && <div className="flex flex-wrap gap-4 mt-6">{r.status !== 'approved' && <button disabled={busy || !r.name?.trim() || (r.comment?.trim().length || 0) < 10} onClick={() => approve(r._id,'approved')} className="bg-blue-600 text-white rounded-xl px-4 py-2 disabled:opacity-50">Approve</button>}<button disabled={busy} onClick={() => approve(r._id,'rejected')} className="border text-red-700 rounded-xl px-4 py-2 disabled:opacity-50">{r.status === 'approved' ? 'Unpublish' : 'Reject'}</button>{r.status === 'pending' && <button disabled={busy} onClick={() => retryNotification(r._id)} className="border rounded-xl px-4 py-2 text-blue-700 disabled:opacity-50">Retry email notification</button>}</div>}{moderate && r.status === 'pending' && <p className="mt-3 text-sm text-slate-600">Email: {r.notification?.status || 'not-sent'}</p>}</article>)}</div></div>
+ <button className="min-h-11 rounded-xl bg-blue-600 px-4 py-2 text-sm sm:text-base font-bold text-white disabled:opacity-50" type="submit">{busy ? 'Submitting…' : 'Submit Review'}</button></fieldset>
+ </form></motion.div>}
+ </AnimatePresence>
+ <div className={`grid min-w-0 gap-4 ${!formOpen && !moderate ? 'md:grid-cols-2' : ''}`}>{loading && <p role="status">Loading reviews…</p>}{error && <p role="alert" className="text-red-700">{error}</p>}
+ {!loading && !error && !reviews.length && <div className="bg-white p-5 sm:p-8 rounded-2xl border border-dashed md:col-span-full"><h2 className="text-xl font-bold">{moderate ? 'No reviews awaiting approval' : 'No reviews yet'}</h2><p className="mt-3 text-slate-500">{moderate ? 'New submissions will appear here.' : 'Have you travelled with us? Be the first to share your experience.'}</p>{!moderate && embedded && <Link to='/reviews#write-review' className="inline-block mt-5 rounded-xl bg-blue-600 px-5 py-3 text-white font-bold">Write a Review</Link>}</div>}
+ {reviews.map(r => <article key={r._id} className="min-w-0 bg-white p-4 sm:p-6 rounded-2xl border shadow-sm"><h2 className="text-xl font-bold break-words">{r.name || r.draftLabel || 'Unnamed review'}</h2>{moderate && <p className="mt-1 text-sm text-blue-700">{r.status === 'draft' ? `${r.draftLabel || 'Admin draft'} — private` : r.status === 'approved' ? 'Published' : 'Pending approval'}</p>}<div className="text-amber-600 my-2" aria-label={`${r.rating} out of 5 stars`}>{'★'.repeat(r.rating)}{'☆'.repeat(5-r.rating)}</div><time dateTime={r.createdAt} className="text-sm text-slate-500">{new Date(r.createdAt).toLocaleDateString()}</time><p className="my-4 whitespace-pre-wrap break-words">{r.comment}</p><div className="flex flex-wrap gap-2">{r.images.map(id => <Photo key={id} id={id} moderate={moderate} open={setLightbox} />)}</div>{moderate && r.status !== 'approved' && <ReviewEditor review={r} onSaved={data => setReviews(current => current.map(item => item._id === data._id ? { ...item, ...data } : item))} />}{moderate && <div className="flex flex-wrap gap-4 mt-6">{r.status !== 'approved' && <button disabled={busy || !r.name?.trim() || (r.comment?.trim().length || 0) < 10} onClick={() => approve(r._id,'approved')} className="bg-blue-600 text-white rounded-xl px-4 py-2 disabled:opacity-50">Approve</button>}<button disabled={busy} onClick={() => approve(r._id,'rejected')} className="border text-red-700 rounded-xl px-4 py-2 disabled:opacity-50">{r.status === 'approved' ? 'Unpublish' : 'Reject'}</button>{r.status === 'pending' && <button disabled={busy} onClick={() => retryNotification(r._id)} className="border rounded-xl px-4 py-2 text-blue-700 disabled:opacity-50">Retry email notification</button>}</div>}{moderate && r.status === 'pending' && <p className="mt-3 text-sm text-slate-600">Email: {r.notification?.status || 'not-sent'}</p>}</article>)}</div></div>
  {embedded && reviews.length > 0 && <Link to="/reviews" className="inline-block mt-6 text-blue-700 font-bold underline">Write a Review</Link>}
  {moderate && notice && <p role="status" className="mt-6 p-4 bg-blue-50 rounded-xl">{notice}</p>}
  {lightbox && <PhotoLightbox {...lightbox} onClose={() => setLightbox('')} />}
