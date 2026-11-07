@@ -165,3 +165,40 @@ footer a { text-underline-offset: 5px; }
     scroll-behavior: auto;
   }
 }
+
+/* FINAL REVIEW CAROUSEL: ONE ROW ONLY */
+
+/* Mobile: 1 review */
+.review-track-carousel,
+.review-track-carousel:not(.review-track-form) {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: minmax(0, auto);
+  grid-template-columns: none;
+  grid-auto-columns: 88%;
+  gap: 1rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+}
+
+/* Tablet: 2 reviews */
+@media (min-width: 768px) {
+  .review-track-carousel,
+  .review-track-carousel:not(.review-track-form) {
+    grid-template-rows: minmax(0, auto);
+    grid-template-columns: none;
+    grid-auto-columns: calc((100% - 1rem) / 2);
+  }
+}
+
+/* Desktop: 4 reviews in one row */
+@media (min-width: 1024px) {
+  .review-track-carousel,
+  .review-track-carousel:not(.review-track-form) {
+    grid-template-rows: minmax(0, auto);
+    grid-template-columns: none;
+    grid-auto-columns: calc((100% - 3rem) / 4);
+  }
+}
+
