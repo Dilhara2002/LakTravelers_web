@@ -54,7 +54,7 @@ export default function CustomerReviews({ moderate = false, embedded = false }) 
  const [formOpen, setFormOpen] = useState(() => !moderate && !embedded && window.location.hash === '#write-review');
  const [refreshVersion, setRefreshVersion] = useState(0);
  const reducedMotion = useReducedMotion();
- const [visibleCount, setVisibleCount] = useState(4);
+ const reviewTrackRef = useRef(null);
  const [processing, setProcessing] = useState(false), [progress, setProgress] = useState('');
  const processingRef = useRef(false), mounted = useRef(true);
  useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);
@@ -138,9 +138,37 @@ export default function CustomerReviews({ moderate = false, embedded = false }) 
  </AnimatePresence>
  <div className="min-w-0">{loading && <p role="status">Loading reviews…</p>}{error && <p role="alert" className="text-red-700">{error}</p>}
  {!loading && !error && !reviews.length && <div className="bg-white p-5 sm:p-8 rounded-2xl border border-dashed md:col-span-full"><h2 className="text-xl font-bold">{moderate ? 'No reviews awaiting approval' : 'No reviews yet'}</h2><p className="mt-3 text-slate-500">{moderate ? 'New submissions will appear here.' : 'Have you travelled with us? Be the first to share your experience.'}</p>{!moderate && embedded && <Link to='/reviews#write-review' className="inline-block mt-5 rounded-xl bg-blue-600 px-5 py-3 text-white font-bold">Write a Review</Link>}</div>}
- <div className={moderate ? 'grid gap-4' : `review-track ${formOpen ? 'review-track-form' : ''}`} tabIndex={moderate ? undefined : 0} role={moderate ? undefined : 'region'} aria-label={moderate ? undefined : 'Customer reviews — swipe or scroll horizontally on mobile'}>
- {(moderate ? reviews : reviews.slice(0, visibleCount)).map(r => <article key={r._id} className="min-w-0 bg-white p-4 sm:p-6 rounded-2xl border shadow-sm"><h2 className="text-xl font-bold break-words">{r.name || r.draftLabel || 'Unnamed review'}</h2>{moderate && <p className="mt-1 text-sm text-blue-700">{r.status === 'draft' ? `${r.draftLabel || 'Admin draft'} — private` : r.status === 'approved' ? 'Published' : 'Pending approval'}</p>}<div className="text-amber-600 my-2" aria-label={`${r.rating} out of 5 stars`}>{'★'.repeat(r.rating)}{'☆'.repeat(5-r.rating)}</div><ReviewDate review={r} /><p className="my-4 whitespace-pre-wrap break-words">{r.comment}</p><div className="flex flex-wrap gap-2">{r.images.map(id => <Photo key={id} id={id} moderate={moderate} />)}</div>{moderate && r.status !== 'approved' && <ReviewEditor review={r} onSaved={data => setReviews(current => current.map(item => item._id === data._id ? { ...item, ...data } : item))} />}{moderate && <div className="flex flex-wrap gap-4 mt-6">{r.status !== 'approved' && <button disabled={busy || !r.name?.trim() || (r.comment?.trim().length || 0) < 10} onClick={() => approve(r._id,'approved')} className="bg-blue-600 text-white rounded-xl px-4 py-2 disabled:opacity-50">Approve</button>}<button disabled={busy} onClick={() => approve(r._id,'rejected')} className="border text-red-700 rounded-xl px-4 py-2 disabled:opacity-50">{r.status === 'approved' ? 'Unpublish' : 'Reject'}</button>{r.status === 'pending' && <button disabled={busy} onClick={() => retryNotification(r._id)} className="border rounded-xl px-4 py-2 text-blue-700 disabled:opacity-50">Retry email notification</button>}</div>}{moderate && r.status === 'pending' && <p className="mt-3 text-sm text-slate-600">Email: {r.notification?.status || 'not-sent'}</p>}</article>)}</div>
- {!moderate && visibleCount < reviews.length && <div className="mt-6 text-center"><button type="button" onClick={() => setVisibleCount(count => count + 5)} className="min-h-11 rounded-full border border-blue-200 bg-white px-5 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-50">See More Reviews</button><p role="status" className="mt-2 text-xs text-slate-500">Showing {Math.min(visibleCount, reviews.length)} of {reviews.length} reviews</p></div>}
+ <div ref={reviewTrackRef} className={moderate ? 'grid gap-4' : `review-track review-track-carousel ${formOpen ? 'review-track-form' : ''}`} tabIndex={moderate ? undefined : 0} role={moderate ? undefined : 'region'} aria-label={moderate ? undefined : 'Customer reviews — swipe or scroll horizontally on mobile'}>
+ {(moderate ? reviews : reviews).map(r => <article key={r._id} className="min-w-0 bg-white p-4 sm:p-6 rounded-2xl border shadow-sm"><h2 className="text-xl font-bold break-words">{r.name || r.draftLabel || 'Unnamed review'}</h2>{moderate && <p className="mt-1 text-sm text-blue-700">{r.status === 'draft' ? `${r.draftLabel || 'Admin draft'} — private` : r.status === 'approved' ? 'Published' : 'Pending approval'}</p>}<div className="text-amber-600 my-2" aria-label={`${r.rating} out of 5 stars`}>{'★'.repeat(r.rating)}{'☆'.repeat(5-r.rating)}</div><ReviewDate review={r} /><p className="my-4 whitespace-pre-wrap break-words">{r.comment}</p><div className="flex flex-wrap gap-2">{r.images.map(id => <Photo key={id} id={id} moderate={moderate} />)}</div>{moderate && r.status !== 'approved' && <ReviewEditor review={r} onSaved={data => setReviews(current => current.map(item => item._id === data._id ? { ...item, ...data } : item))} />}{moderate && <div className="flex flex-wrap gap-4 mt-6">{r.status !== 'approved' && <button disabled={busy || !r.name?.trim() || (r.comment?.trim().length || 0) < 10} onClick={() => approve(r._id,'approved')} className="bg-blue-600 text-white rounded-xl px-4 py-2 disabled:opacity-50">Approve</button>}<button disabled={busy} onClick={() => approve(r._id,'rejected')} className="border text-red-700 rounded-xl px-4 py-2 disabled:opacity-50">{r.status === 'approved' ? 'Unpublish' : 'Reject'}</button>{r.status === 'pending' && <button disabled={busy} onClick={() => retryNotification(r._id)} className="border rounded-xl px-4 py-2 text-blue-700 disabled:opacity-50">Retry email notification</button>}</div>}{moderate && r.status === 'pending' && <p className="mt-3 text-sm text-slate-600">Email: {r.notification?.status || 'not-sent'}</p>}</article>)}</div>
+
+ {!moderate && reviews.length > 1 && (
+   <div className="review-carousel-controls">
+     <button
+       type="button"
+       aria-label="Previous reviews"
+       onClick={() => reviewTrackRef.current?.scrollBy({
+         left: -reviewTrackRef.current.clientWidth,
+         behavior: reducedMotion ? 'instant' : 'smooth'
+       })}
+     >
+       <span aria-hidden="true">&#8249;</span>
+     </button>
+     <span className="text-sm text-slate-500">
+       Swipe or use arrows to explore reviews
+     </span>
+     <button
+       type="button"
+       aria-label="Next reviews"
+       onClick={() => reviewTrackRef.current?.scrollBy({
+         left: reviewTrackRef.current.clientWidth,
+         behavior: reducedMotion ? 'instant' : 'smooth'
+       })}
+     >
+       <span aria-hidden="true">&#8250;</span>
+     </button>
+   </div>
+ )}
+
  </div></div>
  {embedded && reviews.length > 0 && <Link to="/reviews" className="inline-block mt-6 text-blue-700 font-bold underline">Write a Review</Link>}
  {moderate && notice && <p role="status" className="mt-6 p-4 bg-blue-50 rounded-xl">{notice}</p>}
