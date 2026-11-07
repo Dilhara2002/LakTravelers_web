@@ -72,3 +72,11 @@ footer a { text-underline-offset: 5px; }
  .review-track-form { grid-template-columns: minmax(0, 1fr); }
 }
 @media (prefers-reduced-motion: reduce) { .review-track { scroll-behavior: auto; } }
+
+
+/* Three review cards per row on desktop */
+@media (min-width: 1024px) {
+  .review-track:not(.review-track-form) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

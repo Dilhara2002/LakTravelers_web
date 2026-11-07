@@ -54,7 +54,7 @@ export default function CustomerReviews({ moderate = false, embedded = false }) 
  const [formOpen, setFormOpen] = useState(() => !moderate && !embedded && window.location.hash === '#write-review');
  const [refreshVersion, setRefreshVersion] = useState(0);
  const reducedMotion = useReducedMotion();
- const [visibleCount, setVisibleCount] = useState(3);
+ const [visibleCount, setVisibleCount] = useState(4);
  const [processing, setProcessing] = useState(false), [progress, setProgress] = useState('');
  const processingRef = useRef(false), mounted = useRef(true);
  useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);

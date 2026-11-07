@@ -77,7 +77,7 @@ const Home = () => {
               Sri Lanka
             </span>
           </h1>
-          <p className="text-white text-base md:text-lg font-semibold tracking-wide">LakTravelers · A Brand of IDW (Pvt) Ltd</p>
+          
           <p className="text-lg md:text-2xl text-slate-100 max-w-2xl mx-auto font-light leading-relaxed drop-shadow-md">
             Explore Sri Lanka with personalized travel assistance and transport. Your ultimate island journey awaits.
           </p>
@@ -157,7 +157,7 @@ const Home = () => {
         <div className="travel-hero-copy relative z-30 max-w-5xl w-full text-center text-white space-y-5 sm:space-y-8 px-4 sm:px-6">
           <div className="inline-block"><span className="uppercase tracking-[0.2em] text-xs md:text-sm font-bold bg-white/10 px-6 py-2 rounded-full backdrop-blur-md border border-white/20">The Pearl of the Indian Ocean </span></div>
           <h1 className="text-[clamp(2.1rem,7.5vw,6rem)] font-black tracking-tight leading-[1.1]">Explore <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-orange-400 to-yellow-500">Lak Travelers</span></h1>
-          <p className="text-white text-base md:text-lg font-semibold tracking-wide">LakTravelers · A Brand of IDW (Pvt) Ltd</p>
+          
           <p className="text-lg md:text-2xl text-slate-100 max-w-2xl mx-auto font-light leading-relaxed">Personalized travel experiences and reliable transport across Sri Lanka.</p>
 
         </div>
