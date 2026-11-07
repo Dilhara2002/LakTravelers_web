@@ -1,6 +1,6 @@
 import { useReducedMotion } from 'framer-motion';
 import CustomerReviews from './CustomerReviews';
-import { features, whatsappUrl, PUBLIC_AUTH_ENABLED } from '../services/features';
+import { features, PUBLIC_AUTH_ENABLED } from '../services/features';
 import PublicVehicles from './PublicVehicles';
 import { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
@@ -63,7 +63,7 @@ const Home = () => {
   const LoggedInUI = () => (
     <div className="bg-slate-50 min-h-screen font-sans text-slate-800">
       {/* Updated to h-screen for full viewport height */}
-      <div className="relative min-h-[640px] py-16 flex items-center justify-center overflow-hidden">
+      <div className="relative min-h-[520px] md:min-h-[600px] py-16 flex items-center justify-center overflow-hidden">
         {BackgroundSlider()}
         <div className="travel-hero-copy relative z-30 max-w-5xl w-full text-center text-white space-y-8 px-6">
           <div className="inline-block">
@@ -81,10 +81,7 @@ const Home = () => {
           <p className="text-lg md:text-2xl text-slate-100 max-w-2xl mx-auto font-light leading-relaxed drop-shadow-md">
             Explore Sri Lanka with personalized travel assistance and transport. Your ultimate island journey awaits.
           </p>
-          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-            <Link to="/vehicles" className="bg-yellow-400 text-slate-900 px-8 py-4 rounded-2xl font-bold">View Vehicles</Link>
-            <a href={whatsappUrl({ pathname: '/' })} target="_blank" rel="noopener noreferrer" className="bg-green-700 text-white px-8 py-4 rounded-2xl font-bold">WhatsApp Enquiry</a>
-          </div>
+
         </div>
       </div>
 
@@ -155,17 +152,14 @@ const Home = () => {
   const GuestUI = () => (
     <div className="bg-slate-50 min-h-screen font-sans text-slate-800">
       {/* Updated to h-screen for full viewport height */}
-      <div className="relative min-h-[640px] py-16 flex items-center justify-center px-4 overflow-hidden">
+      <div className="relative min-h-[520px] md:min-h-[600px] py-16 flex items-center justify-center px-4 overflow-hidden">
         {BackgroundSlider()}
         <div className="travel-hero-copy relative z-30 max-w-5xl w-full text-center text-white space-y-8 px-6">
           <div className="inline-block"><span className="uppercase tracking-[0.2em] text-xs md:text-sm font-bold bg-white/10 px-6 py-2 rounded-full backdrop-blur-md border border-white/20">The Pearl of the Indian Ocean </span></div>
           <h1 className="text-5xl sm:text-6xl md:text-8xl font-black tracking-tight leading-[1.1]">Explore <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-orange-400 to-yellow-500">Lak Travelers</span></h1>
           <p className="text-white text-base md:text-lg font-semibold tracking-wide">LakTravelers · A Brand of IDW (Pvt) Ltd</p>
           <p className="text-lg md:text-2xl text-slate-100 max-w-2xl mx-auto font-light leading-relaxed">Personalized travel experiences and reliable transport across Sri Lanka.</p>
-          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-            <Link to="/vehicles" className="bg-yellow-400 hover:bg-yellow-500 text-slate-900 px-8 py-4 rounded-2xl font-bold transition shadow-lg text-lg">View Vehicles</Link>
-            <a href={whatsappUrl({ pathname: "/" })} target="_blank" rel="noopener noreferrer" className="bg-green-700 text-white px-8 py-4 rounded-2xl font-bold text-lg">WhatsApp Enquiry</a>
-          </div>
+
         </div>
       </div>
 

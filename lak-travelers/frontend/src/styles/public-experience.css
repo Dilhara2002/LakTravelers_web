@@ -63,3 +63,12 @@ footer a { text-underline-offset: 5px; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .public-experience article:hover, .travel-whatsapp:hover { transform: none; }
 }
+
+/* Native review swiping stays inside its container; no content height clipping. */
+.review-track { display: grid; grid-auto-flow: column; grid-auto-columns: 90%; gap: 1rem; min-width: 0; max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scroll-behavior: smooth; padding: .25rem .25rem 1rem; }
+.review-track > article { scroll-snap-align: start; overflow-wrap: anywhere; }
+@media (min-width: 768px) {
+ .review-track { grid-auto-flow: row; grid-auto-columns: auto; grid-template-columns: repeat(2, minmax(0, 1fr)); overflow: visible; }
+ .review-track-form { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) { .review-track { scroll-behavior: auto; } }

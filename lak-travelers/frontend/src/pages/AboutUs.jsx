@@ -45,12 +45,12 @@ const AboutUs = () => {
         </div>
 
         {/* --- Leadership profiles --- */}
-        <section aria-label="Our leadership" className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <article data-reveal className="min-w-0 bg-slate-900 rounded-[3rem] p-6 sm:p-8 text-white flex flex-col items-center gap-8 shadow-2xl shadow-blue-900/10">
-            <div className="w-full max-w-72 aspect-[3/4] rounded-[2.5rem] overflow-hidden bg-slate-800 border-4 border-slate-700">
+        <section aria-label="Our leadership" className="grid grid-cols-1 gap-8">
+          <article data-reveal className="min-w-0 bg-slate-900 rounded-[3rem] p-6 sm:p-8 text-white flex flex-col md:flex-row items-center gap-6 md:gap-10 shadow-2xl shadow-blue-900/10">
+            <div className="w-full max-w-56 md:max-w-64 md:shrink-0 aspect-[3/4] rounded-[2.5rem] overflow-hidden bg-slate-800 border-4 border-slate-700">
               <img src={founderPhoto} alt="Ishan Wijesinghe, Founder of Lak Travelers" width="750" height="1000" loading="lazy" decoding="async" className="w-full h-full object-cover object-top" />
             </div>
-            <div className="space-y-5 text-center">
+            <div className="min-w-0 flex-1 space-y-5 text-center md:text-left">
               <span className="inline-block bg-blue-600 text-xs px-3 py-1 rounded-full font-bold">Founder — Lak Travelers</span>
               <h2 className="text-3xl sm:text-4xl font-black">Ishan Wijesinghe</h2>
               <p className="text-slate-400 text-lg font-medium">Ishan Wijesinghe — Founder — LakTravelers</p>
@@ -60,11 +60,11 @@ const AboutUs = () => {
               </p>
             </div>
           </article>
-          <article data-reveal className="min-w-0 bg-slate-900 rounded-[3rem] p-6 sm:p-8 text-white flex flex-col items-center gap-8 shadow-2xl shadow-blue-900/10">
-            <div className="w-full max-w-72 aspect-[3/4] rounded-[2.5rem] overflow-hidden bg-slate-800 border-4 border-slate-700">
+          <article data-reveal className="min-w-0 bg-slate-900 rounded-[3rem] p-6 sm:p-8 text-white flex flex-col md:flex-row items-center gap-6 md:gap-10 shadow-2xl shadow-blue-900/10">
+            <div className="w-full max-w-56 md:max-w-64 md:shrink-0 aspect-[3/4] rounded-[2.5rem] overflow-hidden bg-slate-800 border-4 border-slate-700">
               <img src={ceoPhoto} alt="Manjula Kumara, Chief Executive Officer of Lak Travelers" width="767" height="1000" loading="lazy" decoding="async" className="w-full h-full object-cover object-top" />
             </div>
-            <div className="space-y-5 text-center">
+            <div className="min-w-0 flex-1 space-y-5 text-center md:text-left">
               <span className="inline-block bg-blue-600 text-xs px-3 py-1 rounded-full font-bold">Chief Executive Officer (CEO)</span>
               <h2 className="text-3xl sm:text-4xl font-black">Manjula Kumara</h2>
               <p className="text-slate-400 text-lg font-medium">Lak Travelers · A Brand of IDW (Pvt) Ltd</p>
