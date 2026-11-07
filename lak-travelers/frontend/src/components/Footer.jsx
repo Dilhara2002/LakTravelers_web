@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom';
-import { FaWhatsapp } from 'react-icons/fa';
+import { FaWhatsapp, FaFacebookF } from 'react-icons/fa';
 import { features, whatsappUrl, PUBLIC_AUTH_ENABLED } from '../services/features';
 import { Link } from 'react-router-dom';
 import logoImage from "../assets/logo.png"; 
@@ -87,6 +87,15 @@ const Footer = () => {
             <div className="flex gap-4 justify-center md:justify-start">
               <a href={whatsappUrl({ pathname })} target="_blank" rel="noopener noreferrer" aria-label="Contact Lak Travelers" className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-green-600 hover:bg-green-600 hover:text-white transition-all">
                 <FaWhatsapp className="w-5 h-5" />
+              </a>
+              <a
+                href="https://www.facebook.com/share/1C47A29Ljm/?mibextid=wwXIfr"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Visit Lak Travelers on Facebook"
+                className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white transition-all"
+              >
+                <FaFacebookF className="w-5 h-5" />
               </a>
             </div>
           </div>
