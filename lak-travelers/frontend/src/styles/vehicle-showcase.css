@@ -196,3 +196,135 @@
   }
   .vehicle-showcase__enquire { transition: none; }
 }
+
+/* VEHICLE PAGE ORIGINAL LAYOUT RESTORE */
+/* Homepage showcase remains unchanged. */
+
+.vehicle-showcase--page {
+  position: relative;
+  display: block;
+  height: calc(100svh - 6rem);
+  overflow: hidden;
+  background: #060a14;
+}
+
+.vehicle-showcase--page .vehicle-showcase__stage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.vehicle-showcase--page .vehicle-showcase__photo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+.vehicle-showcase--page .vehicle-showcase__panel {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: .5rem;
+  min-height: 0;
+  padding: 2rem 5rem 2rem;
+  text-align: center;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,.38) 0%,
+    transparent 25%,
+    transparent 55%,
+    rgba(0,0,0,.75) 100%
+  );
+}
+
+.vehicle-showcase--page .vehicle-showcase__heading {
+  font-size: clamp(1.6rem, 3vw, 2.6rem);
+}
+
+.vehicle-showcase--page .vehicle-showcase__counter {
+  margin-top: auto;
+  margin-bottom: .25rem;
+}
+
+.vehicle-showcase--page .vehicle-showcase__name {
+  max-width: 75%;
+  font-size: clamp(1.7rem, 3.4vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.12;
+  text-shadow: 0 2px 15px rgba(0,0,0,.65);
+}
+
+.vehicle-showcase--page .vehicle-showcase__description {
+  color: #e2e8f0;
+}
+
+/* Compact enquiry button beside the vehicle */
+.vehicle-showcase--page .vehicle-showcase__enquire {
+  position: absolute;
+  z-index: 5;
+  top: 67%;
+  right: clamp(1rem, 3vw, 3rem);
+  min-height: 42px;
+  margin: 0;
+  padding: .6rem 1.15rem;
+  font-size: .88rem;
+  font-weight: 800;
+  pointer-events: auto;
+  transform: translateY(-50%);
+}
+
+.vehicle-showcase--page .vehicle-showcase__enquire:hover {
+  transform: translateY(calc(-50% - 3px));
+}
+
+/* Mobile: keep photo large and button visible */
+@media (max-width: 767px) {
+  .vehicle-showcase--page {
+    display: block;
+    height: calc(100svh - 6rem);
+  }
+
+  .vehicle-showcase--page .vehicle-showcase__panel {
+    gap: .3rem;
+    padding: 1rem 1rem 5rem;
+  }
+
+  .vehicle-showcase--page .vehicle-showcase__heading {
+    font-size: 1.45rem;
+  }
+
+  .vehicle-showcase--page .vehicle-showcase__counter {
+    margin-top: auto;
+  }
+
+  .vehicle-showcase--page .vehicle-showcase__name {
+    max-width: 95%;
+    font-size: clamp(1.3rem, 5.5vw, 2rem);
+  }
+
+  .vehicle-showcase--page .vehicle-showcase__description {
+    font-size: .75rem;
+  }
+
+  .vehicle-showcase--page .vehicle-showcase__enquire {
+    top: auto;
+    bottom: 1rem;
+    right: 1rem;
+    min-height: 42px;
+    padding: .55rem 1.15rem;
+    font-size: .85rem;
+    transform: none;
+  }
+
+  .vehicle-showcase--page .vehicle-showcase__enquire:hover {
+    transform: none;
+  }
+}
+
