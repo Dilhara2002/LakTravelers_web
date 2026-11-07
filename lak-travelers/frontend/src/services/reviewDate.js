@@ -6,7 +6,7 @@ export function reviewDate(review) {
   const date = hasTravelDate ? travel : parse(review.createdAt);
   if (!date || !Number.isFinite(date.getTime())) return null;
   return {
-    label: hasTravelDate ? 'Travel date' : 'Review submitted',
+    label: hasTravelDate ? 'Review date' : 'Review submitted',
     dateTime: date.toISOString(),
     text: date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }),
   };
