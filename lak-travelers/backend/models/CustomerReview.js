@@ -6,6 +6,8 @@ const schema = new mongoose.Schema({
  status: { type: String, enum: ['draft', 'pending', 'approved', 'rejected'], default: 'pending', index: true },
  draftLabel: String,
  decisionAt: Date,
+ // Optional trip date, stored as UTC midnight; createdAt remains the submission timestamp.
+ displayDate: Date,
  notification: {
   status: { type: String, enum: ['not-sent', 'sent', 'failed'], default: 'not-sent' },
   attempts: { type: Number, default: 0 }, lastAttemptAt: Date, lastSentAt: Date, failureCode: String,

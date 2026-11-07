@@ -27,7 +27,7 @@ export function validateReview(body, files) {
  if (files.length > 5 || files.some(f => f.size > 5 * 1024 * 1024 || !imageType(f.buffer) || imageType(f.buffer) !== f.mimetype)) throw fail('Use up to 5 JPG, PNG or WebP images, maximum 5 MB each.');
  return { name: name.trim(), comment: comment.trim(), rating: Number(rating) };
 }
-const publicFields = 'name rating comment images createdAt';
+const publicFields = 'name rating comment images createdAt displayDate';
 router.get('/', async (_req, res) => res.json(await CustomerReview.find({ status: 'approved' }).select(publicFields).sort({ createdAt: -1 }).limit(100).lean()));
 router.get('/moderation', protect, admin, async (_req, res) => res.json(await CustomerReview.find({ status: { $in: ['draft', 'pending', 'approved'] } }).select(`${publicFields} status draftLabel updatedAt notification decisionAt`).sort({ createdAt: 1 }).limit(100).lean()));
 router.patch('/:id/details', protect, admin, async (req, res) => {
