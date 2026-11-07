@@ -3,9 +3,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { reviewDate } from '../src/services/reviewDate.js';
 
-test('optional trip date takes precedence without changing the source timestamps', () => {
+test('valid displayDate takes precedence with the Review submitted label and unchanged timestamps', () => {
  const review = Object.freeze({ displayDate: '2026-10-15T00:00:00.000Z', createdAt: '2026-11-06T20:00:00.000Z' });
- assert.deepEqual(reviewDate(review), { label: 'Review date', dateTime: review.displayDate, text: '15 Oct 2026' });
+ assert.deepEqual(reviewDate(review), { label: 'Review submitted', dateTime: review.displayDate, text: '15 Oct 2026' });
 });
 test('older reviews and invalid optional dates safely fall back to submission date', () => {
  for (const displayDate of [undefined, null, '', 'invalid']) {
