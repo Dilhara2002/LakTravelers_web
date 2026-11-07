@@ -53,7 +53,7 @@ const AboutUs = () => {
             <div className="min-w-0 flex-1 space-y-5 text-center md:text-left">
               <span className="inline-block bg-blue-600 text-xs px-3 py-1 rounded-full font-bold">Founder — Lak Travelers</span>
               <h2 className="text-3xl sm:text-4xl font-black">Ishan Wijesinghe</h2>
-              <p className="text-slate-400 text-lg font-medium">Ishan Wijesinghe — Founder — LakTravelers</p>
+              
               <blockquote className="text-xl font-bold italic">"Travel is the only thing you buy that makes you richer."</blockquote>
               <p className="text-slate-300 leading-relaxed text-base md:text-lg">
                 I founded Lak Travelers to help you experience Sri Lanka in a way that feels personal. From listening to your travel plans to helping with the details, I focus on thoughtful customer care and reliable service so you can enjoy the journey.
@@ -67,9 +67,11 @@ const AboutUs = () => {
             <div className="min-w-0 flex-1 space-y-5 text-center md:text-left">
               <span className="inline-block bg-blue-600 text-xs px-3 py-1 rounded-full font-bold">Chief Executive Officer (CEO)</span>
               <h2 className="text-3xl sm:text-4xl font-black">Manjula Kumara</h2>
-              <p className="text-slate-400 text-lg font-medium">Lak Travelers · A Brand of IDW (Pvt) Ltd</p>
+              
+              <blockquote className="text-xl font-bold italic">"A great journey begins with care, trust, and attention to every detail."</blockquote>
               <p className="text-slate-300 leading-relaxed text-base md:text-lg">
-                As the Chief Executive Officer of Lak Travelers, Manjula Kumara is focused on making every journey comfortable and well-organized. From vehicle arrangements to travel planning, our goal is to provide reliable service, clear communication, and thoughtful customer care so every traveler can explore Sri Lanka with confidence.
+                
+                At Lak Travelers, I believe every guest deserves a comfortable and worry-free journey. My focus is on reliable transport, thoughtful planning, and clear communication. From the first enquiry to the final destination, I want every traveller to feel welcome, supported, and confident while exploring beautiful Sri Lanka.
               </p>
             </div>
           </article>
