@@ -202,3 +202,33 @@ footer a { text-underline-offset: 5px; }
   }
 }
 
+
+
+/* WIDER COMPACT REVIEW CARDS */
+@media (min-width: 1024px) {
+  .review-wide-section {
+    width: 100%;
+    max-width: 1520px;
+  }
+
+  .review-wide-section .review-track-carousel {
+    gap: .85rem;
+    grid-auto-columns: calc((100% - 2.55rem) / 4);
+  }
+
+  .review-wide-section .review-track-carousel > article {
+    padding: 1rem;
+    font-size: .875rem;
+    line-height: 1.5;
+  }
+
+  .review-wide-section .review-track-carousel > article h2 {
+    font-size: 1.05rem;
+    line-height: 1.35;
+  }
+
+  .review-wide-section .review-track-carousel > article p {
+    margin-top: .6rem;
+    margin-bottom: .6rem;
+  }
+}
