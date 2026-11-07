@@ -119,9 +119,9 @@ export default function CustomerReviews({ moderate = false, embedded = false }) 
  const Heading = embedded ? 'h2' : 'h1';
  const input = 'block mt-2 w-full rounded-xl border border-slate-300 p-3 focus:outline-blue-600';
  return <section className="review-wide-section mx-auto max-w-[1520px] px-3 sm:px-5 py-8 md:py-14 pb-20">
- <Heading className="text-3xl md:text-5xl font-black">{moderate ? 'Review Moderation' : 'Customer Reviews'}</Heading>
- <p className="mt-3 mb-5 text-sm sm:text-base text-slate-500">{moderate ? 'Complete the private drafts with genuine customer details, save your changes, then approve them for public display.' : 'Share your Sri Lanka journey with Lak Travelers. Reviews are published immediately and may be removed if inappropriate. Visitor reviews are not independently verified.'}</p>
- {!moderate && !embedded && <button type="button" disabled={busy || processing} aria-expanded={formOpen} aria-controls="write-review" onClick={() => setFormOpen(open => !open)} className="mb-5 min-h-11 rounded-xl bg-blue-600 px-4 py-2 text-sm sm:text-base font-bold text-white disabled:opacity-50">{formOpen ? 'Cancel / Close Form' : 'Write a Review'}</button>}
+ <Heading className="text-3xl md:text-5xl font-black text-center">{moderate ? 'Review Moderation' : 'Customer Reviews'}</Heading>
+ <p className="mt-3 mb-5 text-sm sm:text-base text-slate-500 text-center max-w-4xl mx-auto">{moderate ? 'Complete the private drafts with genuine customer details, save your changes, then approve them for public display.' : 'Share your Sri Lanka journey with Lak Travelers. Reviews are published immediately and may be removed if inappropriate. Visitor reviews are not independently verified.'}</p>
+ {!moderate && !embedded && <button type="button" disabled={busy || processing} aria-expanded={formOpen} aria-controls="write-review" onClick={() => setFormOpen(open => !open)} className="mb-5 min-h-11 rounded-xl bg-blue-600 px-4 py-2 text-sm sm:text-base font-bold text-white disabled:opacity-50 block mx-auto">{formOpen ? 'Cancel / Close Form' : 'Write a Review'}</button>}
  {!moderate && notice && <p role="status" className="mb-5 rounded-xl bg-blue-50 p-3 text-sm text-blue-900">{notice}</p>}
  <div className={`grid items-start gap-5 md:gap-8 ${formOpen && !moderate && !embedded ? 'lg:grid-cols-2' : ''}`}>
  <AnimatePresence initial={false}>
