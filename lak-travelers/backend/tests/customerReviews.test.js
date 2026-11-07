@@ -83,14 +83,28 @@ test('multipart submission, moderation authorization and photo privacy work thro
  } finally { await new Promise(resolve => server.close(resolve)); }
 });
 
-test('central WhatsApp helper identifies the website, page and both vehicles', async () => {
+test('WhatsApp messages match each vehicle and homepage', async () => {
  const { whatsappUrl } = await import('../../frontend/src/services/features.js');
- for (const vehicle of ['Toyota Axio 2016 Hybrid', 'Suzuki Wagon R Stingray 2018 Hybrid']) {
-  const url = new URL(whatsappUrl({vehicle}));
-  assert.equal(url.pathname, '/94762898945');
-  assert.match(url.searchParams.get('text'), /LakTravelers \| Source: Website \| Service: Vehicle Booking/);
-  assert.ok(url.searchParams.get('text').includes(`Vehicle: ${vehicle}`));
+
+ const home = new URL(whatsappUrl({ pathname: '/' }));
+ assert.equal(home.pathname, '/94762898945');
+ assert.equal(
+  home.searchParams.get('text'),
+  'LakTravelers |  Hello, I would like to know more about your services.'
+ );
+
+ const vehicles = [
+  ['Toyota Axio 2016 Hybrid', '/vehicles/toyota-axio-2016-hybrid'],
+  ['Suzuki Wagon R Stingray 2018 Hybrid', '/vehicles/suzuki-wagon-r-stingray-2018-hybrid']
+ ];
+
+ for (const [vehicle, pathname] of vehicles) {
+  const expected = `LakTravelers |  Hello, I would like to enquire about the ${vehicle}.`;
+
+  for (const context of [{ vehicle }, { pathname }]) {
+   const url = new URL(whatsappUrl(context));
+   assert.equal(url.pathname, '/94762898945');
+   assert.equal(url.searchParams.get('text'), expected);
+  }
  }
- assert.match(new URL(whatsappUrl({pathname:'/'})).searchParams.get('text'), /Page: Home/);
- assert.match(new URL(whatsappUrl({pathname:'/vehicles/toyota-axio-2016-hybrid'})).searchParams.get('text'), /Vehicle: Toyota Axio 2016 Hybrid/);
 });
