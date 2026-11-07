@@ -87,7 +87,7 @@ test('central WhatsApp helper identifies the website, page and both vehicles', a
  const { whatsappUrl } = await import('../../frontend/src/services/features.js');
  for (const vehicle of ['Toyota Axio 2016 Hybrid', 'Suzuki Wagon R Stingray 2018 Hybrid']) {
   const url = new URL(whatsappUrl({vehicle}));
-  assert.equal(url.pathname, '/94723201365');
+  assert.equal(url.pathname, '/94762898945');
   assert.match(url.searchParams.get('text'), /LakTravelers \| Source: Website \| Service: Vehicle Booking/);
   assert.ok(url.searchParams.get('text').includes(`Vehicle: ${vehicle}`));
  }

@@ -75,7 +75,7 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-3 justify-center md:justify-start">
                 <span className="text-blue-600">📞</span>
-                <a href="tel:+94723201365">Ishan: +94 72 320 1365</a>
+                <a href="tel:+94762898945">Ishan: +94 76 289 8945</a>
               </li>
               <li className="flex items-center gap-3 justify-center md:justify-start">
                 <span className="text-blue-600">✉️</span>

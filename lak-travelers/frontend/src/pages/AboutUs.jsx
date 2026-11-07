@@ -82,7 +82,7 @@ const AboutUs = () => {
           </div>
           <p className="text-slate-600 font-bold text-lg md:text-xl mb-4 italic">73/D Walagedara, Wattappola, Sri Lanka.</p>
           <div className="flex flex-col md:flex-row justify-center gap-4 md:gap-8 font-black text-blue-600 text-lg">
-            <a href="tel:+94723201365" className="hover:text-blue-800 transition-colors underline decoration-blue-200 decoration-2 underline-offset-4">Ishan: +94 72 320 1365</a>
+            <a href="tel:+94762898945" className="hover:text-blue-800 transition-colors underline decoration-blue-200 decoration-2 underline-offset-4">Ishan: +94 76 289 8945</a>
 
             <span className="hidden md:block text-slate-300">|</span>
             <a href="mailto:wijesinghelageishan@gmail.com" className="break-all hover:text-blue-800 transition-colors underline decoration-blue-200 decoration-2 underline-offset-4">wijesinghelageishan@gmail.com</a>

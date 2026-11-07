@@ -11,5 +11,5 @@ export const whatsappUrl = (context = {}) => {
  const page = pageNames[pathname] || pathname.split('/').filter(Boolean).map(part => part.replaceAll('-', ' ')).join(' / ') || 'Home';
  const subject = vehicleName ? `Service: Vehicle Booking | Vehicle: ${vehicleName}` : service ? `Service: ${service}` : `Page: ${page}`;
  const greeting = message || (vehicleName ? 'Hello, I would like to enquire about this vehicle.' : 'Hello, I would like to know more about your services.');
- return `https://wa.me/94723201365?text=${encodeURIComponent(`LakTravelers | Source: Website | ${subject} | ${greeting}`)}`;
+ return `https://wa.me/94762898945?text=${encodeURIComponent(`LakTravelers | Source: Website | ${subject} | ${greeting}`)}`;
 };
