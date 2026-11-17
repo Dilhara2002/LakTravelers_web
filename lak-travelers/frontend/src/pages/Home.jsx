@@ -37,7 +37,7 @@ const Home = () => {
   }, [heroImages.length, reducedMotion]);
 
   const BackgroundSlider = () => (
-    <div className="absolute inset-0 z-0 overflow-hidden h-full w-full">
+    <div className="travel-hero-slider absolute inset-0 z-0 overflow-hidden h-full w-full">
       {heroImages.map((imgUrl, index) => (
         <img
           key={index}
@@ -63,7 +63,7 @@ const Home = () => {
   const LoggedInUI = () => (
     <div className="bg-slate-50 min-h-screen font-sans text-slate-800">
       {/* Updated to h-screen for full viewport height */}
-      <div className="relative min-h-[calc(100svh-6rem)] py-10 sm:py-16 flex items-center justify-center overflow-hidden">
+      <div className="travel-home-hero relative min-h-[calc(100svh-6rem)] py-10 sm:py-16 flex items-center justify-center overflow-hidden">
         {BackgroundSlider()}
         <div className="travel-hero-copy relative z-30 max-w-5xl w-full text-center text-white space-y-5 sm:space-y-8 px-4 sm:px-6">
           <div className="inline-block">
@@ -152,7 +152,7 @@ const Home = () => {
   const GuestUI = () => (
     <div className="bg-slate-50 min-h-screen font-sans text-slate-800">
       {/* Updated to h-screen for full viewport height */}
-      <div className="relative min-h-[calc(100svh-6rem)] py-10 sm:py-16 flex items-center justify-center px-4 overflow-hidden">
+      <div className="travel-home-hero relative min-h-[calc(100svh-6rem)] py-10 sm:py-16 flex items-center justify-center px-4 overflow-hidden">
         {BackgroundSlider()}
         <div className="travel-hero-copy relative z-30 max-w-5xl w-full text-center text-white space-y-5 sm:space-y-8 px-4 sm:px-6">
           <div className="inline-block"><span className="uppercase tracking-[0.2em] text-xs md:text-sm font-bold bg-white/10 px-6 py-2 rounded-full backdrop-blur-md border border-white/20">The Pearl of the Indian Ocean </span></div>
@@ -163,7 +163,7 @@ const Home = () => {
         </div>
       </div>
 
-      <section className="py-24 bg-white">
+      <section className="travel-journey py-24 bg-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-4">Your Journey Starts Here</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mt-16 text-center">

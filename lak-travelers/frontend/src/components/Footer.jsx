@@ -8,10 +8,10 @@ import logoImage from "../assets/logo.png";
 const Footer = () => {
   const { pathname } = useLocation();
   return (
-    <footer className="bg-white border-t border-gray-100 pt-10 md:pt-16 pb-8 mt-auto">
+    <footer className="travel-footer bg-white border-t border-gray-100 pt-10 md:pt-16 pb-8 mt-auto">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-12 text-center md:text-left">
+        <div className="travel-footer-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-12 text-center md:text-left">
           
           {/* Column 1: Brand & Identity */}
           <div className="space-y-4 flex flex-col items-center md:items-start">
@@ -104,7 +104,7 @@ const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-slate-700 text-center md:text-left">
+        <div className="travel-footer-bottom border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-slate-700 text-center md:text-left">
           <p className="font-semibold">&copy; {new Date().getFullYear()} LakTravelers | A Brand of IDW (Pvt) Ltd</p>
           <div className="flex gap-6 mt-4 md:mt-0">
             <Link to="/privacy" className="hover:text-blue-600 transition">Privacy Policy</Link>
