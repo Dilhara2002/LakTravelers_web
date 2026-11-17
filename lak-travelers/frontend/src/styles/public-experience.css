@@ -62,13 +62,16 @@ footer a { text-underline-offset: 5px; }
   .travel-hero-slider > img { margin: 0; padding: 0; border: 0; border-radius: 0; box-shadow: none; width: 100%; height: 100%; }
   .travel-hero-slider > img { display: block; object-fit: cover; }
 
-  .travel-journey { padding-block: 2rem; }
-  .travel-journey h2 { font-size: 1.5rem; line-height: 1.25; margin-bottom: .75rem; }
-  .travel-journey .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; margin-top: 1.25rem; }
-  .travel-journey .group { min-width: 0; overflow-wrap: anywhere; }
-  .travel-journey .group > div { width: 2.25rem; height: 2.25rem; font-size: 1.125rem; margin-bottom: .5rem; }
-  .travel-journey h3 { font-size: .875rem; line-height: 1.3; margin-bottom: .375rem; }
-  .travel-journey p { font-size: .8125rem; line-height: 1.45; }
+  .travel-journey { padding-block: 1.25rem; }
+  .travel-journey h2 { font-size: 1.25rem; line-height: 1.25; margin-bottom: .875rem; }
+  .travel-journey-mobile { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; }
+  .travel-journey-mobile > li { position: relative; min-width: 0; }
+  .travel-journey-number { display: flex; align-items: center; justify-content: center; width: 1.75rem; height: 1.75rem; margin: 0 auto .5rem; border-radius: 50%; background: #dbeafe; color: #2563eb; font-size: .875rem; font-weight: 700; }
+  .travel-journey-connector { position: absolute; top: .875rem; left: calc(50% + 1.125rem); width: calc(100% - 1.75rem); border-top: 2px dotted #93c5fd; transform-origin: left; }
+  .travel-journey-mobile h3 { display: flex; align-items: center; justify-content: center; gap: .25rem; font-size: .8125rem; font-weight: 700; line-height: 1.3; margin-bottom: .25rem; }
+  .travel-journey-mobile h3 svg { width: .75rem; height: .75rem; flex-shrink: 0; color: #2563eb; }
+  .travel-journey-mobile p { font-size: .75rem; line-height: 1.4; }
+
 }
 @keyframes travel-enter { from { opacity: .35; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 @media (hover: hover) and (pointer: fine) {

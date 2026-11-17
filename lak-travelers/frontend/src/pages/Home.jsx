@@ -1,4 +1,5 @@
-import { useReducedMotion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
+import { FaCar, FaCommentDots, FaCheckCircle } from 'react-icons/fa';
 import CustomerReviews from './CustomerReviews';
 import { features, PUBLIC_AUTH_ENABLED } from '../services/features';
 import PublicVehicles from './PublicVehicles';
@@ -166,7 +167,39 @@ const Home = () => {
       <section className="travel-journey py-24 bg-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-4">Your Journey Starts Here</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mt-16 text-center">
+          <motion.ol
+            className="travel-journey-mobile md:hidden"
+            initial={reducedMotion ? false : 'hidden'}
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.5 }}
+          >
+            {[
+              { title: 'Choose', description: 'Pick your vehicle', Icon: FaCar },
+              { title: 'Enquire', description: 'Share your trip', Icon: FaCommentDots },
+              { title: 'Confirm', description: 'Ready to travel!', Icon: FaCheckCircle },
+            ].map(({ title, description, Icon }, index) => (
+              <motion.li
+                key={title}
+                variants={{
+                  hidden: { opacity: 0, y: 8 },
+                  visible: { opacity: 1, y: 0, transition: { duration: reducedMotion ? 0 : 0.35, delay: reducedMotion ? 0 : index * 0.2 } },
+                }}
+              >
+                <span className="travel-journey-number">{index + 1}</span>
+                {index < 2 && <motion.span
+                  className="travel-journey-connector"
+                  aria-hidden="true"
+                  variants={{
+                    hidden: { scaleX: 0 },
+                    visible: { scaleX: 1, transition: { duration: reducedMotion ? 0 : 0.3, delay: reducedMotion ? 0 : index * 0.2 + 0.15 } },
+                  }}
+                />}
+                <h3><Icon aria-hidden="true" />{title}</h3>
+                <p className="text-slate-500">{description}</p>
+              </motion.li>
+            ))}
+          </motion.ol>
+          <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-12 mt-16 text-center">
             <div className="group"><div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 transition group-hover:bg-blue-600 group-hover:text-white">1</div><h3 className="text-xl font-bold mb-3">Choose a Vehicle</h3><p className="text-slate-500 max-w-xs mx-auto">Browse our vehicles and choose one for your journey.</p></div>
             <div className="group"><div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 transition group-hover:bg-blue-600 group-hover:text-white">2</div><h3 className="text-xl font-bold mb-3">Send an Enquiry</h3><p className="text-slate-500 max-w-xs mx-auto">Share your dates and route on WhatsApp. No account is required.</p></div>
             <div className="group"><div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 transition group-hover:bg-blue-600 group-hover:text-white">3</div><h3 className="text-xl font-bold mb-3">Confirm Your Journey</h3><p className="text-slate-500 max-w-xs mx-auto">Confirm availability, price and arrangements directly with our team.</p></div>
