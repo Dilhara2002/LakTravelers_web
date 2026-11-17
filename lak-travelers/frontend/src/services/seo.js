@@ -22,7 +22,7 @@ export function metadata(path) {
 export function structuredData(path) {
   const pathname = normalizePath(path);
   if (!pages[pathname]) return [];
-  const business = { '@type': 'TravelAgency', '@id': `${siteUrl}/#organization`, name: 'Lak Travelers', url: siteUrl, logo: `${siteUrl}/logo-2.png`, telephone: '+94762898945', email: 'wijesinghelageishan@gmail.com', address: { '@type': 'PostalAddress', streetAddress: '73/D Walagedara', addressLocality: 'Wattappola', addressCountry: 'LK' }, sameAs: ['https://www.facebook.com/share/1C47A29Ljm/?mibextid=wwXIfr'] };
+  const business = { '@type': 'TravelAgency', '@id': `${siteUrl}/#organization`, name: 'Lak Travelers', url: siteUrl, logo: `${siteUrl}/brand-logo.png`, telephone: '+94762898945', email: 'wijesinghelageishan@gmail.com', address: { '@type': 'PostalAddress', streetAddress: '73/D Walagedara', addressLocality: 'Wattappola', addressCountry: 'LK' }, sameAs: ['https://www.facebook.com/share/1C47A29Ljm/?mibextid=wwXIfr'] };
   const graph = [business, { '@type': 'WebSite', '@id': `${siteUrl}/#website`, url: siteUrl, name: 'Lak Travelers', publisher: { '@id': business['@id'] } }];
   if (pathname !== '/') {
     const crumbs = [{ name: 'Home', item: siteUrl + '/' }];
