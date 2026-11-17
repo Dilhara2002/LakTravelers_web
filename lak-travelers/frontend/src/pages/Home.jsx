@@ -42,7 +42,7 @@ const Home = () => {
         <img
           key={index}
           src={index <= currentImageIndex + 1 ? imgUrl : undefined}
-          alt="Sri Lanka Paradise"
+          alt="" aria-hidden="true"
           fetchPriority={index === 0 ? "high" : "low"}
           decoding="async"
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[1200ms] ease-in-out transform ${
@@ -91,7 +91,7 @@ const Home = () => {
           <div className="flex flex-col lg:flex-row items-center gap-16">
             <div className="lg:w-1/2 relative">
                <div className="absolute -top-10 -left-10 w-40 h-40 bg-blue-100 rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-pulse"></div>
-               <img src={i2} alt="AI Travel Planning" className="relative z-10 rounded-[3rem] shadow-2xl border-8 border-white object-cover h-[500px] w-full" />
+               <img src={i2} loading="lazy" decoding="async" alt="AI Travel Planning" className="relative z-10 rounded-[3rem] shadow-2xl border-8 border-white object-cover h-[500px] w-full" />
                <div className="absolute bottom-6 right-6 z-20 bg-white/90 backdrop-blur-md p-6 rounded-3xl shadow-xl border border-blue-50 max-w-xs">
                   <div className="flex items-center gap-3 mb-2">
                     <span className="h-3 w-3 bg-green-500 rounded-full animate-ping"></span>
@@ -156,9 +156,9 @@ const Home = () => {
         {BackgroundSlider()}
         <div className="travel-hero-copy relative z-30 max-w-5xl w-full text-center text-white space-y-5 sm:space-y-8 px-4 sm:px-6">
           <div className="inline-block"><span className="uppercase tracking-[0.2em] text-xs md:text-sm font-bold bg-white/10 px-6 py-2 rounded-full backdrop-blur-md border border-white/20">The Pearl of the Indian Ocean </span></div>
-          <h1 className="text-[clamp(2.1rem,7.5vw,6rem)] font-black tracking-tight leading-[1.1]">Explore <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-orange-400 to-yellow-500">Lak Travelers</span></h1>
+          <h1 className="text-[clamp(2.1rem,7.5vw,6rem)] font-black tracking-tight leading-[1.1]">Sri Lanka Private Tours <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-orange-400 to-yellow-500">& Car Hire with Driver</span></h1>
           
-          <p className="text-lg md:text-2xl text-slate-100 max-w-2xl mx-auto font-light leading-relaxed">Personalized travel experiences and reliable transport across Sri Lanka.</p>
+          <p className="text-lg md:text-2xl text-slate-100 max-w-2xl mx-auto font-light leading-relaxed">Explore Sri Lanka with personalized travel assistance, private driver enquiries and vehicle hire. Discuss your dates and route with Lak Travelers.</p>
 
         </div>
       </div>
@@ -186,7 +186,7 @@ const Home = () => {
                 </Link>
             </div>
             <div className="flex-1">
-                <img src={i8} alt="Join Lak Travelers" className="rounded-2xl shadow-2xl w-full h-auto object-cover" />
+                <img src={i8} loading="lazy" decoding="async" alt="Join Lak Travelers" className="rounded-2xl shadow-2xl w-full h-auto object-cover" />
             </div>
           </div>
         </div>

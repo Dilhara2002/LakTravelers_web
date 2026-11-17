@@ -1,3 +1,4 @@
+import { servicePages } from '../services/servicePages';
 import { useLocation } from 'react-router-dom';
 import { FaWhatsapp, FaFacebookF } from 'react-icons/fa';
 import { features, whatsappUrl, PUBLIC_AUTH_ENABLED } from '../services/features';
@@ -47,6 +48,7 @@ const Footer = () => {
               <li><Link to="/" className="hover:text-blue-600 transition duration-200">Home</Link></li>
               {features.hotels && <li><Link to="/hotels" className="hover:text-blue-600 transition duration-200">Luxury Hotels</Link></li>}
               {features.tourPackages && <li><Link to="/tours" className="hover:text-blue-600 transition duration-200">Tour Packages</Link></li>}
+              {Object.entries(servicePages).map(([path, page]) => <li key={path}><Link to={path} className="hover:text-blue-600 transition">{page.label}</Link></li>)}
               <li><Link to="/vehicles" className="hover:text-blue-600 transition duration-200">Vehicle Rentals</Link></li>
             </ul>
           </div>

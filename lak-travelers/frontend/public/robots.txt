@@ -1,8 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /admin/
-Disallow: /vendor/
-Disallow: /profile
-Disallow: /my-bookings
 
-Sitemap: https://laktravelers-web.pages.dev/sitemap.xml
+Sitemap: https://laktravelers.com/sitemap.xml

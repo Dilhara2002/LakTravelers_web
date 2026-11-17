@@ -134,6 +134,7 @@ export default function PublicVehicles({
           Enquire
           <span aria-hidden="true">&#8599;</span>
         </a>
+        <nav aria-label="Browse vehicles" className="flex flex-wrap gap-4 mt-4">{vehicles.map(vehicle => <Link key={vehicle.id} to={`/vehicles/${vehicle.id}`} className="text-blue-600 underline">{vehicle.name}</Link>)}</nav>
       </div>
     </section>
   );

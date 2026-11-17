@@ -24,6 +24,9 @@ const projectRoot = path.resolve();
 const configuredOrigins = [process.env.ALLOWED_ORIGINS, process.env.FRONTEND_URL].filter(Boolean).join(',')
   .split(',').map((origin) => origin.trim()).filter(Boolean);
 const allowedOrigins = new Set([
+  'https://laktravelers.com',
+  'https://www.laktravelers.com',
+  'https://laktravelers.pages.dev',
   'https://laktravelers-web.pages.dev',
   ...(process.env.NODE_ENV === 'production' ? [] : ['http://localhost:5173', 'http://127.0.0.1:5173']),
   ...configuredOrigins,

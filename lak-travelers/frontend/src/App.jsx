@@ -7,6 +7,8 @@ import PublicVehicles from './pages/PublicVehicles';
 import CustomerReviews from './pages/CustomerReviews';
 import ReviewDecision from './pages/ReviewDecision';
 const ComingSoon = () => <section className="text-center py-24"><h1 className="text-3xl font-bold text-blue-600">Lak Travelers — Coming Soon</h1><p className="mt-4">This service is not available yet.</p><a href="/" className="inline-block mt-6 text-blue-600 underline">Explore Lak Travelers</a></section>;
+import ServiceLanding from './pages/ServiceLanding';
+import { servicePages } from './services/servicePages';
 import PageMetadata from './components/PageMetadata';
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -91,6 +93,7 @@ function App() {
             <PublicExperience><Routes>
               {/* --- 🌍 Public Routes --- */}
               <Route path="/" element={<Home />} />
+              {Object.keys(servicePages).map(path => <Route key={path} path={path} element={<ServiceLanding path={path} />} />)}
               <Route path="/login" element={PUBLIC_AUTH_ENABLED ? <Login /> : <Navigate to="/" replace />} />
               <Route path="/admin/login" element={<Login adminOnly />} />
               <Route path="/register" element={PUBLIC_AUTH_ENABLED ? <Register /> : <Navigate to="/" replace />} />
@@ -141,7 +144,7 @@ function App() {
               <Route path='/vendor/bookings' element={<RoleRoute roles={['vendor', 'admin']}><VendorBookings /></RoleRoute>} />
 
               {/* 404 Route */}
-              <Route path="*" element={<div className="text-center py-20 font-bold text-gray-500">404 - Not Found</div>} />
+              <Route path="*" element={<section className="text-center py-20"><h1 className="text-3xl font-bold">404 — Page not found</h1><a href="/" className="inline-block mt-6 text-blue-600 underline">Return to Lak Travelers</a></section>} />
             </Routes></PublicExperience>
             </Suspense>
           </main>

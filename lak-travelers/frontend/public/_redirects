@@ -1,1 +1,22 @@
-/* /index.html 200
+# Keep SPA entry points for authentication, protected and feature-flagged routes.
+# Public pages are generated as static HTML. Other URLs use Pages' 404.html.
+/login /app.html 200
+/register /app.html 200
+/admin/* /app.html 200
+/vendor/* /app.html 200
+/profile /app.html 200
+/my-bookings /app.html 200
+/dashboard /app.html 200
+/vendor-setup /app.html 200
+/smart-planner /app.html 200
+/community /app.html 200
+/hotels /app.html 200
+/hotels/* /app.html 200
+/tours /app.html 200
+/tours/* /app.html 200
+/add-hotel /app.html 200
+/edit-hotel/* /app.html 200
+/add-tour /app.html 200
+/edit-tour/* /app.html 200
+/add-vehicle /app.html 200
+/contact /app.html 200
