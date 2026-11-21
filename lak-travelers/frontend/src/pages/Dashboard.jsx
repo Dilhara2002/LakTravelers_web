@@ -46,7 +46,7 @@ const Dashboard = () => {
     if (!user) return;
     try {
       setLoading(true);
-      if (user.role === "admin") {
+      if (["admin", "super-admin"].includes(user.role)) {
         const [statsRes, pendingRes, usersRes] = await Promise.all([
           API.get("/users/admin-stats").catch(() => ({ data: {} })),
           API.get("/users/pending").catch(() => ({ data: [] })),
@@ -155,7 +155,7 @@ const Dashboard = () => {
   );
 
   /* ================= ADMIN UI ================= */
-  if (user?.role === "admin") {
+  if (["admin", "super-admin"].includes(user?.role)) {
     const adminChart = [
       { name: "Hotels", count: adminStats.hotelsCount || 0 },
       { name: "Tours", count: adminStats.toursCount || 0 },
@@ -173,6 +173,7 @@ const Dashboard = () => {
             <div>
               <h1 className="text-3xl font-black text-slate-900 tracking-tight">Admin Master Console 🛡️</h1>
               <p className="text-gray-500">Global system management & manual account control.</p>
+              <Link to="/admin/partners" className="inline-block mt-3 rounded-lg bg-cyan-700 px-4 py-2 font-bold text-white">Partner Management</Link>
             </div>
             <div className="flex bg-white p-1 rounded-xl shadow-sm border border-gray-200">
               {['overview', 'applications', 'users'].map(tab => (

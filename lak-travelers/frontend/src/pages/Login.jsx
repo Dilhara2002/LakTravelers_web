@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import GoogleSignIn from '../components/GoogleSignIn';
 import API from "../services/api";
 import loginImage from "../assets/Login.jpg"; 
@@ -9,10 +9,7 @@ const Login = ({ adminOnly = false }) => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
-  const requested = location.state?.from ? `${location.state.from.pathname}${location.state.from.search || ''}` : new URLSearchParams(location.search).get('returnTo');
-  const safePath = requested?.startsWith('/') && !requested.startsWith('//') && !requested.includes('\\');
-  const destination = safePath && (!adminOnly || requested.startsWith('/admin/') && !requested.startsWith('/admin/login')) ? requested : adminOnly ? '/admin/reviews' : '/';
+  const destination = '/';
 
   // Scroll to the top of the page immediately upon loading
   useEffect(() => {

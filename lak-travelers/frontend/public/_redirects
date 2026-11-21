@@ -20,3 +20,7 @@
 /edit-tour/* /app.html 200
 /add-vehicle /app.html 200
 /contact /app.html 200
+
+# Partner onboarding and authenticated dashboard routes.
+/partners /app.html 200
+/partners/* /app.html 200

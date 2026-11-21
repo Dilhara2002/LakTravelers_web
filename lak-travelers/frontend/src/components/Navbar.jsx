@@ -22,6 +22,34 @@ const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // LT_NAVBAR_OUTSIDE_CLICK_FIX
+  useEffect(() => {
+    const closeOnOutsideClick = (event) => {
+      const mainNav =
+        document.querySelector('nav.fixed');
+
+      if (mainNav && !mainNav.contains(event.target)) {
+        setIsDropdownOpen(false);
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener(
+      'pointerdown',
+      closeOnOutsideClick,
+      true
+    );
+
+    return () => {
+      document.removeEventListener(
+        'pointerdown',
+        closeOnOutsideClick,
+        true
+      );
+    };
+  }, []);
+
+
   useEffect(() => {
     const close = event => {
       if (event.key === 'Escape') {
@@ -183,7 +211,34 @@ const Navbar = () => {
             </div>
           )}
 
-          {/* MOBILE HAMBURGER */}
+          
+          {/* LT_ACCOUNT_SIGNIN_FALLBACK */}
+          {!PUBLIC_AUTH_ENABLED &&
+            !(user && ['admin', 'super-admin'].includes(user.role)) && (
+              <Link
+                to="/admin/login"
+                aria-label="Account sign in"
+                className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-2 text-sm font-bold text-gray-700 shadow-sm hover:bg-gray-50 hover:text-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+              >
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-white">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    width="19"
+                    height="19"
+                    aria-hidden="true"
+                  >
+                    <circle cx="12" cy="8" r="4" />
+                    <path d="M4 21a8 8 0 0 1 16 0" />
+                  </svg>
+                </span>
+                <span className="hidden sm:inline">Account</span>
+              </Link>
+            )}
+
+    {/* MOBILE HAMBURGER */}
           <button aria-controls="mobile-navigation" aria-label="Toggle navigation" aria-expanded={isMobileMenuOpen} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="xl:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition">
             {isMobileMenuOpen ? (
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -218,6 +273,8 @@ const Navbar = () => {
                 )}
               </Link>
             ))}
+
+            
 
             {PUBLIC_AUTH_ENABLED && !user && (
               <div className="flex flex-col gap-3 pt-6 mt-4 border-t border-gray-100">

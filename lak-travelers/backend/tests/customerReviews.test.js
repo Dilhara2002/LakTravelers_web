@@ -20,6 +20,9 @@ test('reviews validate ratings, plain text, honeypot and image limits', () => {
 });
 
 test('multipart submission, moderation authorization and photo privacy work through HTTP (isolated model doubles)', async t => {
+ const previousAdminEmail = process.env.ADMIN_REVIEW_EMAIL;
+ delete process.env.ADMIN_REVIEW_EMAIL; // Keep this isolated test offline, regardless of local .env.
+ t.after(() => { if (previousAdminEmail === undefined) delete process.env.ADMIN_REVIEW_EMAIL; else process.env.ADMIN_REVIEW_EMAIL = previousAdminEmail; });
  const previousSecret = process.env.JWT_SECRET;
  process.env.JWT_SECRET = 'isolated-review-test-secret';
  t.after(() => { if (previousSecret === undefined) delete process.env.JWT_SECRET; else process.env.JWT_SECRET = previousSecret; });
@@ -37,8 +40,9 @@ test('multipart submission, moderation authorization and photo privacy work thro
  const url = `http://127.0.0.1:${server.address().port}/api/customer-reviews`;
  try {
   const body = new FormData(); body.set('name','Test guest'); body.set('rating','4'); body.set('comment','A thoughtful journey through Sri Lanka.');
-  const photo = await readFile(new URL('../../frontend/src/assets/toyota-axio.jpg',import.meta.url));
-  for (let i = 0; i < 5; i++) body.append('photos',new Blob([photo],{type:'image/jpeg'}),`travel-${i}.jpg`);
+  // This legacy .jpg-named fixture contains PNG bytes.
+ const photo = await readFile(new URL('../../frontend/src/assets/toyota-axio.jpg',import.meta.url));
+  for (let i = 0; i < 5; i++) body.append('photos',new Blob([photo],{type:'image/png'}),`travel-${i}.png`);
   const result = await fetch(url,{method:'POST',body}); assert.equal(result.status,201); assert.equal(records[0].status,'approved'); assert.equal(images.length,5);
   assert.equal(records[0].images.length,5);
   assert.equal(records[0].notification.status, 'not-sent'); // Email configuration failure must not erase the saved submission.
@@ -52,7 +56,7 @@ test('multipart submission, moderation authorization and photo privacy work thro
   assert.equal((await fetch(`${url}/moderation/photos/${images[0]._id}`,{headers:auth('admin-test')})).status,200);
   assert.equal((await fetch(`${url}/${records[0]._id}/status`,{method:'PATCH',headers:{...auth('admin-test'),'Content-Type':'application/json'},body:JSON.stringify({status:'approved'})})).status,409);
   assert.equal((await (await fetch(url)).json()).length,1);
-  const publicPhoto = await fetch(photoUrl); assert.equal(publicPhoto.status,200); assert.equal(publicPhoto.headers.get('content-type'),'image/jpeg');
+  const publicPhoto = await fetch(photoUrl); assert.equal(publicPhoto.status,200); assert.equal(publicPhoto.headers.get('content-type'),'image/png');
   assert.deepEqual(Buffer.from(await publicPhoto.arrayBuffer()),photo);
   const unpublish = await fetch(`${url}/${records[0]._id}/decision`, {
     method:'POST',

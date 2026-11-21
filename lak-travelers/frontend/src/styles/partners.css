@@ -1,0 +1,46 @@
+.partner-page { max-width: 1152px; margin: 0 auto; padding: 2rem 1rem 6rem; color: #082f49; overflow-wrap: anywhere; }
+.partner-page h1 { font-size: clamp(1.65rem, 5vw, 2.8rem); font-weight: 800; line-height: 1.2; }
+.partner-page h2 { font-size: 1.25rem; font-weight: 750; margin-bottom: .75rem; }
+.partner-page p { margin: .75rem 0; line-height: 1.6; }
+.partner-page a:not(.partner-button) { text-decoration: underline; text-underline-offset: 3px; }
+.partner-hero { padding: clamp(1.5rem, 5vw, 3rem); background: #082f49; color: white; border-radius: 1.5rem; margin-bottom: 1.5rem; }
+.partner-hero > span { display: block; color: #facc15; font-size: .75rem; font-weight: 700; letter-spacing: .15em; margin-bottom: 1rem; }
+.partner-hero p { max-width: 42rem; }
+.partner-category-grid, .partner-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.partner-category-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.partner-card { min-width: 0; border: 1px solid #dbeafe; border-radius: 1rem; background: white; padding: 1.5rem; margin-bottom: 1rem; }
+.partner-card > svg { color: #0891b2; margin-bottom: 1rem; }
+.partner-account { max-width: 36rem; margin-inline: auto; }
+.partner-notice { padding: .75rem; border-left: 3px solid #eab308; background: #fefce8; font-size: .875rem; }
+.partner-page button, .partner-button { display: inline-flex; align-items: center; justify-content: center; padding: .65rem 1rem; min-height: 44px; border-radius: .65rem; background: #082f49; color: white; font-weight: 650; font-size: .875rem; text-align: center; }
+.partner-page .secondary { background: #f0f9ff; color: #075985; border: 1px solid #bae6fd; }
+.partner-page button:disabled { opacity: .5; cursor: not-allowed; }
+.partner-page button[aria-pressed=true], .partner-page button[aria-current=step] { background: #0e7490; color: white; }
+.partner-hero .partner-button { background: #facc15; color: #082f49; }
+.partner-page label { display: block; font-size: .875rem; font-weight: 600; margin-bottom: .75rem; }
+.partner-page input:not([type=checkbox]), .partner-page select, .partner-page textarea { display: block; width: 100%; min-width: 0; border: 1px solid #94a3b8; border-radius: .5rem; padding: .65rem; margin-top: .35rem; background: white; color: #0f172a; font-size: 1rem; }
+.partner-page input[type=file] { font-size: .8rem; }
+.partner-page fieldset:disabled { opacity: .8; }
+.partner-page .partner-check { display: flex; align-items: flex-start; gap: .65rem; margin-block: 1rem; font-weight: 400; }
+.partner-check input { flex-shrink: 0; margin-top: .25rem; width: 1.1rem; height: 1.1rem; }
+.partner-actions, .partner-dashboard-header { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; margin-block: 1rem; }
+.partner-dashboard-header { justify-content: space-between; }
+.partner-progress { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; margin-block: 1rem; }
+.partner-progress button { width: 100%; height: 100%; padding: .5rem; font-size: .8rem; }
+.partner-document { min-width: 0; padding: .75rem; background: #f8fafc; border-radius: .5rem; }
+.partner-document button { margin-top: .5rem; }
+.partner-error, .partner-success { padding: 1rem; border-radius: .5rem; background: #fef2f2; color: #991b1b; }
+.partner-success { background: #ecfdf5; color: #065f46; }
+.partner-history { margin-top: 1rem; max-height: 24rem; overflow-y: auto; }
+.partner-history li { border-bottom: 1px solid #e2e8f0; padding-block: .75rem; font-size: .875rem; }
+.partner-application-list { display: grid; gap: .5rem; margin-block: 1rem; }
+.partner-application-list button { width: 100%; justify-content: flex-start; }
+.partner-page summary { cursor: pointer; padding-top: 1rem; font-weight: 600; }
+.partner-page dt { font-weight: 650; }
+.partner-page dd { margin-bottom: .75rem; white-space: pre-wrap; }
+@media (width < 768px) {
+  .partner-page { padding-inline: 0; padding-top: 1rem; }
+  .partner-fields, .partner-category-grid { grid-template-columns: minmax(0, 1fr); }
+  .partner-card { padding: 1rem; }
+  .partner-actions { gap: .5rem; }
+}

@@ -59,6 +59,7 @@ const Footer = () => {
             <ul className="space-y-3 text-sm text-gray-500">
               {PUBLIC_AUTH_ENABLED && <li><Link to="/profile" className="hover:text-blue-600 transition duration-200">My Profile</Link></li>}
               {PUBLIC_AUTH_ENABLED && <li><Link to="/my-bookings" className="hover:text-blue-600 transition duration-200">Manage Bookings</Link></li>}
+              <li><Link to="/partners" className="hover:text-blue-600 transition">Join as Partner</Link></li>
               <li><Link to="/contact" className="hover:text-blue-600 transition">Contact Us</Link></li>
               <li><Link to="/reviews" className="hover:text-blue-600 transition">Reviews</Link></li>
               <li><Link to="/gallery" className="hover:text-blue-600 transition">Gallery</Link></li>

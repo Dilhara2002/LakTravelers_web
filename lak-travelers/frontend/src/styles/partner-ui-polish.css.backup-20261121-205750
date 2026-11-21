@@ -1,0 +1,161 @@
+
+.lt-partner-join-tab {
+  position: fixed;
+  right: calc(1.25rem + 7px);
+  bottom: calc(5.7rem + env(safe-area-inset-bottom));
+  z-index: 49;
+  width: 42px;
+  height: 155px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #dc2626;
+  color: #ffffff;
+  border: 1px solid #b91c1c;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(127, 29, 29, 0.25);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  transition: background 160ms ease, box-shadow 160ms ease;
+}
+
+.lt-partner-join-tab span {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+}
+
+.lt-partner-join-tab:hover {
+  background: #b91c1c;
+  color: #ffffff;
+  box-shadow: 0 12px 28px rgba(127, 29, 29, 0.35);
+}
+
+.lt-partner-join-tab:focus-visible {
+  outline: 3px solid #f8c45c;
+  outline-offset: 4px;
+}
+
+.lt-partners-polished {
+  min-height: calc(100vh - 100px);
+  padding: clamp(12px, 2.5vw, 32px);
+  background:
+    radial-gradient(
+      circle at 5% 5%,
+      rgba(17, 132, 141, 0.08),
+      transparent 42%
+    ),
+    linear-gradient(160deg, #fbfcfd, #eff5f5);
+}
+
+.lt-partners-polished h1,
+.lt-partners-polished h2,
+.lt-partners-polished h3 {
+  color: #0b3048;
+  letter-spacing: -0.025em;
+}
+
+.lt-partners-polished input,
+.lt-partners-polished select,
+.lt-partners-polished textarea {
+  border-radius: 12px;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.lt-partners-polished input:focus-visible,
+.lt-partners-polished select:focus-visible,
+.lt-partners-polished textarea:focus-visible {
+  outline: 2px solid #147f89;
+  outline-offset: 2px;
+}
+
+.lt-partners-polished button {
+  border-radius: 12px;
+  transition: background 160ms ease, box-shadow 160ms ease;
+}
+
+.lt-partners-polished button:focus-visible {
+  outline: 3px solid #d9ad50;
+  outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+  .lt-partner-join-tab {
+    width: 38px;
+    height: 145px;
+    right: calc(1.25rem + 9px);
+    font-size: 11px;
+  }
+
+  .lt-partners-polished {
+    padding: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lt-partner-join-tab,
+  .lt-partners-polished button {
+    transition: none;
+  }
+}
+
+
+/* LT_PARTNER_HEADING_VISIBILITY_FIX */
+
+/* Override transparent gradient-text styles that
+   can make the hero heading invisible. */
+
+
+
+
+/* Maintain readable secondary text. */
+.lt-partners-polished {
+  color: #12384f;
+}
+
+
+/* LT_HERO_CONTRAST_SCOPED_V2 */
+.lt-partners-polished .lt-partner-hero-title,
+.lt-partners-polished .lt-partner-hero-title * {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background-image: none !important;
+  opacity: 1 !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.lt-partners-polished .lt-partner-hero-title {
+  line-height: 1.15;
+}
+
+/* LT_PARTNER_AUTH_POLISH_V1 — isolated partner account UI */
+.partner-page .partner-account {
+  border: 1px solid #d5e6ea;
+  border-radius: 20px;
+  box-shadow: 0 14px 42px rgba(7, 45, 66, .09);
+  max-width: 540px;
+  margin: 12px auto 32px;
+  background: #ffffff;
+}
+.partner-page .partner-account > h1 {
+  color: #0b3048;
+  font-size: clamp(1.55rem, 3vw, 2.1rem);
+  line-height: 1.2;
+}
+.partner-page .partner-account form > button {
+  background: #097f8c;
+  color: white;
+  font-weight: 700;
+}
+.partner-page .lt-partner-auth-switch {
+  margin-top: 15px;
+  color: #375467;
+  font-size: .9rem;
+}
+.partner-page .lt-partner-auth-switch a {
+  color: #076a89;
+  font-weight: 700;
+  text-decoration: underline;
+}

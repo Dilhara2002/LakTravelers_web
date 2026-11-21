@@ -1,3 +1,6 @@
+import RouteScrollTop from './components/RouteScrollTop';
+import './styles/partner-ui-polish.css';
+import PartnerJoinTab from './components/PartnerJoinTab';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import React, { lazy, Suspense, useEffect, useRef } from "react";
 import { features, PUBLIC_AUTH_ENABLED } from './services/features';
@@ -18,6 +21,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { CurrencyProvider } from './context/CurrencyContext';
 
 // Pages Import
+const Partners = lazy(() => import('./pages/Partners'));
+const AdminPartners = lazy(() => import('./pages/AdminPartners'));
 const Home = lazy(() => import('./pages/Home'));
 const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
@@ -81,6 +86,7 @@ function App() {
   return (
     <CurrencyProvider>
       <Router>
+        <RouteScrollTop />
         <PageMetadata />
         {/* limit={1} also helps control multiple simultaneous notifications */}
         <ToastContainer position="top-center" autoClose={3000} limit={1} />
@@ -88,11 +94,13 @@ function App() {
         <div className="font-sans bg-gray-50 text-gray-900 min-h-screen flex flex-col relative">
           <Navbar />
           
-          <main className="pt-24 flex-grow px-4 md:px-0">
+          <main className="pt-20 flex-grow px-4 md:px-0">
             <Suspense fallback={<div className="py-24 text-center font-bold text-blue-600">Loading...</div>}>
             <PublicExperience><Routes>
               {/* --- 🌍 Public Routes --- */}
               <Route path="/" element={<Home />} />
+              <Route path="/partners/*" element={<div className="lt-partners-polished"><Partners /></div>} />
+              <Route path="/admin/partners" element={<RoleRoute roles={['admin', 'super-admin']}><AdminPartners /></RoleRoute>} />
               {Object.keys(servicePages).map(path => <Route key={path} path={path} element={<ServiceLanding path={path} />} />)}
               <Route path="/login" element={PUBLIC_AUTH_ENABLED ? <Login /> : <Navigate to="/" replace />} />
               <Route path="/admin/login" element={<Login adminOnly />} />
@@ -150,6 +158,7 @@ function App() {
           </main>
 
           {features.chatbot && <ChatBot />}
+          <PartnerJoinTab />
           <WhatsApp /> 
           <Footer />
         </div>

@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import path from 'path';
 
+import partnerRoutes from './routes/partnerRoutes.js';
 import galleryRoutes from './routes/galleryRoutes.js';
 import customerReviewRoutes from './routes/customerReviewRoutes.js';
 import userRoutes from './routes/userRoutes.js';
@@ -62,6 +63,7 @@ app.use('/uploads', express.static(path.join(projectRoot, 'uploads'), {
 app.get('/', (_req, res) => res.status(200).json({ service: 'Lak Travelers API', status: 'ok' }));
 app.get('/api/health', (_req, res) => res.status(200).json({ status: 'ok' }));
 
+app.use('/api/partners', partnerRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/hotels', hotelRoutes);
 app.use('/api/tours', tourRoutes);
